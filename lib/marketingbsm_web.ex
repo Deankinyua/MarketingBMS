@@ -81,7 +81,6 @@ defmodule MarketingbsmWeb do
 
   defp html_helpers do
     quote do
-      use Tremorx
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components and translation
@@ -90,6 +89,7 @@ defmodule MarketingbsmWeb do
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
+      use Tremorx
 
       # Routes generation with the ~p sigil
       unquote(verified_routes())
