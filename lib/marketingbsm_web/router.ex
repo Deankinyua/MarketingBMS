@@ -1,6 +1,8 @@
 defmodule MarketingbsmWeb.Router do
   use MarketingbsmWeb, :router
 
+  use AshAuthentication.Phoenix.Router
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,16 +10,38 @@ defmodule MarketingbsmWeb.Router do
     plug :put_root_layout, html: {MarketingbsmWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :load_from_session
   end
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :load_from_bearer
   end
 
   scope "/", MarketingbsmWeb do
     pipe_through :browser
 
     get "/", PageController, :home
+    live "/sign-in", SignInPage
+    live "/register", RegisterPage
+
+    # auth code
+    sign_out_route(AuthController)
+    auth_routes_for(Marketingbsm.Accounts.User, to: AuthController)
+
+    ash_authentication_live_session :authentication_optional,
+      on_mount: {MarketingbsmWeb.LiveUserAuth, :live_no_user} do
+    end
+
+    ash_authentication_live_session :authentication_required,
+      on_mount: {MarketingbsmWeb.LiveUserAuth, :live_user_required} do
+      live "/regions", RegionLive.Index, :index
+      live "/regions/new", RegionLive.Index, :new
+      live "/regions/:id/edit", RegionLive.Index, :edit
+
+      live "/regions/:id", RegionLive.Show, :show
+      live "/regions/:id/show/edit", RegionLive.Show, :edit
+    end
   end
 
   # Other scopes may use custom stacks.

@@ -31,6 +31,12 @@ config :marketingbsm, MarketingbsmWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :marketingbsm, Marketingbsm.Mailer, adapter: Swoosh.Adapters.Local
 
+config :marketingbsm,
+  ash_domains: [
+    Marketingbsm.Accounts,
+    Marketingbsm.Outlet
+  ]
+
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.17.11",

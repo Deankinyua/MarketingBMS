@@ -1,0 +1,98 @@
+defmodule Marketingbsm.Accounts.User do
+  use Ash.Resource,
+    domain: Marketingbsm.Accounts,
+    data_layer: AshPostgres.DataLayer,
+    extensions: [AshAuthentication]
+
+  resource do
+    description("""
+    Represents the User of the Audio2Audio platform.
+    """)
+  end
+
+  postgres do
+    table("users")
+    repo(Marketingbsm.Repo)
+  end
+
+  attributes do
+    uuid_primary_key(:id)
+
+    attribute :email, :ci_string do
+      allow_nil?(false)
+      public?(true)
+    end
+
+    attribute(:hashed_password, :string, allow_nil?: false, sensitive?: true)
+
+    attribute :name, :string do
+      allow_nil?(false)
+    end
+
+    create_timestamp(:created_at)
+    update_timestamp(:updated_at)
+  end
+
+  authentication do
+    domain(Marketingbsm.Accounts)
+
+    strategies do
+      password :password do
+        identity_field(:email)
+        sign_in_tokens_enabled?(true)
+        confirmation_required?(false)
+        # A list of additional fields to be accepted in the register action.
+        register_action_accept([:name])
+      end
+    end
+
+    tokens do
+      enabled?(true)
+      token_resource(Marketingbsm.Accounts.Token)
+      signing_secret(Marketingbsm.Accounts.Secrets)
+      store_all_tokens?(true)
+      require_token_presence_for_authentication?(true)
+    end
+  end
+
+  identities do
+    identity(:unique_email, [:email])
+  end
+
+  validations do
+    validate(match(:email, ~r/^([a-z\d\.-]+)@([a-z\d]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/),
+      message: " @ sign plus additional stuff are supposed to be there"
+    )
+  end
+
+  actions do
+    defaults([:read])
+
+    read :by_email do
+      # This action has one argument :email of type :ci_string
+      argument(:email, :ci_string, allow_nil?: false)
+      # Tells us we expect this action to return a single result
+      get?(true)
+      # Filters the `:email` given in the argument
+      # against the `email` of each element in the resource
+      filter(expr(email == ^arg(:email)))
+    end
+
+    read :by_id do
+      # This action has one argument :id of type :ci_string
+      argument(:id, :uuid, allow_nil?: false)
+      # Tells us we expect this action to return a single result
+      get?(true)
+      # Filters the `:id` given in the argument
+      # against the `id` of each element in the resource
+      filter(expr(id == ^arg(:id)))
+    end
+  end
+
+  # If using policies, add the following bypass:
+  # policies do
+  #   bypass AshAuthentication.Checks.AshAuthenticationInteraction do
+  #     authorize_if always()
+  #   end
+  # end
+end

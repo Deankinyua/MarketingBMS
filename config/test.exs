@@ -6,8 +6,8 @@ import Config
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :marketingbsm, Marketingbsm.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "dean",
+  password: "kamanu254",
   hostname: "localhost",
   database: "marketingbsm_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,

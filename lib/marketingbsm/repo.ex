@@ -1,5 +1,7 @@
 defmodule Marketingbsm.Repo do
-  use Ecto.Repo,
-    otp_app: :marketingbsm,
-    adapter: Ecto.Adapters.Postgres
+  use AshPostgres.Repo, otp_app: :marketingbsm
+
+  def installed_extensions do
+    ["uuid-ossp", "citext", "ash-functions"]
+  end
 end

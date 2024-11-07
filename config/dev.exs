@@ -2,8 +2,8 @@ import Config
 
 # Configure your database
 config :marketingbsm, Marketingbsm.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "dean",
+  password: "kamanu254",
   hostname: "localhost",
   database: "marketingbsm_dev",
   stacktrace: true,

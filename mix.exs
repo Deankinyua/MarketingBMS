@@ -33,9 +33,11 @@ defmodule Marketingbsm.MixProject do
   defp deps do
     [
       {:ash, "~> 3.0"},
+      {:picosat_elixir, "~> 0.2"},
       {:ash_authentication, "~> 4.0"},
       {:ash_authentication_phoenix, "~> 2.0"},
       {:ash_postgres, "~> 2.0"},
+      {:bcrypt_elixir, "~> 3.0"},
       {:tremorx, git: "https://github.com/briankariuki/tremorx.git"},
       {:phoenix, "~> 1.7.14"},
       {:phoenix_ecto, "~> 4.5"},
