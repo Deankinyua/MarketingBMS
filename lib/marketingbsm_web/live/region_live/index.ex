@@ -16,73 +16,88 @@ defmodule MarketingbsmWeb.RegionLive.Index do
           sticky: true
         ) %>
 
-        <.header>
-          Listing Regions
-          <:actions>
-            <Button.button>
-              <.link patch={~p"/regions/new"}>
-                New Region
-              </.link>
-            </Button.button>
-          </:actions>
-        </.header>
-
-        <Table.table class="w-full">
-          <Table.table_head class="rounded-t-md border-b-[1px]">
-            <Table.table_row class="hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted">
-              <Table.table_cell>
-                <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                  Name
-                </Text.text>
-              </Table.table_cell>
-
-              <Table.table_cell>
-                <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                  Actions
-                </Text.text>
-              </Table.table_cell>
-            </Table.table_row>
-          </Table.table_head>
-
-          <Table.table_body
-            id="table_stream_regions"
-            phx-update="stream"
-            class="divide-y overflow-y-auto"
-          >
-            <Table.table_row
-              :for={{dom_id, region} <- @streams.regions}
-              id={"#{dom_id}"}
-              class="group hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted"
-            >
-              <.live_component
-                module={MarketingbsmWeb.RegionLive.RowComponent}
-                id={dom_id}
-                region={region}
-                dom_id={dom_id}
-              >
-                <Table.table_cell>
-                  <%= region.name %>
-                </Table.table_cell>
-              </.live_component>
-            </Table.table_row>
-          </Table.table_body>
-        </Table.table>
-
-        <.modal
-          :if={@live_action in [:new, :edit]}
-          id="region-modal"
-          show
-          on_cancel={JS.patch(~p"/regions")}
+        <Layout.flex
+          flex_direction="col"
+          align_items="start"
+          justify_content="start"
+          class="flex-1 px-8 py-8 h-full overflow-y-auto bg-gray-50/75 border-2 border-red-400 my-10"
         >
-          <.live_component
-            module={MarketingbsmWeb.RegionLive.FormComponent}
-            id={(@region && @region.id) || :new}
-            title={@page_title}
-            action={@live_action}
-            region={@region}
-            patch={~p"/regions"}
-          />
-        </.modal>
+          <Layout.flex justify_content="between" class="">
+            <Layout.flex flex_direction="col" align_items="start" class="grow">
+              <Text.title class="text-xl">
+                <Text.bold>Outlets</Text.bold>
+              </Text.title>
+
+              <Text.subtitle color="gray">
+                Regions hold Outlets.
+              </Text.subtitle>
+            </Layout.flex>
+
+            <Button.button size="xl" phx-click={JS.patch(~p"/regions/new")}>
+              <:icon>
+                <.icon name="hero-plus" />
+              </:icon>
+              New Region
+            </Button.button>
+          </Layout.flex>
+
+          <Table.table class="w-full">
+            <Table.table_head class="rounded-t-md border-b-[1px]">
+              <Table.table_row class="hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted">
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Name
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis text-center">
+                    Actions
+                  </Text.text>
+                </Table.table_cell>
+              </Table.table_row>
+            </Table.table_head>
+
+            <Table.table_body
+              id="table_stream_regions"
+              phx-update="stream"
+              class="divide-y overflow-y-auto"
+            >
+              <Table.table_row
+                :for={{dom_id, region} <- @streams.regions}
+                id={"#{dom_id}"}
+                class="group hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted"
+              >
+                <.live_component
+                  module={MarketingbsmWeb.RegionLive.RowComponent}
+                  id={dom_id}
+                  region={region}
+                  dom_id={dom_id}
+                >
+                  <Table.table_cell>
+                    <%= region.name %>
+                  </Table.table_cell>
+                </.live_component>
+              </Table.table_row>
+            </Table.table_body>
+          </Table.table>
+
+          <.modal
+            :if={@live_action in [:new, :edit]}
+            id="region-modal"
+            show
+            on_cancel={JS.patch(~p"/regions")}
+          >
+            <.live_component
+              module={MarketingbsmWeb.RegionLive.FormComponent}
+              id={(@region && @region.id) || :new}
+              title={@page_title}
+              action={@live_action}
+              region={@region}
+              patch={~p"/regions"}
+            />
+          </.modal>
+        </Layout.flex>
       </Layout.flex>
     </div>
     """
@@ -122,7 +137,8 @@ defmodule MarketingbsmWeb.RegionLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"region_id" => id}, socket) do
+  def handle_event("delete", %{"region_id" => id} = params, socket) do
+    dbg(params)
     region = Ash.get!(Marketingbsm.Outlet.Region, id)
     Ash.destroy!(region)
 

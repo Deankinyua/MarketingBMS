@@ -4,39 +4,77 @@ defmodule MarketingbsmWeb.ProjectLive.FormComponent do
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
-      <.header>
-        <%= @title %>
-        <:subtitle>Use this form to manage project records in your database.</:subtitle>
-      </.header>
+    <section>
+      <Layout.col>
+        <Text.title class="text-xl">
+          <Text.bold><%= @title %></Text.bold>
+        </Text.title>
 
-      <.simple_form
-        for={@form}
-        id="project-form"
-        phx-target={@myself}
-        phx-change="validate"
-        phx-submit="save"
-      >
-        <%= if @form.source.type == :create do %>
-          <.input field={@form[:name]} type="text" label="Name" />
-        <% end %>
+        <Text.subtitle color="gray">
+          Use this form to manage Project records in your database.
+        </Text.subtitle>
 
-        <%= if @form.source.type == :update do %>
-          <.input field={@form[:name]} type="text" label="Name" />
+        <Layout.divider class="my-4" />
 
-          <.input
-            field={@form[:is_freezed]}
-            type="select"
-            options={@freeze_selector}
-            label="Is_Freezed"
-          />
-        <% end %>
+        <.form :let={f} for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
+          <%= if @form.source.type == :create do %>
+            <Layout.col class="space-y-1.5">
+              <label for="name_field">
+                <Text.text class="text-tremor-content">
+                  Project Name
+                </Text.text>
+              </label>
 
-        <:actions>
-          <.button phx-disable-with="Saving...">Save Project</.button>
-        </:actions>
-      </.simple_form>
-    </div>
+              <Input.text_input
+                id="name"
+                name={f[:name].name}
+                placeholder="Project Name..."
+                type="text"
+                field={f[:name]}
+                value={f[:name].value}
+                required="true"
+              />
+            </Layout.col>
+          <% end %>
+
+          <%= if @form.source.type == :update do %>
+            <Layout.col class="space-y-1.5">
+              <label for="name">
+                <Text.text class="text-tremor-content">
+                  Project Name
+                </Text.text>
+              </label>
+
+              <Input.text_input
+                id="name"
+                name={@form[:name].name}
+                placeholder="New Name..."
+                type="text"
+                field={@form[:name]}
+                value={@form[:name].value}
+                required="true"
+              />
+
+              <label for="status">
+                <Text.text class="text-tremor-content">
+                  Project Status
+                </Text.text>
+              </label>
+
+              <.input id="status" field={@form[:is_freezed]} type="select" options={@freeze_selector} />
+            </Layout.col>
+          <% end %>
+
+          <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Saving...">
+            <%= if @form.source.type == :update do %>
+              Update Project
+            <% else %>
+              Create New Project
+            <% end %>
+          </Button.button>
+        </.form>
+      </Layout.col>
+    </section>
     """
   end
 

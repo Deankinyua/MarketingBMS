@@ -46,9 +46,6 @@ defmodule MarketingbsmWeb.Router do
       live "/outlets/new", ShopLive.Index, :new
       live "/outlets/:id/edit", ShopLive.Index, :edit
 
-      live "/outlets/:id", ShopLive.Show, :show
-      live "/outlets/:id/show/edit", ShopLive.Show, :edit
-
       live "/ambassadors", AmbassadorLive.Index, :index
       live "/ambassadors/new", AmbassadorLive.Index, :new
       live "/ambassadors/:id/edit", AmbassadorLive.Index, :edit

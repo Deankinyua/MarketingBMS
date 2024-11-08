@@ -16,16 +16,6 @@ defmodule MarketingbsmWeb.ShopLive.FormComponent do
           <Text.bold><%= @title %></Text.bold>
         </Text.title>
 
-        <Layout.flex
-          flex_direction="col"
-          justify_content="between"
-          align_items="end"
-          class="border px-5 py-5"
-        >
-          <div>what about flex items</div>
-          <div>what about flex items</div>
-        </Layout.flex>
-
         <Text.subtitle color="gray">
           Use this form to manage shop records in your database.
         </Text.subtitle>

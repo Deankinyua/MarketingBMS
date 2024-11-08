@@ -12,57 +12,105 @@ defmodule MarketingbsmWeb.ProjectLive.Index do
           sticky: true
         ) %>
 
-        <.header>
-          Listing Projects
-          <:actions>
-            <.link patch={~p"/projects/new"}>
-              <.button>New Project</.button>
-            </.link>
-          </:actions>
-        </.header>
-
-        <.table
-          id="projects"
-          rows={@streams.projects}
-          row_click={fn {_id, project} -> JS.navigate(~p"/projects/#{project}") end}
+        <Layout.flex
+          flex_direction="col"
+          align_items="start"
+          justify_content="start"
+          class="flex-1 px-8 py-8 h-full overflow-y-auto bg-gray-50/75 border-2 border-red-400 my-10"
         >
-          <:col :let={{_id, project}} label="Project Name"><%= project.name %></:col>
-          <:col :let={{_id, project}} label="Freezed"><%= project.is_freezed %></:col>
+          <Layout.flex justify_content="between" class="">
+            <Layout.flex flex_direction="col" align_items="start" class="grow">
+              <Text.title class="text-xl">
+                <Text.bold>Projects</Text.bold>
+              </Text.title>
 
-          <:action :let={{_id, project}}>
-            <div class="sr-only">
-              <.link navigate={~p"/projects/#{project}"}>Show</.link>
-            </div>
+              <Text.subtitle color="gray">
+                This is where you will create a project.
+              </Text.subtitle>
+              <Text.subtitle color="gray" class="mb-10">
+                Afterwards go to the reporting templates page to create the respective templates.
+              </Text.subtitle>
+            </Layout.flex>
 
-            <.link patch={~p"/projects/#{project}/edit"}>Edit</.link>
-          </:action>
+            <Button.button size="xl" phx-click={JS.patch(~p"/projects/new")}>
+              <:icon>
+                <.icon name="hero-plus" />
+              </:icon>
+              New Project
+            </Button.button>
+          </Layout.flex>
 
-          <:action :let={{id, project}}>
-            <.link
-              phx-click={JS.push("delete", value: %{id: project.id}) |> hide("##{id}")}
-              data-confirm="Are you sure?"
+          <Table.table class="w-full">
+            <Table.table_head class="rounded-t-md border-b-[1px]">
+              <Table.table_row class="hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted">
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Name
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Status
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis text-center">
+                    Actions
+                  </Text.text>
+                </Table.table_cell>
+              </Table.table_row>
+            </Table.table_head>
+
+            <Table.table_body
+              id="table_stream_projects"
+              phx-update="stream"
+              class="divide-y overflow-y-auto"
             >
-              Delete
-            </.link>
-          </:action>
-        </.table>
+              <Table.table_row
+                :for={{dom_id, project} <- @streams.projects}
+                id={"#{dom_id}"}
+                class="group hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted"
+              >
+                <.live_component
+                  module={MarketingbsmWeb.ProjectLive.RowComponent}
+                  id={dom_id}
+                  project={project}
+                  dom_id={dom_id}
+                >
+                  <Table.table_cell>
+                    <%= project.name %>
+                  </Table.table_cell>
+                  <Table.table_cell>
+                    <%= if project.is_freezed == true do %>
+                      Freezed
+                    <% else %>
+                      Not Freezed
+                    <% end %>
+                  </Table.table_cell>
+                </.live_component>
+              </Table.table_row>
+            </Table.table_body>
+          </Table.table>
 
-        <.modal
-          :if={@live_action in [:new, :edit]}
-          id="project-modal"
-          show
-          on_cancel={JS.patch(~p"/projects")}
-        >
-          <.live_component
-            module={MarketingbsmWeb.ProjectLive.FormComponent}
-            id={(@project && @project.id) || :new}
-            title={@page_title}
-            current_user={@current_user}
-            action={@live_action}
-            project={@project}
-            patch={~p"/projects"}
-          />
-        </.modal>
+          <.modal
+            :if={@live_action in [:new, :edit]}
+            id="project-modal"
+            show
+            on_cancel={JS.patch(~p"/projects")}
+          >
+            <.live_component
+              module={MarketingbsmWeb.ProjectLive.FormComponent}
+              id={(@project && @project.id) || :new}
+              title={@page_title}
+              current_user={@current_user}
+              action={@live_action}
+              project={@project}
+              patch={~p"/projects"}
+            />
+          </.modal>
+        </Layout.flex>
       </Layout.flex>
     </div>
     """
@@ -110,7 +158,7 @@ defmodule MarketingbsmWeb.ProjectLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
+  def handle_event("delete", %{"project_id" => id}, socket) do
     project =
       Ash.get!(Marketingbsm.ProjectGeneral.Project, id, actor: socket.assigns.current_user)
 
