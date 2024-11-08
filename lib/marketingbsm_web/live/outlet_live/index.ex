@@ -1,9 +1,7 @@
-defmodule MarketingbsmWeb.RegionLive.Index do
+defmodule MarketingbsmWeb.ShopLive.Index do
   use MarketingbsmWeb, :live_view
 
-  alias Tremorx.Components.Text
   alias Tremorx.Components.Table
-  alias Tremorx.Components.Button
 
   @impl true
   def render(assigns) do
@@ -15,13 +13,12 @@ defmodule MarketingbsmWeb.RegionLive.Index do
           id: "live_drawer",
           sticky: true
         ) %>
-
         <.header>
-          Listing Regions
+          Listing Outlets
           <:actions>
             <Button.button>
-              <.link patch={~p"/regions/new"}>
-                New Region
+              <.link patch={~p"/outlets/new"}>
+                New Shop
               </.link>
             </Button.button>
           </:actions>
@@ -45,23 +42,23 @@ defmodule MarketingbsmWeb.RegionLive.Index do
           </Table.table_head>
 
           <Table.table_body
-            id="table_stream_regions"
+            id="table_stream_outlets"
             phx-update="stream"
             class="divide-y overflow-y-auto"
           >
             <Table.table_row
-              :for={{dom_id, region} <- @streams.regions}
+              :for={{dom_id, outlet} <- @streams.outlets}
               id={"#{dom_id}"}
               class="group hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted"
             >
               <.live_component
-                module={MarketingbsmWeb.RegionLive.RowComponent}
+                module={MarketingbsmWeb.ShopLive.RowComponent}
                 id={dom_id}
-                region={region}
+                outlet={outlet}
                 dom_id={dom_id}
               >
                 <Table.table_cell>
-                  <%= region.name %>
+                  <%= outlet.name %>
                 </Table.table_cell>
               </.live_component>
             </Table.table_row>
@@ -70,17 +67,18 @@ defmodule MarketingbsmWeb.RegionLive.Index do
 
         <.modal
           :if={@live_action in [:new, :edit]}
-          id="region-modal"
+          id="shop-modal"
           show
-          on_cancel={JS.patch(~p"/regions")}
+          on_cancel={JS.patch(~p"/outlets")}
         >
           <.live_component
-            module={MarketingbsmWeb.RegionLive.FormComponent}
-            id={(@region && @region.id) || :new}
+            module={MarketingbsmWeb.ShopLive.FormComponent}
+            id={(@shop && @shop.id) || :new}
             title={@page_title}
+            current_user={@current_user}
             action={@live_action}
-            region={@region}
-            patch={~p"/regions"}
+            shop={@shop}
+            patch={~p"/outlets"}
           />
         </.modal>
       </Layout.flex>
@@ -90,7 +88,13 @@ defmodule MarketingbsmWeb.RegionLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :regions, Ash.read!(Marketingbsm.Outlet.Region))}
+    {:ok,
+     socket
+     |> stream(
+       :outlets,
+       Ash.read!(Marketingbsm.Outlet.Shop, actor: socket.assigns[:current_user])
+     )
+     |> assign_new(:current_user, fn -> nil end)}
   end
 
   @impl true
@@ -100,32 +104,32 @@ defmodule MarketingbsmWeb.RegionLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit Region")
-    |> assign(:region, Ash.get!(Marketingbsm.Outlet.Region, id))
+    |> assign(:page_title, "Edit Shop")
+    |> assign(:shop, Ash.get!(Marketingbsm.Outlet.Shop, id, actor: socket.assigns.current_user))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "New Region")
-    |> assign(:region, nil)
+    |> assign(:page_title, "New Shop")
+    |> assign(:shop, nil)
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Regions")
-    |> assign(:region, nil)
+    |> assign(:page_title, "Listing Outlets")
+    |> assign(:shop, nil)
   end
 
   @impl true
-  def handle_info({MarketingbsmWeb.RegionLive.FormComponent, {:saved, region}}, socket) do
-    {:noreply, stream_insert(socket, :regions, region)}
+  def handle_info({MarketingbsmWeb.ShopLive.FormComponent, {:saved, shop}}, socket) do
+    {:noreply, stream_insert(socket, :outlets, shop)}
   end
 
   @impl true
-  def handle_event("delete", %{"region_id" => id}, socket) do
-    region = Ash.get!(Marketingbsm.Outlet.Region, id)
-    Ash.destroy!(region)
+  def handle_event("delete", %{"outlet_id" => id}, socket) do
+    outlet = Ash.get!(Marketingbsm.Outlet.Shop, id)
+    Ash.destroy!(outlet)
 
-    {:noreply, stream_delete(socket, :regions, region)}
+    {:noreply, stream_delete(socket, :outlets, outlet)}
   end
 end

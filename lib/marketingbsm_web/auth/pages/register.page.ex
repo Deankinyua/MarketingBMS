@@ -1,6 +1,5 @@
 defmodule MarketingbsmWeb.RegisterPage do
   use MarketingbsmWeb, :live_view
-
   alias Tremorx.Components.Layout
   alias Tremorx.Components.Text
   alias AshPhoenix.Form
