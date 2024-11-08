@@ -7,7 +7,7 @@ defmodule MarketingbsmWeb.ShopLive.Index do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="w-full h-full px-4 py-4">
+    <div class="w-full h-full">
       <Layout.flex align_items="start" class="h-screen overflow-y-hidden">
         <%= live_render(@socket, MarketingbsmWeb.LiveDrawer,
           session: %{"active_tab" => "outlet", "user" => "user?id=#{@current_user.id}"},
@@ -19,7 +19,7 @@ defmodule MarketingbsmWeb.ShopLive.Index do
           flex_direction="col"
           align_items="start"
           justify_content="start"
-          class="flex-1 px-8 py-8 h-full overflow-y-auto bg-gray-50/75 border-2 border-red-400 my-10"
+          class="flex-1 px-8 py-8 h-full overflow-y-auto bg-gray-50/75"
         >
           <Layout.flex justify_content="between" class="">
             <Layout.flex flex_direction="col" align_items="start" class="grow">

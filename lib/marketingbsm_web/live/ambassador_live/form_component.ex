@@ -6,31 +6,35 @@ defmodule MarketingbsmWeb.AmbassadorLive.FormComponent do
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
-      <.header>
-        <%= @title %>
-        <:subtitle>Use this form to manage ambassador records in your database .</:subtitle>
-      </.header>
+    <section>
+      <Layout.col>
+        <Text.title class="text-xl">
+          <Text.bold><%= @title %></Text.bold>
+        </Text.title>
 
-      <.simple_form
-        for={@form}
-        id="ambassador-form"
-        phx-target={@myself}
-        phx-change="validate"
-        phx-submit="save"
-      >
-        <%= if @form.source.type == :create do %>
-          <.input field={@form[:ambassador_email]} type="text" label="Email" />
-        <% end %>
-        <%= if @form.source.type == :update do %>
-          <.input field={@form[:total_days_worked]} type="number" label="Total days worked" />
-        <% end %>
+        <Text.subtitle color="gray">
+          Enter the Email you registered with.
+        </Text.subtitle>
 
-        <:actions>
-          <.button phx-disable-with="Saving...">Save Ambassador</.button>
-        </:actions>
-      </.simple_form>
-    </div>
+        <Layout.divider class="my-4" />
+
+        <.form :let={f} for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
+          <Layout.col class="space-y-1.5">
+            <label for="email">
+              <Text.text class="text-tremor-content">
+                Email
+              </Text.text>
+            </label>
+
+            <.input field={f[:ambassador_email]} type="text" label="Email" />
+          </Layout.col>
+
+          <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Saving...">
+            Register
+          </Button.button>
+        </.form>
+      </Layout.col>
+    </section>
     """
   end
 
@@ -43,7 +47,9 @@ defmodule MarketingbsmWeb.AmbassadorLive.FormComponent do
   end
 
   @impl true
-  def handle_event("validate", %{"ambassador" => ambassador_params}, socket) do
+  def handle_event("validate", %{"ambassador" => ambassador_params} = params, socket) do
+    dbg(params)
+
     {:noreply,
      assign(socket, form: AshPhoenix.Form.validate(socket.assigns.form, ambassador_params))}
   end
