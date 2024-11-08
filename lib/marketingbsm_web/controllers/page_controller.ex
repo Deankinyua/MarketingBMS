@@ -9,6 +9,7 @@ defmodule MarketingbsmWeb.PageController do
 
   def home(conn, _params) do
     if conn.assigns.current_user do
+      dbg(conn)
       redirect(conn, to: "/outlets")
     else
       redirect(conn, to: "/sign-in")

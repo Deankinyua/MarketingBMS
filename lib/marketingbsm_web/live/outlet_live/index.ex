@@ -88,13 +88,15 @@ defmodule MarketingbsmWeb.ShopLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+
+
     {:ok,
      socket
      |> stream(
        :outlets,
        Ash.read!(Marketingbsm.Outlet.Shop, actor: socket.assigns[:current_user])
      )
-     |> assign_new(:current_user, fn -> nil end)}
+     }
   end
 
   @impl true
