@@ -33,7 +33,7 @@ defmodule MarketingbsmWeb.NavigationComponent do
                     Theme.get_sizing_style("xl", "width")
                   ])
                 }
-                name={"hero-home" <> if(@active_tab == "outlet", do: "-solid", else: "")}
+                name={"hero-building-storefront" <> if(@active_tab == "outlet", do: "-solid", else: "")}
               />
             </:icon>
           </.menu_item>
@@ -52,7 +52,7 @@ defmodule MarketingbsmWeb.NavigationComponent do
                     Theme.get_sizing_style("xl", "width")
                   ])
                 }
-                name={"hero-briefcase" <> if(@active_tab == "project", do: "-solid", else: "")}
+                name={"hero-folder-open" <> if(@active_tab == "project", do: "-solid", else: "")}
               />
             </:icon>
           </.menu_item>
@@ -71,7 +71,7 @@ defmodule MarketingbsmWeb.NavigationComponent do
                     Theme.get_sizing_style("xl", "width")
                   ])
                 }
-                name={"hero-building-office-2" <> if(@active_tab == "registry", do: "-solid", else: "")}
+                name={"hero-clipboard-document-list" <> if(@active_tab == "registry", do: "-solid", else: "")}
               />
             </:icon>
           </.menu_item>
@@ -90,7 +90,7 @@ defmodule MarketingbsmWeb.NavigationComponent do
                     Theme.get_sizing_style("xl", "width")
                   ])
                 }
-                name={"hero-rectangle-stack" <> if(@active_tab == "region", do: "-solid", else: "")}
+                name={"hero-building-library" <> if(@active_tab == "region", do: "-solid", else: "")}
               />
             </:icon>
           </.menu_item>
@@ -109,7 +109,7 @@ defmodule MarketingbsmWeb.NavigationComponent do
                     Theme.get_sizing_style("xl", "width")
                   ])
                 }
-                name={"hero-rectangle-stack" <> if(@active_tab == "ambassador", do: "-solid", else: "")}
+                name={"hero-user-plus" <> if(@active_tab == "ambassador", do: "-solid", else: "")}
               />
             </:icon>
           </.menu_item>
