@@ -34,7 +34,9 @@ config :marketingbsm, Marketingbsm.Mailer, adapter: Swoosh.Adapters.Local
 config :marketingbsm,
   ash_domains: [
     Marketingbsm.Accounts,
-    Marketingbsm.Outlet
+    Marketingbsm.Outlet,
+    Marketingbsm.ProjectGeneral,
+    Marketingbsm.Activation
   ]
 
 # Configure esbuild (the version is required)

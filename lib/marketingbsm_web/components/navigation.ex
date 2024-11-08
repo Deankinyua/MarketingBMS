@@ -20,8 +20,8 @@ defmodule MarketingbsmWeb.NavigationComponent do
       <Layout.flex flex_direction="col" class="flex-1">
         <Layout.grid class="border-red-400 border-4 space-y-1 w-full first:mt-3">
           <.menu_item
-            on_click={on_live_navigate(:home, ~p"/outlets")}
-            active={@active_tab == "reports"}
+            on_click={on_live_navigate(:outlet, ~p"/outlets")}
+            active={@active_tab == "outlet"}
             name="Outlets"
           >
             <:icon>
@@ -33,14 +33,14 @@ defmodule MarketingbsmWeb.NavigationComponent do
                     Theme.get_sizing_style("xl", "width")
                   ])
                 }
-                name={"hero-home" <> if(@active_tab == "home", do: "-solid", else: "")}
+                name={"hero-home" <> if(@active_tab == "outlet", do: "-solid", else: "")}
               />
             </:icon>
           </.menu_item>
 
           <.menu_item
-            on_click={on_live_navigate(:workspace, ~p"/projects")}
-            active={@active_tab == "workspace"}
+            on_click={on_live_navigate(:project, ~p"/projects")}
+            active={@active_tab == "project"}
             name="Projects"
           >
             <:icon>
@@ -52,14 +52,14 @@ defmodule MarketingbsmWeb.NavigationComponent do
                     Theme.get_sizing_style("xl", "width")
                   ])
                 }
-                name={"hero-briefcase" <> if(@active_tab == "workspace", do: "-solid", else: "")}
+                name={"hero-briefcase" <> if(@active_tab == "project", do: "-solid", else: "")}
               />
             </:icon>
           </.menu_item>
 
           <.menu_item
-            on_click={on_live_navigate(:organization, ~p"/registry")}
-            active={@active_tab == "organization"}
+            on_click={on_live_navigate(:registry, ~p"/registry")}
+            active={@active_tab == "registry"}
             name="Registry"
           >
             <:icon>
@@ -71,14 +71,14 @@ defmodule MarketingbsmWeb.NavigationComponent do
                     Theme.get_sizing_style("xl", "width")
                   ])
                 }
-                name={"hero-building-office-2" <> if(@active_tab == "organization", do: "-solid", else: "")}
+                name={"hero-building-office-2" <> if(@active_tab == "registry", do: "-solid", else: "")}
               />
             </:icon>
           </.menu_item>
 
           <.menu_item
-            on_click={on_live_navigate(:task, ~p"/regions")}
-            active={@active_tab == "task"}
+            on_click={on_live_navigate(:region, ~p"/regions")}
+            active={@active_tab == "region"}
             name="Regions"
           >
             <:icon>
@@ -90,7 +90,26 @@ defmodule MarketingbsmWeb.NavigationComponent do
                     Theme.get_sizing_style("xl", "width")
                   ])
                 }
-                name={"hero-rectangle-stack" <> if(@active_tab == "tasks", do: "-solid", else: "")}
+                name={"hero-rectangle-stack" <> if(@active_tab == "region", do: "-solid", else: "")}
+              />
+            </:icon>
+          </.menu_item>
+
+          <.menu_item
+            on_click={on_live_navigate(:ambassador, ~p"/ambassadors")}
+            active={@active_tab == "ambassador"}
+            name="Ambassadors"
+          >
+            <:icon>
+              <%!-- hero-rectangle-stack-solid --%>
+              <.icon
+                class={
+                  Tails.classes([
+                    Theme.get_sizing_style("xl", "height"),
+                    Theme.get_sizing_style("xl", "width")
+                  ])
+                }
+                name={"hero-rectangle-stack" <> if(@active_tab == "ambassador", do: "-solid", else: "")}
               />
             </:icon>
           </.menu_item>
@@ -98,8 +117,8 @@ defmodule MarketingbsmWeb.NavigationComponent do
 
         <Layout.grid class="space-y-1 w-full">
           <.menu_item
-            on_click={on_live_navigate(:notification, ~p"/outlets")}
-            active={@active_tab == "notification"}
+            on_click={on_live_navigate(:outlet, ~p"/outlets")}
+            active={@active_tab == "outlet"}
             name="Notifications"
           >
             <:icon>
@@ -111,7 +130,7 @@ defmodule MarketingbsmWeb.NavigationComponent do
                     Theme.get_sizing_style("xl", "width")
                   ])
                 }
-                name={"hero-bell-alert" <> if(@active_tab == "notification", do: "-solid", else: "")}
+                name={"hero-bell-alert" <> if(@active_tab == "outlet", do: "-solid", else: "")}
               />
             </:icon>
           </.menu_item>

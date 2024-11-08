@@ -9,7 +9,7 @@ defmodule MarketingbsmWeb.ShopLive.Index do
     <div class="w-full h-full px-4 py-4">
       <Layout.flex align_items="start" class="h-screen overflow-y-hidden">
         <%= live_render(@socket, MarketingbsmWeb.LiveDrawer,
-          session: %{"active_tab" => "organization", "user" => "user?id=#{@current_user.id}"},
+          session: %{"active_tab" => "outlet", "user" => "user?id=#{@current_user.id}"},
           id: "live_drawer",
           sticky: true
         ) %>
@@ -88,15 +88,12 @@ defmodule MarketingbsmWeb.ShopLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-
-
     {:ok,
      socket
      |> stream(
        :outlets,
        Ash.read!(Marketingbsm.Outlet.Shop, actor: socket.assigns[:current_user])
-     )
-     }
+     )}
   end
 
   @impl true
