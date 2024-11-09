@@ -4,64 +4,355 @@ defmodule MarketingbsmWeb.TemplateLive.FormComponent do
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
-      <.header>
-        <%= @title %>
-        <:subtitle>Use this form to manage label records in your database.</:subtitle>
-      </.header>
+    <section>
+      <Layout.col>
+        <Text.title class="text-xl">
+          <Text.bold><%= @title %></Text.bold>
+        </Text.title>
 
-      <.simple_form
-        for={@form}
-        id="label-form"
-        phx-target={@myself}
-        phx-change="validate"
-        phx-submit="save"
-      >
-        <%= if @form.source.type == :create do %>
-          <.input
-            type="select"
-            field={@form[:project_id]}
-            options={@project_selector}
-            label="Project Name"
-          />
-          <.input field={@form[:field_1]} type="text" label="Field 1" />
-          <.input field={@form[:field_2]} type="text" label="Field 2" />
-          <.input field={@form[:field_3]} type="text" label="Field 3" />
-          <.input field={@form[:field_4]} type="text" label="Field 4" />
-          <.input field={@form[:field_5]} type="text" label="Field 5" />
-          <.input field={@form[:field_6]} type="text" label="Field 6" />
-          <.input field={@form[:field_7]} type="text" label="Field 7" />
-          <.input field={@form[:field_8]} type="text" label="Field 8" />
-          <.input field={@form[:field_9]} type="text" label="Field 9" />
-          <.input field={@form[:field_10]} type="text" label="Field 10" />
-          <.input field={@form[:field_11]} type="text" label="Field 11" />
-          <.input field={@form[:field_12]} type="text" label="Field 12" />
-          <.input field={@form[:field_13]} type="text" label="Field 13" />
-          <.input field={@form[:field_14]} type="text" label="Field 14" />
-          <.input field={@form[:field_15]} type="text" label="Field 15" />
-          <.input field={@form[:field_16]} type="text" label="Field 16" />
-          <.input field={@form[:field_17]} type="text" label="Field 17" />
-          <.input field={@form[:field_18]} type="text" label="Field 18" />
-          <.input field={@form[:field_19]} type="text" label="Field 19" />
-          <.input field={@form[:field_20]} type="text" label="Field 20" />
-        <% end %>
-        <%= if @form.source.type == :update do %>
-          <.input field={@form[:field_1]} type="text" label="Field 1" /><.input
-            field={@form[:field_2]}
-            type="text"
-            label="Field 2"
-          /><.input field={@form[:field_3]} type="text" label="Field 3" /><.input
-            field={@form[:field_4]}
-            type="text"
-            label="Field 4"
-          /><.input field={@form[:field_5]} type="text" label="Field 5" />
-        <% end %>
+        <Text.subtitle color="gray">
+          Use this form to Make Reporting Templates For Respective Projects.
+        </Text.subtitle>
 
-        <:actions>
-          <.button phx-disable-with="Saving...">Save Template</.button>
-        </:actions>
-      </.simple_form>
-    </div>
+        <Layout.divider class="my-4" />
+
+        <.form :let={f} for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
+          <Layout.col class="space-y-1.5">
+            <label for="project_name">
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Project Name
+              </Text.text>
+            </label>
+
+            <.input type="select" field={f[:project_id]} options={@project_selector} required />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 1
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_1].name}
+              placeholder="Field 1..."
+              type="text"
+              field={f[:field_1]}
+              value={f[:field_1].value}
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 2
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_2].name}
+              placeholder="Field 2..."
+              type="text"
+              field={f[:field_2]}
+              value={f[:field_2].value}
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 3
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_3].name}
+              placeholder="Field 3..."
+              type="text"
+              field={f[:field_3]}
+              value={f[:field_3].value}
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 4
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_4].name}
+              placeholder="Field 4..."
+              type="text"
+              field={f[:field_4]}
+              value={f[:field_4].value}
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 5
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_5].name}
+              placeholder="Field 5..."
+              type="text"
+              field={f[:field_5]}
+              value={f[:field_5].value}
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 6
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_6].name}
+              placeholder="Field 6..."
+              type="text"
+              field={f[:field_6]}
+              value={f[:field_6].value}
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 7
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_7].name}
+              placeholder="Field 7..."
+              type="text"
+              field={f[:field_7]}
+              value={f[:field_7].value}
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 8
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_8].name}
+              placeholder="Field 8..."
+              type="text"
+              field={f[:field_8]}
+              value={f[:field_8].value}
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 9
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_9].name}
+              placeholder="Field 9..."
+              type="text"
+              field={f[:field_9]}
+              value={f[:field_9].value}
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 10
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_10].name}
+              placeholder="Field 10..."
+              type="text"
+              field={f[:field_10]}
+              value={f[:field_10].value}
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 11
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_11].name}
+              placeholder="Field 11..."
+              type="text"
+              field={f[:field_11]}
+              value={f[:field_11].value}
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 12
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_12].name}
+              placeholder="Field 12..."
+              type="text"
+              field={f[:field_12]}
+              value={f[:field_12].value}
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 13
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_13].name}
+              placeholder="Field 13..."
+              type="text"
+              field={f[:field_13]}
+              value={f[:field_13].value}
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 14
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_14].name}
+              placeholder="Field 14..."
+              type="text"
+              field={f[:field_14]}
+              value={f[:field_14].value}
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 15
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_15].name}
+              placeholder="Field 15..."
+              type="text"
+              field={f[:field_15]}
+              value={f[:field_15].value}
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 16
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_16].name}
+              placeholder="Field 16..."
+              type="text"
+              field={f[:field_16]}
+              value={f[:field_16].value}
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 17
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_17].name}
+              placeholder="Field 17..."
+              type="text"
+              field={f[:field_17]}
+              value={f[:field_17].value}
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 18
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_18].name}
+              placeholder="Field 18..."
+              type="text"
+              field={f[:field_18]}
+              value={f[:field_18].value}
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 19
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_19].name}
+              placeholder="Field 19..."
+              type="text"
+              field={f[:field_19]}
+              value={f[:field_19].value}
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Field 20
+              </Text.text>
+            </label>
+
+            <Input.text_input
+              name={f[:field_20].name}
+              placeholder="Field 20..."
+              type="text"
+              field={f[:field_20]}
+              value={f[:field_20].value}
+            />
+          </Layout.col>
+
+          <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Saving...">
+            Create Template
+          </Button.button>
+        </.form>
+      </Layout.col>
+    </section>
     """
   end
 

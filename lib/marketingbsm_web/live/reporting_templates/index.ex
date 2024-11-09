@@ -39,31 +39,229 @@ defmodule MarketingbsmWeb.TemplateLive.Index do
             </Button.button>
           </Layout.flex>
 
-          <.table id="templates" rows={@streams.templates}>
-            <:col :let={{_id, template}} label="Project Name">
-              <%= ProjectGeneral.get_project_by_id!(template.project_id).name %>
-            </:col>
-            <:col :let={{_id, template}} label="Field 1"><%= template.field_1 %></:col>
-            <:col :let={{_id, template}} label="Field 2"><%= template.field_2 %></:col>
-            <:col :let={{_id, template}} label="Field 3"><%= template.field_3 %></:col>
-            <:col :let={{_id, template}} label="Field 4"><%= template.field_4 %></:col>
-            <:col :let={{_id, template}} label="Field 5"><%= template.field_5 %></:col>
-            <:col :let={{_id, template}} label="Field 6"><%= template.field_6 %></:col>
-            <:col :let={{_id, template}} label="Field 7"><%= template.field_7 %></:col>
-            <:col :let={{_id, template}} label="Field 8"><%= template.field_8 %></:col>
-            <:col :let={{_id, template}} label="Field 9"><%= template.field_9 %></:col>
-            <:col :let={{_id, template}} label="Field 10"><%= template.field_10 %></:col>
-            <:col :let={{_id, template}} label="Field 11"><%= template.field_11 %></:col>
-            <:col :let={{_id, template}} label="Field 12"><%= template.field_12 %></:col>
-            <:col :let={{_id, template}} label="Field 13"><%= template.field_13 %></:col>
-            <:col :let={{_id, template}} label="Field 14"><%= template.field_14 %></:col>
-            <:col :let={{_id, template}} label="Field 15"><%= template.field_15 %></:col>
-            <:col :let={{_id, template}} label="Field 16"><%= template.field_16 %></:col>
-            <:col :let={{_id, template}} label="Field 17"><%= template.field_17 %></:col>
-            <:col :let={{_id, template}} label="Field 18"><%= template.field_18 %></:col>
-            <:col :let={{_id, template}} label="Field 19"><%= template.field_19 %></:col>
-            <:col :let={{_id, template}} label="Field 20"><%= template.field_20 %></:col>
-          </.table>
+          <Table.table class="w-full">
+            <Table.table_head class="rounded-t-md border-b-[1px]">
+              <Table.table_row class="hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted">
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Project Name
+                  </Text.text>
+                </Table.table_cell>
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 1
+                  </Text.text>
+                </Table.table_cell>
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 2
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 3
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 4
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 5
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 6
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 7
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 8
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 9
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 10
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 11
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 12
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 13
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 14
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 15
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 16
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 17
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 18
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 19
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Field 20
+                  </Text.text>
+                </Table.table_cell>
+              </Table.table_row>
+            </Table.table_head>
+
+            <Table.table_body
+              id="table_stream_outlets"
+              phx-update="stream"
+              class="divide-y overflow-y-auto"
+            >
+              <Table.table_row
+                :for={{dom_id, template} <- @streams.templates}
+                id={"#{dom_id}"}
+                class="group hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted"
+              >
+                <Table.table_cell>
+                  <%= ProjectGeneral.get_project_by_id!(template.project_id).name %>
+                </Table.table_cell>
+                <Table.table_cell>
+                  <%= template.field_1 %>
+                </Table.table_cell>
+                <Table.table_cell>
+                  <%= template.field_2 %>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <%= template.field_3 %>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <%= template.field_4 %>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <%= template.field_5 %>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <%= template.field_6 %>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <%= template.field_7 %>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <%= template.field_8 %>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <%= template.field_9 %>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <%= template.field_10 %>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <%= template.field_11 %>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <%= template.field_12 %>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <%= template.field_13 %>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <%= template.field_14 %>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <%= template.field_15 %>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <%= template.field_16 %>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <%= template.field_17 %>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <%= template.field_18 %>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <%= template.field_19 %>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <%= template.field_20 %>
+                </Table.table_cell>
+              </Table.table_row>
+            </Table.table_body>
+          </Table.table>
 
           <.modal
             :if={@live_action in [:new, :edit]}
@@ -121,8 +319,8 @@ defmodule MarketingbsmWeb.TemplateLive.Index do
     |> assign(:template, nil)
   end
 
-  # @impl true
-  # def handle_info({MarketingbsmWeb.templateLive.FormComponent, {:saved, template}}, socket) do
-  #   {:noreply, stream_insert(socket, :templates, template)}
-  # end
+  @impl true
+  def handle_info({MarketingbsmWeb.TemplateLive.FormComponent, {:saved, template}}, socket) do
+    {:noreply, stream_insert(socket, :templates, template)}
+  end
 end
