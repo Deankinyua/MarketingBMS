@@ -30,6 +30,10 @@ defmodule MarketingbsmWeb.ShopLive.Index do
               <Text.subtitle color="gray">
                 Information related to the Outlets.
               </Text.subtitle>
+
+              <Text.subtitle color="gray">
+                There are <strong><%= @count %></strong> Outlets.
+              </Text.subtitle>
             </Layout.flex>
 
             <Button.button size="xl" phx-click={JS.patch(~p"/outlets/new")}>
@@ -115,12 +119,20 @@ defmodule MarketingbsmWeb.ShopLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+    socket =
+      socket
+      |> assign(:count, get_count())
+
     {:ok,
      socket
      |> stream(
        :outlets,
        Ash.read!(Marketingbsm.Outlet.Shop, actor: socket.assigns[:current_user])
      )}
+  end
+
+  def get_count do
+    Enum.count(Ash.read!(Marketingbsm.Outlet.Shop))
   end
 
   @impl true
@@ -148,6 +160,13 @@ defmodule MarketingbsmWeb.ShopLive.Index do
 
   @impl true
   def handle_info({MarketingbsmWeb.ShopLive.FormComponent, {:saved, shop}}, socket) do
+    dbg(shop)
+    dbg(socket.assigns.streams.outlets)
+
+    socket =
+      socket
+      |> assign(:count, socket.assigns.count + 1)
+
     {:noreply, stream_insert(socket, :outlets, shop)}
   end
 

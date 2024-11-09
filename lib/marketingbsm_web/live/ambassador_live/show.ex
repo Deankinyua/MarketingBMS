@@ -42,15 +42,13 @@ defmodule MarketingbsmWeb.AmbassadorLive.Show do
   end
 
   @impl true
-  def handle_params(%{"ambassador_id" => ambassador_id}, _, socket) do
+  def handle_params(%{"id" => id}, _, socket) do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(
        :ambassador,
-       Ash.get!(Marketingbsm.Activation.Ambassador, ambassador_id,
-         actor: socket.assigns.current_user
-       )
+       Ash.get!(Marketingbsm.Activation.Ambassador, id, actor: socket.assigns.current_user)
      )}
   end
 

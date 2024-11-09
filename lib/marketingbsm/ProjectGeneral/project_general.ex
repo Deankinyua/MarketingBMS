@@ -24,7 +24,7 @@ defmodule Marketingbsm.ProjectGeneral do
       # <Function> <Action>
       define :add_label, action: :create
       define :update_label, action: :update
-      define :list_labels, action: :read
+      define :list_templates, action: :read
       define :get_template_by_project_id, args: [:project_id], action: :by_id
     end
   end

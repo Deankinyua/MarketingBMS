@@ -26,7 +26,7 @@ defmodule MarketingbsmWeb.AmbassadorLive.FormComponent do
               </Text.text>
             </label>
 
-            <.input field={f[:ambassador_email]} type="text" label="Email" />
+            <.input field={@form[:ambassador_email]} type="text" label="Email" />
           </Layout.col>
 
           <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Saving...">
@@ -59,7 +59,7 @@ defmodule MarketingbsmWeb.AmbassadorLive.FormComponent do
 
     case Accounts.get_user(email) do
       {:ok, user} ->
-        ambassador_params = %{ambassador_id: user.id}
+        ambassador_params = %{id: user.id}
 
         case AshPhoenix.Form.submit(socket.assigns.form, params: ambassador_params) do
           {:ok, ambassador} ->

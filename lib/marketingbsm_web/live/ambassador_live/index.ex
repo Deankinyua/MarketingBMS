@@ -62,7 +62,7 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
                 class="group hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted"
               >
                 <Table.table_cell>
-                  <%= ambassador.name %>
+                  <%= Accounts.get_user_by_id!(ambassador.id).name %>
                 </Table.table_cell>
               </Table.table_row>
             </Table.table_body>
@@ -107,7 +107,7 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
     ambassadors = Activation.list_ambassadors!()
 
     for ambassador <- ambassadors do
-      Accounts.get_user_by_id!(ambassador.ambassador_id)
+      ambassador
     end
   end
 
@@ -116,14 +116,12 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"ambassador_id" => ambassador_id}) do
+  defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Ambassador")
     |> assign(
       :ambassador,
-      Ash.get!(Marketingbsm.Activation.Ambassador, ambassador_id,
-        actor: socket.assigns.current_user
-      )
+      Ash.get!(Marketingbsm.Activation.Ambassador, id, actor: socket.assigns.current_user)
     )
   end
 
@@ -141,6 +139,10 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
 
   @impl true
   def handle_info({MarketingbsmWeb.AmbassadorLive.FormComponent, {:saved, ambassador}}, socket) do
+    socket =
+      socket
+      |> assign(:count, socket.assigns.count + 1)
+
     {:noreply, stream_insert(socket, :ambassadors, ambassador)}
   end
 end

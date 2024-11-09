@@ -21,7 +21,9 @@ defmodule Marketingbsm.Activation.Ambassador do
 
   # Attributes are simple pieces of data that exist in your resource
   attributes do
-    attribute :ambassador_id, :uuid do
+    #  I am introducing a feature that will outline the availability of the ambassador
+
+    attribute :id, :uuid do
       allow_nil? false
       primary_key? true
     end
@@ -39,7 +41,7 @@ defmodule Marketingbsm.Activation.Ambassador do
     create :create do
       # accept name as input
       # * accept behaves like cast/3 in ecto changesets
-      accept [:ambassador_id, :total_days_worked]
+      accept [:id, :total_days_worked]
     end
 
     update :update do
@@ -50,12 +52,12 @@ defmodule Marketingbsm.Activation.Ambassador do
     # Defines custom read action which fetches post by id.
     read :by_id do
       # This action has one argument :id of type :uuid
-      argument :ambassador_id, :uuid, allow_nil?: false
+      argument :id, :uuid, allow_nil?: false
       # Tells us we expect this action to return a single result
       get? true
       # Filters the `:id` given in the argument
       # against the `id` of each element in the resource
-      filter expr(ambassador_id == ^arg(:ambassador_id))
+      filter expr(id == ^arg(:id))
     end
   end
 end

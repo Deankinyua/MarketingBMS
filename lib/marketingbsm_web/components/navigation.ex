@@ -58,6 +58,25 @@ defmodule MarketingbsmWeb.NavigationComponent do
           </.menu_item>
 
           <.menu_item
+            on_click={on_live_navigate(:project, ~p"/templates")}
+            active={@active_tab == "template"}
+            name="Reporting Templates"
+          >
+            <:icon>
+              <%!-- hero-briefcase-solid --%>
+              <.icon
+                class={
+                  Tails.classes([
+                    Theme.get_sizing_style("xl", "height"),
+                    Theme.get_sizing_style("xl", "width")
+                  ])
+                }
+                name={"hero-folder-open" <> if(@active_tab == "template", do: "-solid", else: "")}
+              />
+            </:icon>
+          </.menu_item>
+
+          <.menu_item
             on_click={on_live_navigate(:registry, ~p"/registry")}
             active={@active_tab == "registry"}
             name="Registry"
@@ -343,7 +362,7 @@ defmodule MarketingbsmWeb.NavigationComponent do
       ])
     }>
       <Layout.flex class="space-x-4" justify_content="start">
-        <img class="h-12" src={~p"/images/songanote_logo_with_text.png"} />
+        <img class="h-12" src={~p"/images/FotoJet.png"} />
       </Layout.flex>
     </button>
     """

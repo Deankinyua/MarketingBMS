@@ -1,4 +1,4 @@
-defmodule MarketingbsmWeb.LabelLive.FormComponent do
+defmodule MarketingbsmWeb.TemplateLive.FormComponent do
   use MarketingbsmWeb, :live_component
 
   @impl true
@@ -113,15 +113,6 @@ defmodule MarketingbsmWeb.LabelLive.FormComponent do
         {:noreply, assign(socket, form: form)}
     end
   end
-
-  # defp change_empty_to_nil(label_params) do
-  #   empty = Enum.filter(label_params, fn {_key, value} -> value == "" end)
-
-  #   collectable = Enum.into(empty, %{}, fn {key, val} -> {key, val = nil} end)
-
-  #   label_params = Map.merge(label_params, collectable)
-  #   label_params
-  # end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 

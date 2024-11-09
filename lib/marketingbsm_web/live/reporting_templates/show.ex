@@ -1,4 +1,4 @@
-defmodule MarketingbsmWeb.LabelLive.Show do
+defmodule MarketingbsmWeb.TemplateLive.Show do
   use MarketingbsmWeb, :live_view
 
   @impl true
