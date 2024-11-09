@@ -58,7 +58,7 @@ defmodule MarketingbsmWeb.NavigationComponent do
           </.menu_item>
 
           <.menu_item
-            on_click={on_live_navigate(:project, ~p"/templates")}
+            on_click={on_live_navigate(:template, ~p"/templates")}
             active={@active_tab == "template"}
             name="Reporting Templates"
           >
@@ -71,7 +71,7 @@ defmodule MarketingbsmWeb.NavigationComponent do
                     Theme.get_sizing_style("xl", "width")
                   ])
                 }
-                name={"hero-folder-open" <> if(@active_tab == "template", do: "-solid", else: "")}
+                name={"hero-document-check" <> if(@active_tab == "template", do: "-solid", else: "")}
               />
             </:icon>
           </.menu_item>

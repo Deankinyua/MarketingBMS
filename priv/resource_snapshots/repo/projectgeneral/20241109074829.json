@@ -22,23 +22,13 @@
     },
     {
       "allow_nil?": false,
-      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
+      "default": "false",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "created_at",
-      "type": "utc_datetime_usec"
-    },
-    {
-      "allow_nil?": false,
-      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "updated_at",
-      "type": "utc_datetime_usec"
+      "source": "is_freezed",
+      "type": "boolean"
     }
   ],
   "base_filter": null,
@@ -46,7 +36,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "F7686D3B57EBEA7A5D542951800AC8DA4416FE868719F0DB1E2B852063470EDA",
+  "hash": "7E8D1DD54F73F9362523E0DAC1F875B3802BD60793466561CB88FAC343E4699B",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -55,5 +45,5 @@
   },
   "repo": "Elixir.Marketingbsm.Repo",
   "schema": null,
-  "table": "regions"
+  "table": "projectgeneral"
 }

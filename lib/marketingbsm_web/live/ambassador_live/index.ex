@@ -48,6 +48,16 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
                     Ambassador Name
                   </Text.text>
                 </Table.table_cell>
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Availability
+                  </Text.text>
+                </Table.table_cell>
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Location
+                  </Text.text>
+                </Table.table_cell>
               </Table.table_row>
             </Table.table_head>
 
@@ -63,6 +73,12 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
               >
                 <Table.table_cell>
                   <%= Accounts.get_user_by_id!(ambassador.id).name %>
+                </Table.table_cell>
+                <Table.table_cell>
+                  <%= ambassador.availability %>
+                </Table.table_cell>
+                <Table.table_cell>
+                  <%= ambassador.location %>
                 </Table.table_cell>
               </Table.table_row>
             </Table.table_body>
@@ -105,6 +121,7 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
 
   def get_records do
     ambassadors = Activation.list_ambassadors!()
+    dbg(ambassadors)
 
     for ambassador <- ambassadors do
       ambassador

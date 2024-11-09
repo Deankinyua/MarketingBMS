@@ -2,13 +2,43 @@
   "attributes": [
     {
       "allow_nil?": false,
-      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
+      "default": "fragment(\"gen_random_uuid()\")",
+      "generated?": false,
+      "primary_key?": true,
+      "references": null,
+      "size": null,
+      "source": "id",
+      "type": "uuid"
+    },
+    {
+      "allow_nil?": false,
+      "default": "nil",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "updated_at",
-      "type": "utc_datetime_usec"
+      "source": "email",
+      "type": "citext"
+    },
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "source": "hashed_password",
+      "type": "text"
+    },
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "source": "name",
+      "type": "text"
     },
     {
       "allow_nil?": false,
@@ -21,54 +51,14 @@
       "type": "utc_datetime_usec"
     },
     {
-      "allow_nil?": true,
-      "default": "nil",
+      "allow_nil?": false,
+      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "extra_data",
-      "type": "map"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "purpose",
-      "type": "text"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "expires_at",
-      "type": "utc_datetime"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "subject",
-      "type": "text"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": true,
-      "references": null,
-      "size": null,
-      "source": "jti",
-      "type": "text"
+      "source": "updated_at",
+      "type": "utc_datetime_usec"
     }
   ],
   "base_filter": null,
@@ -76,8 +66,23 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "29F006383937A59C525B4B812F14D4F4C4D76DA59EF95048998439D4FE476674",
-  "identities": [],
+  "hash": "4FC463D8D610DA66C376A476D9719DAFBD6EBC1145F26CD31951C02FEF50D8A8",
+  "identities": [
+    {
+      "all_tenants?": false,
+      "base_filter": null,
+      "index_name": "users_unique_email_index",
+      "keys": [
+        {
+          "type": "atom",
+          "value": "email"
+        }
+      ],
+      "name": "unique_email",
+      "nils_distinct?": true,
+      "where": null
+    }
+  ],
   "multitenancy": {
     "attribute": null,
     "global": null,
@@ -85,5 +90,5 @@
   },
   "repo": "Elixir.Marketingbsm.Repo",
   "schema": null,
-  "table": "tokens"
+  "table": "users"
 }

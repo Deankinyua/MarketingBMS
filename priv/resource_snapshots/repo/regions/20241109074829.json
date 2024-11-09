@@ -14,21 +14,31 @@
       "allow_nil?": false,
       "default": "nil",
       "generated?": false,
-      "primary_key?": true,
+      "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "ambassador_id",
-      "type": "uuid"
+      "source": "name",
+      "type": "text"
     },
     {
       "allow_nil?": false,
-      "default": "0",
+      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "total_days_worked",
-      "type": "bigint"
+      "source": "created_at",
+      "type": "utc_datetime_usec"
+    },
+    {
+      "allow_nil?": false,
+      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
+      "generated?": false,
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "source": "updated_at",
+      "type": "utc_datetime_usec"
     }
   ],
   "base_filter": null,
@@ -36,7 +46,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "710A54460DE82C86383276756932789180D5BCDF71A6A4077D950B44CCB26E3F",
+  "hash": "7332D6D18128A634D78A5589AF1E39C7B103F941DC176AC095DD5F9F5D16DCDB",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -45,5 +55,5 @@
   },
   "repo": "Elixir.Marketingbsm.Repo",
   "schema": null,
-  "table": "ambassadors"
+  "table": "regions"
 }

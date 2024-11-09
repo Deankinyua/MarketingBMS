@@ -28,6 +28,16 @@ defmodule Marketingbsm.Activation.Ambassador do
       primary_key? true
     end
 
+    attribute :availability, :string do
+      allow_nil? false
+      default "Occupied"
+    end
+
+    attribute :location, :string do
+      allow_nil? false
+      default "Not Set"
+    end
+
     attribute :total_days_worked, :integer do
       allow_nil? false
       default 0
