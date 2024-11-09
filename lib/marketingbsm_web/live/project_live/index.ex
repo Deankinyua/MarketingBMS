@@ -118,6 +118,23 @@ defmodule MarketingbsmWeb.ProjectLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+    # user_id = socket.assigns.current_user.id
+    # cond do
+    #   user_id == "d18936fb-cf6a-49c6-86f2-d481436ba2f3" ->
+    #     {:ok,
+    #      socket
+    #      |> stream(
+    #        :projects,
+    #        Ash.read!(Marketingbsm.ProjectGeneral.Project, actor: socket.assigns[:current_user])
+    #      )}
+
+    #   user_id != "d18936fb-cf6a-49c6-86f2-d481436ba2f3" ->
+    #     {:ok,
+    #      socket
+    #      |> redirect(to: "/outlets")
+    #      |> put_flash(:error, "Access Denied!! You are not authorized to see that page ")}
+    # end
+
     {:ok,
      socket
      |> stream(
