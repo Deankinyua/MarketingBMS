@@ -78,7 +78,6 @@ defmodule MarketingbsmWeb.TemplateLive.FormComponent do
     query_results =
       Marketingbsm.ProjectGeneral.Project
       |> Ash.Query.load([])
-      # |> Ash.Query.for_read(:by_user_id, %{id: socket.assigns.current_user.id})
       |> Ash.read!(page: [limit: 20])
 
     projects = Map.get(query_results, :results)
@@ -87,17 +86,18 @@ defmodule MarketingbsmWeb.TemplateLive.FormComponent do
   end
 
   @impl true
-  def handle_event("validate", %{"label" => label_params}, socket) do
-    {:noreply, assign(socket, form: AshPhoenix.Form.validate(socket.assigns.form, label_params))}
+  def handle_event("validate", %{"template" => template_params}, socket) do
+    {:noreply,
+     assign(socket, form: AshPhoenix.Form.validate(socket.assigns.form, template_params))}
   end
 
-  def handle_event("save", %{"label" => label_params}, socket) do
-    # label_params = change_empty_to_nil(label_params)
-    dbg(label_params)
+  def handle_event("save", %{"template" => template_params}, socket) do
+    # template_params = change_empty_to_nil(template_params)
+    dbg(template_params)
 
-    case AshPhoenix.Form.submit(socket.assigns.form, params: label_params) do
-      {:ok, label} ->
-        notify_parent({:saved, label})
+    case AshPhoenix.Form.submit(socket.assigns.form, params: template_params) do
+      {:ok, template} ->
+        notify_parent({:saved, template})
 
         socket =
           socket
@@ -116,16 +116,16 @@ defmodule MarketingbsmWeb.TemplateLive.FormComponent do
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 
-  defp assign_form(%{assigns: %{label: label}} = socket) do
+  defp assign_form(%{assigns: %{template: template}} = socket) do
     form =
-      if label do
-        AshPhoenix.Form.for_update(label, :update,
-          as: "label",
+      if template do
+        AshPhoenix.Form.for_update(template, :update,
+          as: "template",
           actor: socket.assigns.current_user
         )
       else
-        AshPhoenix.Form.for_create(Marketingbsm.ProjectGeneral.Label, :create,
-          as: "label",
+        AshPhoenix.Form.for_create(Marketingbsm.ProjectGeneral.Template, :create,
+          as: "template",
           actor: socket.assigns.current_user
         )
       end

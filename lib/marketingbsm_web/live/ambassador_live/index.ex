@@ -121,7 +121,6 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
 
   def get_records do
     ambassadors = Activation.list_ambassadors!()
-    dbg(ambassadors)
 
     for ambassador <- ambassadors do
       ambassador

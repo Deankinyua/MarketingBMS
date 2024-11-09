@@ -18,12 +18,12 @@ defmodule Marketingbsm.ProjectGeneral do
       define :get_project_by_id, args: [:id], action: :by_id
     end
 
-    resource Marketingbsm.ProjectGeneral.Label do
+    resource Marketingbsm.ProjectGeneral.Template do
       # Define an interface for calling resource actions.
       # We use the Function when we executing code
       # <Function> <Action>
-      define :add_label, action: :create
-      define :update_label, action: :update
+      define :add_template, action: :create
+      define :update_template, action: :update
       define :list_templates, action: :read
       define :get_template_by_project_id, args: [:project_id], action: :by_id
     end

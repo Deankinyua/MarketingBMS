@@ -14,57 +14,74 @@ defmodule MarketingbsmWeb.TemplateLive.Index do
           sticky: true
         ) %>
 
-        <.header>
-          Listing Reporting Templates
-          <:actions>
-            <.link patch={~p"/templates/new"}>
-              <.button>New Reporting Template</.button>
-            </.link>
-          </:actions>
-        </.header>
-
-        <.table id="templates" rows={@streams.templates}>
-          <:col :let={{_id, label}} label="Project Name">
-            <%= ProjectGeneral.get_project_by_id!(label.project_id).name %>
-          </:col>
-          <:col :let={{_id, label}} label="Field 1"><%= label.field_1 %></:col>
-          <:col :let={{_id, label}} label="Field 2"><%= label.field_2 %></:col>
-          <:col :let={{_id, label}} label="Field 3"><%= label.field_3 %></:col>
-          <:col :let={{_id, label}} label="Field 4"><%= label.field_4 %></:col>
-          <:col :let={{_id, label}} label="Field 5"><%= label.field_5 %></:col>
-          <:col :let={{_id, label}} label="Field 6"><%= label.field_6 %></:col>
-          <:col :let={{_id, label}} label="Field 7"><%= label.field_7 %></:col>
-          <:col :let={{_id, label}} label="Field 8"><%= label.field_8 %></:col>
-          <:col :let={{_id, label}} label="Field 9"><%= label.field_9 %></:col>
-          <:col :let={{_id, label}} label="Field 10"><%= label.field_10 %></:col>
-          <:col :let={{_id, label}} label="Field 11"><%= label.field_11 %></:col>
-          <:col :let={{_id, label}} label="Field 12"><%= label.field_12 %></:col>
-          <:col :let={{_id, label}} label="Field 13"><%= label.field_13 %></:col>
-          <:col :let={{_id, label}} label="Field 14"><%= label.field_14 %></:col>
-          <:col :let={{_id, label}} label="Field 15"><%= label.field_15 %></:col>
-          <:col :let={{_id, label}} label="Field 16"><%= label.field_16 %></:col>
-          <:col :let={{_id, label}} label="Field 17"><%= label.field_17 %></:col>
-          <:col :let={{_id, label}} label="Field 18"><%= label.field_18 %></:col>
-          <:col :let={{_id, label}} label="Field 19"><%= label.field_19 %></:col>
-          <:col :let={{_id, label}} label="Field 20"><%= label.field_20 %></:col>
-        </.table>
-
-        <.modal
-          :if={@live_action in [:new, :edit]}
-          id="label-modal"
-          show
-          on_cancel={JS.patch(~p"/templates")}
+        <Layout.flex
+          flex_direction="col"
+          align_items="start"
+          justify_content="start"
+          class="flex-1 px-8 py-8 h-full overflow-y-auto bg-gray-50/75"
         >
-          <.live_component
-            module={MarketingbsmWeb.LabelLive.FormComponent}
-            id={(@label && @label.project_id) || :new}
-            title={@page_title}
-            current_user={@current_user}
-            action={@live_action}
-            label={@label}
-            patch={~p"/templates"}
-          />
-        </.modal>
+          <Layout.flex justify_content="between" class="">
+            <Layout.flex flex_direction="col" align_items="start" class="grow">
+              <Text.title class="text-xl">
+                <Text.bold>Reporting Templates</Text.bold>
+              </Text.title>
+
+              <Text.subtitle color="gray">
+                Templates define how the Brand Ambassadors are going to Report Sales
+              </Text.subtitle>
+            </Layout.flex>
+
+            <Button.button size="xl" phx-click={JS.patch(~p"/templates/new")}>
+              <:icon>
+                <.icon name="hero-plus" />
+              </:icon>
+              Create Template
+            </Button.button>
+          </Layout.flex>
+
+          <.table id="templates" rows={@streams.templates}>
+            <:col :let={{_id, template}} label="Project Name">
+              <%= ProjectGeneral.get_project_by_id!(template.project_id).name %>
+            </:col>
+            <:col :let={{_id, template}} label="Field 1"><%= template.field_1 %></:col>
+            <:col :let={{_id, template}} label="Field 2"><%= template.field_2 %></:col>
+            <:col :let={{_id, template}} label="Field 3"><%= template.field_3 %></:col>
+            <:col :let={{_id, template}} label="Field 4"><%= template.field_4 %></:col>
+            <:col :let={{_id, template}} label="Field 5"><%= template.field_5 %></:col>
+            <:col :let={{_id, template}} label="Field 6"><%= template.field_6 %></:col>
+            <:col :let={{_id, template}} label="Field 7"><%= template.field_7 %></:col>
+            <:col :let={{_id, template}} label="Field 8"><%= template.field_8 %></:col>
+            <:col :let={{_id, template}} label="Field 9"><%= template.field_9 %></:col>
+            <:col :let={{_id, template}} label="Field 10"><%= template.field_10 %></:col>
+            <:col :let={{_id, template}} label="Field 11"><%= template.field_11 %></:col>
+            <:col :let={{_id, template}} label="Field 12"><%= template.field_12 %></:col>
+            <:col :let={{_id, template}} label="Field 13"><%= template.field_13 %></:col>
+            <:col :let={{_id, template}} label="Field 14"><%= template.field_14 %></:col>
+            <:col :let={{_id, template}} label="Field 15"><%= template.field_15 %></:col>
+            <:col :let={{_id, template}} label="Field 16"><%= template.field_16 %></:col>
+            <:col :let={{_id, template}} label="Field 17"><%= template.field_17 %></:col>
+            <:col :let={{_id, template}} label="Field 18"><%= template.field_18 %></:col>
+            <:col :let={{_id, template}} label="Field 19"><%= template.field_19 %></:col>
+            <:col :let={{_id, template}} label="Field 20"><%= template.field_20 %></:col>
+          </.table>
+
+          <.modal
+            :if={@live_action in [:new, :edit]}
+            id="label-modal"
+            show
+            on_cancel={JS.patch(~p"/templates")}
+          >
+            <.live_component
+              module={MarketingbsmWeb.TemplateLive.FormComponent}
+              id={(@template && @template.project_id) || :new}
+              title={@page_title}
+              current_user={@current_user}
+              action={@live_action}
+              template={@template}
+              patch={~p"/templates"}
+            />
+          </.modal>
+        </Layout.flex>
       </Layout.flex>
     </div>
     """
@@ -85,25 +102,27 @@ defmodule MarketingbsmWeb.TemplateLive.Index do
     socket
     |> assign(:page_title, "Edit Label")
     |> assign(
-      :label,
-      Ash.get!(Marketingbsm.ProjectGeneral.Label, project_id, actor: socket.assigns.current_user)
+      :template,
+      Ash.get!(Marketingbsm.ProjectGeneral.Template, project_id,
+        actor: socket.assigns.current_user
+      )
     )
   end
 
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Reporting Template")
-    |> assign(:label, nil)
+    |> assign(:template, nil)
   end
 
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Reporting Templates")
-    |> assign(:label, nil)
+    |> assign(:template, nil)
   end
 
   # @impl true
-  # def handle_info({MarketingbsmWeb.LabelLive.FormComponent, {:saved, label}}, socket) do
-  #   {:noreply, stream_insert(socket, :templates, label)}
+  # def handle_info({MarketingbsmWeb.templateLive.FormComponent, {:saved, template}}, socket) do
+  #   {:noreply, stream_insert(socket, :templates, template)}
   # end
 end

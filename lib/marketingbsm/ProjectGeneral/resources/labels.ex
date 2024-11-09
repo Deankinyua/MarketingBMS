@@ -1,4 +1,4 @@
-defmodule Marketingbsm.ProjectGeneral.Label do
+defmodule Marketingbsm.ProjectGeneral.Template do
   use Ash.Resource,
     # Tells Ash where the generated code interface belongs
     domain: Marketingbsm.ProjectGeneral,
@@ -6,18 +6,18 @@ defmodule Marketingbsm.ProjectGeneral.Label do
 
   resource do
     description """
-    Represents the labels => that will be put on the reporting templates to control writing data
+    Represents the templates => that will be put on the reporting templates to control writing data
     Represents the columns => that will be put on the tables to control reading data
-    Handles the Sensitive information belonging to the Project resource which is the table that
+    Handles the Sensitive information belonging to the Reports resource which is the table that
     all ambassadors will be writing data to.
     """
 
-    plural_name :labels
-    short_name :label
+    plural_name :templates
+    short_name :template
   end
 
   postgres do
-    table "labels"
+    table "templates"
     repo Marketingbsm.Repo
   end
 
