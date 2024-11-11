@@ -20,6 +20,25 @@ defmodule MarketingbsmWeb.NavigationComponent do
       <Layout.flex flex_direction="col" class="flex-1">
         <Layout.grid class="border-red-400 border-4 space-y-1 w-full first:mt-3">
           <.menu_item
+            on_click={on_live_navigate(:report, ~p"/reports")}
+            active={@active_tab == "report"}
+            name="Reports"
+          >
+            <:icon>
+              <%!-- hero-home-solid --%>
+              <.icon
+                class={
+                  Tails.classes([
+                    Theme.get_sizing_style("xl", "height"),
+                    Theme.get_sizing_style("xl", "width")
+                  ])
+                }
+                name={"hero-home" <> if(@active_tab == "report", do: "-solid", else: "")}
+              />
+            </:icon>
+          </.menu_item>
+
+          <.menu_item
             on_click={on_live_navigate(:outlet, ~p"/outlets")}
             active={@active_tab == "outlet"}
             name="Outlets"
@@ -77,7 +96,7 @@ defmodule MarketingbsmWeb.NavigationComponent do
           </.menu_item>
 
           <.menu_item
-            on_click={on_live_navigate(:registry, ~p"/registry")}
+            on_click={on_live_navigate(:registry, ~p"/registries")}
             active={@active_tab == "registry"}
             name="Registry"
           >

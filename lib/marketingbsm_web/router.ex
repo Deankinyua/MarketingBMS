@@ -66,6 +66,20 @@ defmodule MarketingbsmWeb.Router do
 
       live "/templates/:id", TemplateLive.Show, :show
       live "/templates/:id/show/edit", TemplateLive.Show, :edit
+
+      live "/registries", RegistryLive.Index, :index
+      live "/registries/new", RegistryLive.Index, :new
+      live "/registries/:id/edit", RegistryLive.Index, :edit
+
+      live "/registries/:id", RegistryLive.Show, :show
+      live "/registries/:id/show/edit", RegistryLive.Show, :edit
+
+      live "/reports", ReportLive.Index, :index
+      live "/reports/new", ReportLive.Index, :new
+      live "/reports/:id/edit", ReportLive.Index, :edit
+
+      live "/reports/:id", ReportLive.Show, :show
+      live "/reports/:id/show/edit", ReportLive.Show, :edit
     end
   end
 

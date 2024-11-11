@@ -1,0 +1,122 @@
+defmodule MarketingbsmWeb.RegistryLive.Index do
+  use MarketingbsmWeb, :live_view
+  alias Marketingbsm.Accounts
+  alias Marketingbsm.Outlet
+  alias Marketingbsm.ProjectGeneral
+
+  @impl true
+  def render(assigns) do
+    ~H"""
+    <.header>
+      Listing registries
+      <:actions>
+        <.link patch={~p"/registries/new"}>
+          <.button>New Registry</.button>
+        </.link>
+      </:actions>
+    </.header>
+
+    <.table
+      id="registries"
+      rows={@streams.registries}
+      row_click={fn {_id, registry} -> JS.navigate(~p"/registries/#{registry}") end}
+    >
+      <:col :let={{_id, registry}} label="Ambassador Name">
+        <%= Accounts.get_user_by_id!(registry.ambassador_id).name %>
+      </:col>
+      <:col :let={{_id, registry}} label="Project Name">
+        <%= ProjectGeneral.get_project_by_id!(registry.project_id).name %>
+      </:col>
+      <:col :let={{_id, registry}} label="Outlet Name">
+        <%= Outlet.get_outlet!(registry.outlet_id).name %>
+      </:col>
+      <:col :let={{_id, registry}} label="Days Worked"><%= registry.days_worked %></:col>
+      <:col :let={{_id, registry}} label="Should Activate"><%= registry.should_activate %></:col>
+
+      <:action :let={{_id, registry}}>
+        <div class="sr-only">
+          <.link navigate={~p"/registries/#{registry}"}>Show</.link>
+        </div>
+
+        <.link patch={~p"/registries/#{registry}/edit"}>Edit</.link>
+      </:action>
+
+      <:action :let={{id, registry}}>
+        <.link
+          phx-click={JS.push("delete", value: %{id: registry.id}) |> hide("##{id}")}
+          data-confirm="Are you sure?"
+        >
+          Delete
+        </.link>
+      </:action>
+    </.table>
+
+    <.modal
+      :if={@live_action in [:new, :edit]}
+      id="registry-modal"
+      show
+      on_cancel={JS.patch(~p"/registries")}
+    >
+      <.live_component
+        module={MarketingbsmWeb.RegistryLive.FormComponent}
+        id={(@registry && @registry.id) || :new}
+        title={@page_title}
+        current_user={@current_user}
+        action={@live_action}
+        registry={@registry}
+        patch={~p"/registries"}
+      />
+    </.modal>
+    """
+  end
+
+  @impl true
+  def mount(_params, _session, socket) do
+    {:ok,
+     socket
+     |> stream(
+       :registries,
+       Ash.read!(Marketingbsm.Record.Registry, actor: socket.assigns[:current_user])
+     )
+     |> assign_new(:current_user, fn -> nil end)}
+  end
+
+  @impl true
+  def handle_params(params, _url, socket) do
+    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  end
+
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    socket
+    |> assign(:page_title, "Edit Registry")
+    |> assign(
+      :registry,
+      Ash.get!(Marketingbsm.Record.Registry, id, actor: socket.assigns.current_user)
+    )
+  end
+
+  defp apply_action(socket, :new, _params) do
+    socket
+    |> assign(:page_title, "New Registry")
+    |> assign(:registry, nil)
+  end
+
+  defp apply_action(socket, :index, _params) do
+    socket
+    |> assign(:page_title, "Listing registries")
+    |> assign(:registry, nil)
+  end
+
+  @impl true
+  def handle_info({MarketingbsmWeb.RegistryLive.FormComponent, {:saved, registry}}, socket) do
+    {:noreply, stream_insert(socket, :registries, registry)}
+  end
+
+  @impl true
+  def handle_event("delete", %{"id" => id}, socket) do
+    registry = Ash.get!(Marketingbsm.Record.Registry, id, actor: socket.assigns.current_user)
+    Ash.destroy!(registry, actor: socket.assigns.current_user)
+
+    {:noreply, stream_delete(socket, :registries, registry)}
+  end
+end
