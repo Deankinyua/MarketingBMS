@@ -309,6 +309,7 @@ defmodule MarketingbsmWeb.ProjectLive.Show do
     query_results =
       Marketingbsm.Record.Report
       |> Ash.Query.filter(project_id: id)
+      |> Ash.Query.sort(total_sales: :desc)
       |> Ash.read!(page: [limit: 50])
 
     reports = Map.get(query_results, :results)
