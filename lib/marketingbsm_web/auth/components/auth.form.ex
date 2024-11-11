@@ -78,7 +78,7 @@ defmodule MarketingbsmWeb.Auth.FormComponent do
               <Input.text_input
                 id="name"
                 name="user[name]"
-                placeholder="juma tano"
+                placeholder="Bevaline Ashanda"
                 type="text"
                 field={f[:name]}
                 value={f[:name].value}
@@ -99,7 +99,7 @@ defmodule MarketingbsmWeb.Auth.FormComponent do
               <Input.text_input
                 id="email"
                 name="user[email]"
-                placeholder="juma"
+                placeholder="kinyuadean@gmail.com"
                 type="email"
                 field={f[:email]}
                 value={f[:email].value}

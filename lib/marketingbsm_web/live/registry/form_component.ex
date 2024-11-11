@@ -89,6 +89,8 @@ defmodule MarketingbsmWeb.RegistryLive.FormComponent do
   end
 
   def handle_event("save", %{"registry" => registry_params}, socket) do
+    dbg(registry_params)
+
     case AshPhoenix.Form.submit(socket.assigns.form, params: registry_params) do
       {:ok, registry} ->
         notify_parent({:saved, registry})

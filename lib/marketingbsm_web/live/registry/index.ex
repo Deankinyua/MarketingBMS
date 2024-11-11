@@ -40,6 +40,10 @@ defmodule MarketingbsmWeb.RegistryLive.Index do
               <Text.subtitle color="gray">
                 There are <strong><%= @count %></strong> activating ambassadors.
               </Text.subtitle>
+
+              <Text.subtitle color="gray">
+                There are people activating the same outlet.
+              </Text.subtitle>
             </Layout.flex>
 
             <Button.button size="xl" phx-click={JS.patch(~p"/registries/new")}>
