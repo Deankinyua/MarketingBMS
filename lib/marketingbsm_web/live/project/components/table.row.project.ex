@@ -11,6 +11,12 @@ defmodule MarketingbsmWeb.ProjectLive.RowComponent do
       <Table.table_cell>
         <div class="flex justify-between px-6">
           <Button.button>
+            <.link navigate={~p"/projects/#{@project}"}>
+              View
+            </.link>
+          </Button.button>
+
+          <Button.button>
             <.link navigate={~p"/projects/#{@project}/edit"}>
               Edit
             </.link>
