@@ -4,74 +4,161 @@ defmodule MarketingbsmWeb.RegistryLive.Index do
   alias Marketingbsm.Outlet
   alias Marketingbsm.ProjectGeneral
 
+  require Ash.Query
+
   @impl true
   def render(assigns) do
     ~H"""
-    <.header>
-      Listing registries
-      <:actions>
-        <.link patch={~p"/registries/new"}>
-          <.button>New Registry</.button>
-        </.link>
-      </:actions>
-    </.header>
+    <div class="w-full h-full">
+      <Layout.flex align_items="start" class="h-screen overflow-y-hidden">
+        <%= live_render(@socket, MarketingbsmWeb.LiveDrawer,
+          session: %{"active_tab" => "registry", "user" => "user?id=#{@current_user.id}"},
+          id: "live_drawer",
+          sticky: true
+        ) %>
 
-    <.table
-      id="registries"
-      rows={@streams.registries}
-      row_click={fn {_id, registry} -> JS.navigate(~p"/registries/#{registry}") end}
-    >
-      <:col :let={{_id, registry}} label="Ambassador Name">
-        <%= Accounts.get_user_by_id!(registry.ambassador_id).name %>
-      </:col>
-      <:col :let={{_id, registry}} label="Project Name">
-        <%= ProjectGeneral.get_project_by_id!(registry.project_id).name %>
-      </:col>
-      <:col :let={{_id, registry}} label="Outlet Name">
-        <%= Outlet.get_outlet!(registry.outlet_id).name %>
-      </:col>
-      <:col :let={{_id, registry}} label="Days Worked"><%= registry.days_worked %></:col>
-      <:col :let={{_id, registry}} label="Should Activate"><%= registry.should_activate %></:col>
-
-      <:action :let={{_id, registry}}>
-        <div class="sr-only">
-          <.link navigate={~p"/registries/#{registry}"}>Show</.link>
-        </div>
-
-        <.link patch={~p"/registries/#{registry}/edit"}>Edit</.link>
-      </:action>
-
-      <:action :let={{id, registry}}>
-        <.link
-          phx-click={JS.push("delete", value: %{id: registry.id}) |> hide("##{id}")}
-          data-confirm="Are you sure?"
+        <Layout.flex
+          flex_direction="col"
+          align_items="start"
+          justify_content="start"
+          class="flex-1 px-8 py-8 h-full overflow-y-auto bg-gray-50/75"
         >
-          Delete
-        </.link>
-      </:action>
-    </.table>
+          <Layout.flex justify_content="between" class="">
+            <Layout.flex flex_direction="col" align_items="start" class="grow">
+              <Text.title class="text-xl">
+                <Text.bold>Outlets</Text.bold>
+              </Text.title>
 
-    <.modal
-      :if={@live_action in [:new, :edit]}
-      id="registry-modal"
-      show
-      on_cancel={JS.patch(~p"/registries")}
-    >
-      <.live_component
-        module={MarketingbsmWeb.RegistryLive.FormComponent}
-        id={(@registry && @registry.id) || :new}
-        title={@page_title}
-        current_user={@current_user}
-        action={@live_action}
-        registry={@registry}
-        patch={~p"/registries"}
-      />
-    </.modal>
+              <Text.subtitle color="gray">
+                Use this to manage multiple ambassadors assigned to the same outlet.
+              </Text.subtitle>
+
+              <Text.subtitle color="gray">
+                Registries keep track of who should activate where.
+              </Text.subtitle>
+
+              <Text.subtitle color="gray">
+                There are <strong><%= @count %></strong> activating ambassadors.
+              </Text.subtitle>
+            </Layout.flex>
+
+            <Button.button size="xl" phx-click={JS.patch(~p"/registries/new")}>
+              <:icon>
+                <.icon name="hero-plus" />
+              </:icon>
+              New Registry
+            </Button.button>
+          </Layout.flex>
+
+          <Table.table class="w-full">
+            <Table.table_head class="rounded-t-md border-b-[1px]">
+              <Table.table_row class="hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted">
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Ambassador Name
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Project Name
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Outlet Name
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Days Worked
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Should Activate
+                  </Text.text>
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis text-center">
+                    Actions
+                  </Text.text>
+                </Table.table_cell>
+              </Table.table_row>
+            </Table.table_head>
+
+            <Table.table_body
+              id="table_stream_registries"
+              phx-update="stream"
+              class="divide-y overflow-y-auto"
+            >
+              <Table.table_row
+                :for={{dom_id, registry} <- @streams.registries}
+                id={"#{dom_id}"}
+                class="group hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted"
+              >
+                <.live_component
+                  module={MarketingbsmWeb.RegistryLive.RowComponent}
+                  id={dom_id}
+                  registry={registry}
+                  dom_id={dom_id}
+                >
+                  <Table.table_cell>
+                    <%= Accounts.get_user_by_id!(registry.ambassador_id).name %>
+                  </Table.table_cell>
+
+                  <Table.table_cell>
+                    <%= ProjectGeneral.get_project_by_id!(registry.project_id).name %>
+                  </Table.table_cell>
+
+                  <Table.table_cell>
+                    <%= Outlet.get_outlet!(registry.outlet_id).name %>
+                  </Table.table_cell>
+
+                  <Table.table_cell>
+                    <%= registry.days_worked %>
+                  </Table.table_cell>
+
+                  <Table.table_cell>
+                    <%= registry.should_activate %>
+                  </Table.table_cell>
+                </.live_component>
+              </Table.table_row>
+            </Table.table_body>
+          </Table.table>
+
+          <.modal
+            :if={@live_action in [:new, :edit]}
+            id="registry-modal"
+            show
+            on_cancel={JS.patch(~p"/registries")}
+          >
+            <.live_component
+              module={MarketingbsmWeb.RegistryLive.FormComponent}
+              id={(@registry && @registry.id) || :new}
+              title={@page_title}
+              current_user={@current_user}
+              action={@live_action}
+              registry={@registry}
+              patch={~p"/registries"}
+            />
+          </.modal>
+        </Layout.flex>
+      </Layout.flex>
+    </div>
     """
   end
 
   @impl true
   def mount(_params, _session, socket) do
+    socket =
+      socket
+      |> assign(:count, get_count())
+
     {:ok,
      socket
      |> stream(
@@ -79,6 +166,17 @@ defmodule MarketingbsmWeb.RegistryLive.Index do
        Ash.read!(Marketingbsm.Record.Registry, actor: socket.assigns[:current_user])
      )
      |> assign_new(:current_user, fn -> nil end)}
+  end
+
+  def get_count do
+    query_results =
+      Marketingbsm.Record.Registry
+      |> Ash.Query.filter(should_activate: true)
+      |> Ash.read!(page: [limit: 20])
+
+    promoters = Map.get(query_results, :results)
+
+    Enum.count(promoters)
   end
 
   @impl true
@@ -113,7 +211,7 @@ defmodule MarketingbsmWeb.RegistryLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
+  def handle_event("delete", %{"registry_id" => id}, socket) do
     registry = Ash.get!(Marketingbsm.Record.Registry, id, actor: socket.assigns.current_user)
     Ash.destroy!(registry, actor: socket.assigns.current_user)
 

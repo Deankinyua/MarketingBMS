@@ -39,25 +39,6 @@ defmodule MarketingbsmWeb.NavigationComponent do
           </.menu_item>
 
           <.menu_item
-            on_click={on_live_navigate(:outlet, ~p"/outlets")}
-            active={@active_tab == "outlet"}
-            name="Outlets"
-          >
-            <:icon>
-              <%!-- hero-home-solid --%>
-              <.icon
-                class={
-                  Tails.classes([
-                    Theme.get_sizing_style("xl", "height"),
-                    Theme.get_sizing_style("xl", "width")
-                  ])
-                }
-                name={"hero-building-storefront" <> if(@active_tab == "outlet", do: "-solid", else: "")}
-              />
-            </:icon>
-          </.menu_item>
-
-          <.menu_item
             on_click={on_live_navigate(:project, ~p"/projects")}
             active={@active_tab == "project"}
             name="Projects"
@@ -129,6 +110,25 @@ defmodule MarketingbsmWeb.NavigationComponent do
                   ])
                 }
                 name={"hero-building-library" <> if(@active_tab == "region", do: "-solid", else: "")}
+              />
+            </:icon>
+          </.menu_item>
+
+          <.menu_item
+            on_click={on_live_navigate(:outlet, ~p"/outlets")}
+            active={@active_tab == "outlet"}
+            name="Outlets"
+          >
+            <:icon>
+              <%!-- hero-home-solid --%>
+              <.icon
+                class={
+                  Tails.classes([
+                    Theme.get_sizing_style("xl", "height"),
+                    Theme.get_sizing_style("xl", "width")
+                  ])
+                }
+                name={"hero-building-storefront" <> if(@active_tab == "outlet", do: "-solid", else: "")}
               />
             </:icon>
           </.menu_item>

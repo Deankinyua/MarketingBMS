@@ -27,7 +27,7 @@ defmodule MarketingbsmWeb.ReportLive.Index do
               </Text.title>
 
               <Text.subtitle color="gray">
-                Use this to for your check-ins, check-outs and Reports.
+                Use this for your check-ins, check-outs and Reports.
               </Text.subtitle>
             </Layout.flex>
 
