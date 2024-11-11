@@ -2,10 +2,11 @@ defmodule MarketingbsmWeb.RegistryLive.FormComponent do
   use MarketingbsmWeb, :live_component
 
   import MarketingbsmWeb.ReportLive.FormComponent,
-    only: [ambassador_selector: 1, fetch_outlets: 1]
+    only: [fetch_outlets: 1]
 
   import MarketingbsmWeb.TemplateLive.FormComponent, only: [fetch_projects: 1]
 
+  alias Marketingbsm.Accounts
   @impl true
   def render(assigns) do
     ~H"""
@@ -79,6 +80,14 @@ defmodule MarketingbsmWeb.RegistryLive.FormComponent do
     promoters = Map.get(query_results, :results)
 
     socket |> assign(promoter_selector: ambassador_selector(promoters))
+  end
+
+  def ambassador_selector(ambassadors) do
+    for item <- ambassadors do
+      user = Accounts.get_user_by_id!(item.id)
+
+      {user.name, user.id}
+    end
   end
 
   @impl true
