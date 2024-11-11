@@ -333,14 +333,6 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
     end
   end
 
-  def ambassador_selector(ambassadors) do
-    for item <- ambassadors do
-      user = Accounts.get_user_by_id!(item.ambassador_id)
-
-      {user.name, user.id}
-    end
-  end
-
   def fetch_projects_unfreezed(socket) do
     query_results =
       Marketingbsm.ProjectGeneral.Project
@@ -356,6 +348,14 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
   defp project_selector(projects) do
     for item <- projects do
       {item.name, item.id}
+    end
+  end
+
+  def ambassador_selector(ambassadors) do
+    for item <- ambassadors do
+      user = Accounts.get_user_by_id!(item.ambassador_id)
+
+      {user.name, user.id}
     end
   end
 end

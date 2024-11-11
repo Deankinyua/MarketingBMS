@@ -82,14 +82,6 @@ defmodule MarketingbsmWeb.RegistryLive.FormComponent do
     socket |> assign(promoter_selector: ambassador_selector(promoters))
   end
 
-  def ambassador_selector(ambassadors) do
-    for item <- ambassadors do
-      user = Accounts.get_user_by_id!(item.id)
-
-      {user.name, user.id}
-    end
-  end
-
   @impl true
   def handle_event("validate", %{"registry" => registry_params}, socket) do
     {:noreply,
@@ -130,5 +122,13 @@ defmodule MarketingbsmWeb.RegistryLive.FormComponent do
       end
 
     assign(socket, form: to_form(form))
+  end
+
+  def ambassador_selector(ambassadors) do
+    for item <- ambassadors do
+      user = Accounts.get_user_by_id!(item.id)
+
+      {user.name, user.id}
+    end
   end
 end
