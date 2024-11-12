@@ -10,48 +10,108 @@ defmodule MarketingbsmWeb.RegistryLive.FormComponent do
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
-      <.header>
-        <%= @title %>
-        <:subtitle>Use this form to manage registry records in your database.</:subtitle>
-      </.header>
+    <section>
+      <Layout.col>
+        <Text.title class="text-xl">
+          <Text.bold><%= @title %></Text.bold>
+        </Text.title>
 
-      <.simple_form
-        for={@form}
-        id="registry-form"
-        phx-target={@myself}
-        phx-change="validate"
-        phx-submit="save"
-      >
-        <%= if @form.source.type == :create do %>
-          <.input
-            type="select"
-            field={@form[:ambassador_id]}
-            options={@promoter_selector}
-            label="Name"
-          />
-          <.input type="select" field={@form[:outlet_id]} options={@outlet_selector} label="Outlet" />
-          <.input
-            type="select"
-            field={@form[:project_id]}
-            options={@project_selector}
-            label="Project Name"
-          />
-        <% end %>
-        <%= if @form.source.type == :update do %>
-          <.input
-            field={@form[:should_activate]}
-            type="select"
-            options={@activate_selector}
-            label="Should Activate"
-          />
-        <% end %>
+        <Text.subtitle color="gray">
+          Use this form to manage the Brand Ambassadors who should activate
+        </Text.subtitle>
 
-        <:actions>
-          <.button phx-disable-with="Saving...">Save Registry</.button>
-        </:actions>
-      </.simple_form>
-    </div>
+        <Layout.divider class="my-4" />
+
+        <.simple_form
+          for={@form}
+          id="registry-form"
+          phx-target={@myself}
+          phx-change="validate"
+          phx-submit="save"
+        >
+          <%= if @form.source.type == :create do %>
+            <Layout.col class="space-y-1.5">
+              <label for="ambassador[:ambassador_id]">
+                <Text.text class="text-tremor-content">
+                  Ambassador Name
+                </Text.text>
+              </label>
+
+              <Select.search_select
+                id="ambassador[:ambassador_id]"
+                name={@form[:ambassador_id].name}
+                placeholder="Select..."
+                value={@form[:ambassador_id].value}
+                phx-update="ignore"
+                required={true}
+              >
+                <:item :for={%{id: _id, name: name} <- @ambassadors}>
+                  <%= name %>
+                </:item>
+              </Select.search_select>
+            </Layout.col>
+
+            <Layout.col class="space-y-1.5">
+              <label for="outlet[:outlet_id]">
+                <Text.text class="text-tremor-content">
+                  Outlet Name
+                </Text.text>
+              </label>
+
+              <Select.search_select
+                id="outlet[:outlet_id]"
+                name={@form[:outlet_id].name}
+                placeholder="Select..."
+                value={@form[:outlet_id].value}
+                phx-update="ignore"
+                required={true}
+              >
+                <:item :for={%{id: _id, name: name} <- @outlets}>
+                  <%= name %>
+                </:item>
+              </Select.search_select>
+            </Layout.col>
+
+            <Layout.col class="space-y-1.5">
+              <label for="project[:project_id]">
+                <Text.text class="text-tremor-content">
+                  Project Name
+                </Text.text>
+              </label>
+
+              <Select.search_select
+                id="project[:project_id]"
+                name={@form[:project_id].name}
+                placeholder="Select..."
+                value={@form[:project_id].value}
+                phx-update="ignore"
+                required={true}
+              >
+                <:item :for={%{id: _id, name: name} <- @projects}>
+                  <%= name %>
+                </:item>
+              </Select.search_select>
+            </Layout.col>
+          <% end %>
+          <%= if @form.source.type == :update do %>
+            <.input
+              field={@form[:should_activate]}
+              type="select"
+              options={@activate_selector}
+              label="Should Activate"
+            />
+          <% end %>
+
+          <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Saving...">
+            <%= if @form.source.type == :update do %>
+              Update Registry
+            <% else %>
+              Create Registry
+            <% end %>
+          </Button.button>
+        </.simple_form>
+      </Layout.col>
+    </section>
     """
   end
 
@@ -77,9 +137,11 @@ defmodule MarketingbsmWeb.RegistryLive.FormComponent do
       |> Ash.Query.load([])
       |> Ash.read!(page: [limit: 20])
 
-    promoters = Map.get(query_results, :results)
+    ambassadors = Map.get(query_results, :results)
 
-    socket |> assign(promoter_selector: ambassador_selector(promoters))
+    dbg(ambassadors)
+
+    socket |> assign(ambassadors: ambassador_selector(ambassadors))
   end
 
   @impl true
@@ -89,7 +151,18 @@ defmodule MarketingbsmWeb.RegistryLive.FormComponent do
   end
 
   def handle_event("save", %{"registry" => registry_params}, socket) do
-    dbg(registry_params)
+    ambassador_id = get_ambassador_id(socket, registry_params)
+
+    outlet_id = get_outlet_id(socket, registry_params)
+
+    project_id = get_project_id(socket, registry_params)
+
+    registry_params =
+      Map.merge(registry_params, %{
+        "ambassador_id" => ambassador_id,
+        "project_id" => project_id,
+        "outlet_id" => outlet_id
+      })
 
     case AshPhoenix.Form.submit(socket.assigns.form, params: registry_params) do
       {:ok, registry} ->
@@ -130,7 +203,34 @@ defmodule MarketingbsmWeb.RegistryLive.FormComponent do
     for item <- ambassadors do
       user = Accounts.get_user_by_id!(item.id)
 
-      {user.name, user.id}
+      user
     end
+  end
+
+  def get_project_id(socket, params) do
+    project_id =
+      Enum.find_value(socket.assigns.projects, fn proj ->
+        if proj.name == Map.get(params, "project_id"), do: proj.id, else: nil
+      end)
+
+    project_id
+  end
+
+  def get_outlet_id(socket, params) do
+    outlet_id =
+      Enum.find_value(socket.assigns.outlets, fn out ->
+        if out.name == Map.get(params, "outlet_id"), do: out.id, else: nil
+      end)
+
+    outlet_id
+  end
+
+  def get_ambassador_id(socket, params) do
+    ambassador_id =
+      Enum.find_value(socket.assigns.ambassadors, fn amb ->
+        if amb.name == Map.get(params, "ambassador_id"), do: amb.id, else: nil
+      end)
+
+    ambassador_id
   end
 end

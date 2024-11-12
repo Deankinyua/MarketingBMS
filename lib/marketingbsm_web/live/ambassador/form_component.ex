@@ -26,7 +26,13 @@ defmodule MarketingbsmWeb.AmbassadorLive.FormComponent do
               </Text.text>
             </label>
 
-            <.input field={@form[:ambassador_email]} type="text" label="Email" />
+            <Input.text_input
+              name={f[:ambassador_email].name}
+              placeholder="Email..."
+              type="text"
+              field={f[:ambassador_email]}
+              value={f[:ambassador_email].value}
+            />
           </Layout.col>
 
           <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Saving...">

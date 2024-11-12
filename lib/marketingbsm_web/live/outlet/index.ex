@@ -160,9 +160,6 @@ defmodule MarketingbsmWeb.ShopLive.Index do
 
   @impl true
   def handle_info({MarketingbsmWeb.ShopLive.FormComponent, {:saved, shop}}, socket) do
-    dbg(shop)
-    dbg(socket.assigns.streams.outlets)
-
     socket =
       socket
       |> assign(:count, socket.assigns.count + 1)

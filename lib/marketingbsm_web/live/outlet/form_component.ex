@@ -49,7 +49,18 @@ defmodule MarketingbsmWeb.ShopLive.FormComponent do
                 </Text.text>
               </label>
 
-              <.input type="select" field={f[:region_id]} options={@region_selector} />
+              <Select.select
+                id="region[:region_id]"
+                name={@form[:region_id].name}
+                placeholder="Select..."
+                value={@form[:region_id].value}
+                phx-update="ignore"
+                required={true}
+              >
+                <:item :for={%{id: _id, name: name} <- @regions}>
+                  <%= name %>
+                </:item>
+              </Select.select>
             </Layout.col>
           <% end %>
 
@@ -80,7 +91,18 @@ defmodule MarketingbsmWeb.ShopLive.FormComponent do
                 </Text.text>
               </label>
 
-              <.input type="select" field={f[:region_id]} options={@region_selector} />
+              <Select.select
+                id="region[:region_id]"
+                name={@form[:region_id].name}
+                placeholder="Select..."
+                value={@form[:region_id].value}
+                phx-update="ignore"
+                required={true}
+              >
+                <:item :for={%{id: _id, name: name} <- @regions}>
+                  <%= name %>
+                </:item>
+              </Select.select>
             </Layout.col>
           <% end %>
 
@@ -110,13 +132,12 @@ defmodule MarketingbsmWeb.ShopLive.FormComponent do
     query_results =
       Marketingbsm.Outlet.Region
       |> Ash.Query.load([])
-      # |> Ash.Query.for_read(:by_user_id, %{id: socket.assigns.current_user.id})
       |> Ash.Query.sort(created_at: :desc)
       |> Ash.read!(page: [limit: 20])
 
     regions = Map.get(query_results, :results)
 
-    socket |> assign(region_selector: region_selector(regions))
+    socket |> assign(regions: regions)
   end
 
   @impl true
@@ -125,8 +146,15 @@ defmodule MarketingbsmWeb.ShopLive.FormComponent do
   end
 
   def handle_event("save", %{"shop" => shop_params}, socket) do
-    dbg(shop_params)
-    dbg(socket.assigns.form.source.type)
+    region_id =
+      Enum.find_value(socket.assigns.regions, fn reg ->
+        if reg.name == Map.get(shop_params, "region_id"), do: reg.id, else: nil
+      end)
+
+    shop_params =
+      Map.merge(shop_params, %{
+        "region_id" => region_id
+      })
 
     case AshPhoenix.Form.submit(socket.assigns.form, params: shop_params) do
       {:ok, shop} ->

@@ -1,6 +1,8 @@
 defmodule MarketingbsmWeb.TemplateLive.FormComponent do
   use MarketingbsmWeb, :live_component
 
+  alias MarketingbsmWeb.RegistryLive.FormComponent
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -18,13 +20,24 @@ defmodule MarketingbsmWeb.TemplateLive.FormComponent do
 
         <.form :let={f} for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
           <Layout.col class="space-y-1.5">
-            <label for="project_name">
-              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+            <label for="project[:project_id]">
+              <Text.text class="text-tremor-content">
                 Project Name
               </Text.text>
             </label>
 
-            <.input type="select" field={f[:project_id]} options={@project_selector} required />
+            <Select.search_select
+              id="project[:project_id]"
+              name={@form[:project_id].name}
+              placeholder="Select..."
+              value={@form[:project_id].value}
+              phx-update="ignore"
+              required={true}
+            >
+              <:item :for={%{id: _id, name: name} <- @projects}>
+                <%= name %>
+              </:item>
+            </Select.search_select>
           </Layout.col>
 
           <Layout.col class="space-y-1.5">
@@ -373,7 +386,7 @@ defmodule MarketingbsmWeb.TemplateLive.FormComponent do
 
     projects = Map.get(query_results, :results)
 
-    socket |> assign(project_selector: project_selector(projects))
+    socket |> assign(projects: projects)
   end
 
   @impl true
@@ -383,8 +396,14 @@ defmodule MarketingbsmWeb.TemplateLive.FormComponent do
   end
 
   def handle_event("save", %{"template" => template_params}, socket) do
-    # template_params = change_empty_to_nil(template_params)
     dbg(template_params)
+
+    project_id = FormComponent.get_project_id(socket, template_params)
+
+    template_params =
+      Map.merge(template_params, %{
+        "project_id" => project_id
+      })
 
     case AshPhoenix.Form.submit(socket.assigns.form, params: template_params) do
       {:ok, template} ->
@@ -422,11 +441,5 @@ defmodule MarketingbsmWeb.TemplateLive.FormComponent do
       end
 
     assign(socket, form: to_form(form))
-  end
-
-  defp project_selector(projects) do
-    for item <- projects do
-      {item.name, item.id}
-    end
   end
 end

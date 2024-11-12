@@ -7,6 +7,9 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
 
   alias Marketingbsm.Accounts
 
+  import MarketingbsmWeb.RegistryLive.FormComponent,
+    only: [get_project_id: 2, get_outlet_id: 2, get_ambassador_id: 2]
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -26,11 +29,42 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
           <Layout.col class="space-y-1.5">
             <label>
               <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
+                Project Name
+              </Text.text>
+            </label>
+
+            <Select.select
+              id="project[:project_id]"
+              name={@form[:project_id].name}
+              placeholder="Select..."
+              value={@form[:project_id].value}
+              phx-update="ignore"
+            >
+              <:item :for={%{id: _id, name: name} <- @projects}>
+                <%= name %>
+              </:item>
+            </Select.select>
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label>
+              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
                 Ambassador Name
               </Text.text>
             </label>
 
-            <.input type="select" field={f[:ambassador_id]} options={@promoter_selector} />
+            <Select.search_select
+              id="ambassador[:ambassador_id]"
+              name={@form[:ambassador_id].name}
+              placeholder="Select..."
+              value={@form[:ambassador_id].value}
+              phx-update="ignore"
+              required={true}
+            >
+              <:item :for={%{id: _id, name: name} <- @ambassadors}>
+                <%= name %>
+              </:item>
+            </Select.search_select>
           </Layout.col>
 
           <Layout.col class="space-y-1.5">
@@ -39,17 +73,18 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
                 Outlet Name
               </Text.text>
             </label>
-            <.input type="select" field={f[:outlet_id]} options={@outlet_selector} />
-          </Layout.col>
 
-          <Layout.col class="space-y-1.5">
-            <label>
-              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
-                Project Name
-              </Text.text>
-            </label>
-
-            <.input type="select" field={f[:project_id]} options={@project_selector} />
+            <Select.search_select
+              id="outlet[:outlet_id]"
+              name={@form[:outlet_id].name}
+              placeholder="Select..."
+              value={@form[:outlet_id].value}
+              phx-update="ignore"
+            >
+              <:item :for={%{id: _id, name: name} <- @outlets}>
+                <%= name %>
+              </:item>
+            </Select.search_select>
           </Layout.col>
 
           <Layout.col class="space-y-1.5">
@@ -224,9 +259,9 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
       |> Ash.Query.load([])
       |> Ash.read!(page: [limit: 20])
 
-    promoters = Map.get(query_results, :results)
+    ambassadors = Map.get(query_results, :results)
 
-    socket |> assign(promoter_selector: ambassador_selector(promoters))
+    socket |> assign(ambassadors: ambassador_selector(ambassadors))
   end
 
   def fetch_outlets(socket) do
@@ -238,12 +273,14 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
 
     outlets = Map.get(query_results, :results)
 
-    socket |> assign(outlet_selector: resource_selector(outlets))
+    socket |> assign(outlets: outlets)
   end
 
   @impl true
   def handle_event("validate", %{"report" => report_params}, socket) do
     project_id = report_params["project_id"]
+
+    project_id = get_project_id(socket, report_params)
 
     result = ProjectGeneral.get_template_by_project_id!(project_id)
 
@@ -254,6 +291,17 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
   end
 
   def handle_event("save", %{"report" => report_params}, socket) do
+    ambassador_id = get_ambassador_id(socket, report_params)
+    outlet_id = get_outlet_id(socket, report_params)
+    project_id = get_project_id(socket, report_params)
+
+    report_params =
+      Map.merge(report_params, %{
+        "ambassador_id" => ambassador_id,
+        "project_id" => project_id,
+        "outlet_id" => outlet_id
+      })
+
     report_params = get_complete_params(report_params)
     ambassador_id = report_params["ambassador_id"]
     outlet_id = report_params["outlet_id"]
@@ -327,12 +375,6 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
     assign(socket, form: to_form(form))
   end
 
-  defp resource_selector(resource) do
-    for item <- resource do
-      {item.name, item.id}
-    end
-  end
-
   def fetch_projects_unfreezed(socket) do
     query_results =
       Marketingbsm.ProjectGeneral.Project
@@ -342,20 +384,14 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
 
     projects = Map.get(query_results, :results)
 
-    socket |> assign(project_selector: project_selector(projects))
-  end
-
-  defp project_selector(projects) do
-    for item <- projects do
-      {item.name, item.id}
-    end
+    socket |> assign(projects: projects)
   end
 
   def ambassador_selector(ambassadors) do
     for item <- ambassadors do
       user = Accounts.get_user_by_id!(item.ambassador_id)
 
-      {user.name, user.id}
+      user
     end
   end
 end

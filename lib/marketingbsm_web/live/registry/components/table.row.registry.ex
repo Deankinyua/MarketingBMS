@@ -21,7 +21,7 @@ defmodule MarketingbsmWeb.RegistryLive.RowComponent do
                 JS.push("delete", value: %{dom_id: @dom_id, registry_id: @registry.id})
                 |> hide("##{@dom_id}")
               }
-              data-confirm="Are you sure?"
+              data-confirm="Are you sure you want to Proceed? You will lose this ambassador's records!"
             >
               Delete
             </.link>
