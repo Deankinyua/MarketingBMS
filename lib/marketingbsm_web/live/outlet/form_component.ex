@@ -190,12 +190,6 @@ defmodule MarketingbsmWeb.ShopLive.FormComponent do
 
     assign(socket, form: to_form(form))
   end
-
-  defp region_selector(regions) do
-    for region <- regions do
-      {region.name, region.id}
-    end
-  end
 end
 
 # ? what does tails by zach daniel do

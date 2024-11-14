@@ -7,8 +7,7 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
 
   alias Marketingbsm.Accounts
 
-  import MarketingbsmWeb.RegistryLive.FormComponent,
-    only: [get_project_id: 2, get_outlet_id: 2, get_ambassador_id: 2]
+  alias MarketingbsmWeb.RegistryLive.FormComponent
 
   @impl true
   def render(assigns) do
@@ -278,9 +277,7 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
 
   @impl true
   def handle_event("validate", %{"report" => report_params}, socket) do
-    project_id = report_params["project_id"]
-
-    project_id = get_project_id(socket, report_params)
+    project_id = FormComponent.get_project_id(socket, report_params)
 
     result = ProjectGeneral.get_template_by_project_id!(project_id)
 
@@ -291,9 +288,9 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
   end
 
   def handle_event("save", %{"report" => report_params}, socket) do
-    ambassador_id = get_ambassador_id(socket, report_params)
-    outlet_id = get_outlet_id(socket, report_params)
-    project_id = get_project_id(socket, report_params)
+    ambassador_id = FormComponent.get_ambassador_id(socket, report_params)
+    outlet_id = FormComponent.get_outlet_id(socket, report_params)
+    project_id = FormComponent.get_project_id(socket, report_params)
 
     report_params =
       Map.merge(report_params, %{

@@ -39,6 +39,25 @@ defmodule MarketingbsmWeb.NavigationComponent do
           </.menu_item>
 
           <.menu_item
+            on_click={on_live_navigate(:checkin, ~p"/checkins")}
+            active={@active_tab == "checkin"}
+            name="Check-Ins"
+          >
+            <:icon>
+              <%!-- hero-home-solid --%>
+              <.icon
+                class={
+                  Tails.classes([
+                    Theme.get_sizing_style("xl", "height"),
+                    Theme.get_sizing_style("xl", "width")
+                  ])
+                }
+                name={"hero-document-check" <> if(@active_tab == "checkin", do: "-solid", else: "")}
+              />
+            </:icon>
+          </.menu_item>
+
+          <.menu_item
             on_click={on_live_navigate(:project, ~p"/projects")}
             active={@active_tab == "project"}
             name="Projects"
