@@ -12,7 +12,20 @@ config :marketingbsm, Marketingbsm.Repo,
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
-#
+
+config :ex_aws,
+  region: {:system, "S3_REGION"},
+  access_key_id: {:system, "S3_ACCESS_KEY_ID"},
+  secret_access_key: {:system, "S3_SECRET_ACCESS_KEY"}
+
+config :ex_aws, :s3,
+  scheme: "http://",
+  host: "localhost",
+  port: 9000
+
+secret_key_base = "lrcEifGeDdhAyd2U0poHmtKQXe11AcuKBLUmAZCpWBACINvPhnYUoZevy6Pi0TdK"
+
+config :marketingbsm, token_signing_secret: secret_key_base
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we can use it
 # to bundle .js and .css sources.
@@ -23,7 +36,7 @@ config :marketingbsm, MarketingbsmWeb.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "lrcEifGeDdhAyd2U0poHmtKQXe11AcuKBLUmAZCpWBACINvPhnYUoZevy6Pi0TdK",
+  secret_key_base: secret_key_base,
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:marketingbsm, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:marketingbsm, ~w(--watch)]}

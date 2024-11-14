@@ -17,28 +17,18 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "ambassador_id",
-      "type": "uuid"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "project_id",
-      "type": "uuid"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "file_url",
+      "source": "name",
       "type": "text"
+    },
+    {
+      "allow_nil?": false,
+      "default": "false",
+      "generated?": false,
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "source": "is_freezed",
+      "type": "boolean"
     }
   ],
   "base_filter": null,
@@ -46,7 +36,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "3343F96260E6955E59BE95A4BAAB70AEBC1D2699743F5EF3AD8E53A80D3D8783",
+  "hash": "C2B9A5A912519B141E7DDF44B324E1BBBDA1A98124CC62E7CAEAB15519103D1B",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -55,5 +45,5 @@
   },
   "repo": "Elixir.Marketingbsm.Repo",
   "schema": null,
-  "table": "checkins"
+  "table": "projectgeneral"
 }

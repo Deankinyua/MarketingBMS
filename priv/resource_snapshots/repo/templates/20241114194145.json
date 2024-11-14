@@ -226,7 +226,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "162A7E057DC1B556EC587D317AAA854A0FD64EAB656775724667181042C5070F",
+  "hash": "ABFDD7BAAE8A64768E9E696FCCECCEFA7C2AB286FAB8B8CF90D2C60F218B7A80",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -235,5 +235,5 @@
   },
   "repo": "Elixir.Marketingbsm.Repo",
   "schema": null,
-  "table": "labels"
+  "table": "templates"
 }

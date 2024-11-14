@@ -32,6 +32,11 @@ defmodule Marketingbsm.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:ex_image_info, "~> 0.2.4"},
+      {:ex_aws, "~> 2.5"},
+      {:ex_aws_s3, "~> 2.0"},
+      {:hackney, "~> 1.19"},
+      {:sweet_xml, "~> 0.7"},
       {:ash, "~> 3.0"},
       {:picosat_elixir, "~> 0.2"},
       {:ash_authentication, "~> 4.0"},

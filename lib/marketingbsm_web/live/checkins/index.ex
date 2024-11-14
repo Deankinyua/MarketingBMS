@@ -117,4 +117,14 @@ defmodule MarketingbsmWeb.CheckinLive.Index do
     |> assign(:page_title, "Listing checkins")
     |> assign(:report, nil)
   end
+
+  @impl true
+  def handle_info(%{event: "notification", title: title, message: message, type: type}, socket) do
+    {:noreply,
+     push_event(socket, "notify", %{
+       title: title,
+       message: message,
+       type: type
+     })}
+  end
 end

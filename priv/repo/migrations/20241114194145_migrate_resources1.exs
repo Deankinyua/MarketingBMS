@@ -41,6 +41,31 @@ defmodule Marketingbsm.Repo.Migrations.MigrateResources1 do
       add :jti, :text, null: false, primary_key: true
     end
 
+    create table(:templates, primary_key: false) do
+      add :id, :uuid, null: false, default: fragment("gen_random_uuid()"), primary_key: true
+      add :project_id, :uuid, null: false
+      add :field_1, :text
+      add :field_2, :text
+      add :field_3, :text
+      add :field_4, :text
+      add :field_5, :text
+      add :field_6, :text
+      add :field_7, :text
+      add :field_8, :text
+      add :field_9, :text
+      add :field_10, :text
+      add :field_11, :text
+      add :field_12, :text
+      add :field_13, :text
+      add :field_14, :text
+      add :field_15, :text
+      add :field_16, :text
+      add :field_17, :text
+      add :field_18, :text
+      add :field_19, :text
+      add :field_20, :text
+    end
+
     create table(:shops, primary_key: false) do
       add :id, :uuid, null: false, default: fragment("gen_random_uuid()"), primary_key: true
       add :name, :text, null: false
@@ -53,6 +78,51 @@ defmodule Marketingbsm.Repo.Migrations.MigrateResources1 do
       add :updated_at, :utc_datetime_usec,
         null: false,
         default: fragment("(now() AT TIME ZONE 'utc')")
+    end
+
+    create table(:reports, primary_key: false) do
+      add :id, :uuid, null: false, default: fragment("gen_random_uuid()"), primary_key: true
+      add :project_id, :uuid, null: false
+      add :ambassador_id, :uuid, null: false
+      add :outlet_id, :uuid, null: false
+      add :field_1, :bigint
+      add :field_2, :bigint
+      add :field_3, :bigint
+      add :field_4, :bigint
+      add :field_5, :bigint
+      add :field_6, :bigint
+      add :field_7, :bigint
+      add :field_8, :bigint
+      add :field_9, :bigint
+      add :field_10, :bigint
+      add :field_11, :bigint
+      add :field_12, :bigint
+      add :field_13, :bigint
+      add :field_14, :bigint
+      add :field_15, :bigint
+      add :field_16, :bigint
+      add :field_17, :bigint
+      add :field_18, :bigint
+      add :field_19, :bigint
+      add :field_20, :bigint
+      add :total_sales, :bigint
+
+      add :created_at, :utc_datetime_usec,
+        null: false,
+        default: fragment("(now() AT TIME ZONE 'utc')")
+
+      add :updated_at, :utc_datetime_usec,
+        null: false,
+        default: fragment("(now() AT TIME ZONE 'utc')")
+    end
+
+    create table(:registries, primary_key: false) do
+      add :id, :uuid, null: false, default: fragment("gen_random_uuid()"), primary_key: true
+      add :project_id, :uuid, null: false
+      add :ambassador_id, :uuid, null: false
+      add :outlet_id, :uuid, null: false
+      add :days_worked, :bigint, null: false, default: 0
+      add :should_activate, :boolean, null: false, default: false
     end
 
     create table(:regions, primary_key: false) do
@@ -87,29 +157,12 @@ defmodule Marketingbsm.Repo.Migrations.MigrateResources1 do
       add :is_freezed, :boolean, null: false, default: false
     end
 
-    create table(:labels, primary_key: false) do
+    create table(:checkins, primary_key: false) do
       add :id, :uuid, null: false, default: fragment("gen_random_uuid()"), primary_key: true
+      add :ambassador_id, :uuid, null: false
       add :project_id, :uuid, null: false
-      add :field_1, :text
-      add :field_2, :text
-      add :field_3, :text
-      add :field_4, :text
-      add :field_5, :text
-      add :field_6, :text
-      add :field_7, :text
-      add :field_8, :text
-      add :field_9, :text
-      add :field_10, :text
-      add :field_11, :text
-      add :field_12, :text
-      add :field_13, :text
-      add :field_14, :text
-      add :field_15, :text
-      add :field_16, :text
-      add :field_17, :text
-      add :field_18, :text
-      add :field_19, :text
-      add :field_20, :text
+      add :outlet_id, :uuid, null: false
+      add :file, :map, null: false
     end
 
     create table(:ambassadors, primary_key: false) do
@@ -123,7 +176,7 @@ defmodule Marketingbsm.Repo.Migrations.MigrateResources1 do
   def down do
     drop table(:ambassadors)
 
-    drop table(:labels)
+    drop table(:checkins)
 
     drop table(:projectgeneral)
 
@@ -141,7 +194,13 @@ defmodule Marketingbsm.Repo.Migrations.MigrateResources1 do
 
     drop table(:regions)
 
+    drop table(:registries)
+
+    drop table(:reports)
+
     drop table(:shops)
+
+    drop table(:templates)
 
     drop table(:tokens)
 

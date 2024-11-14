@@ -11,7 +11,6 @@ defmodule SimpleS3Upload do
     * `:access_key_id` - The AWS access key id
     * `:secret_access_key` - The AWS secret access key
   Returns a map of form fields to be used on the client via the JavaScript `FormData` API.
-
   ## Options
     * `:key` - The required key of the object to be uploaded.
     * `:max_file_size` - The required maximum allowed file size in bytes.
@@ -20,31 +19,14 @@ defmodule SimpleS3Upload do
       before the signed upload expires.
   ## Examples
       {:ok, fields} =
-        SimpleS3Upload.sign_form_upload(config, "my-bucket",
+        SimpleS3Upload.sign_form_upload(
           key: "public/my-file-name",
           content_type: "image/png",
           max_file_size: 10_000,
           expires_in: :timer.hours(1)
         )
   """
-
-  # def config do
-  #   %{
-  #     region: region(),
-  #     access_key_id: Application.fetch_env!(:audioconvert, :access_key_id),
-  #     secret_access_key: Application.fetch_env!(:audioconvert, :secret_access_key)
-  #   }
-  # end
-
-  # def bucket do
-  #   Application.fetch_env!(:audioconvert, :bucket)
-  # end
-
-  # def region do
-  #   Application.fetch_env!(:audioconvert, :region)
-  # end
-
-  def sign_form_upload(config, bucket, opts) do
+  def sign_form_upload(opts) do
     key = Keyword.fetch!(opts, :key)
     max_file_size = Keyword.fetch!(opts, :max_file_size)
     content_type = Keyword.fetch!(opts, :content_type)
@@ -52,14 +34,14 @@ defmodule SimpleS3Upload do
 
     expires_at = DateTime.add(DateTime.utc_now(), expires_in, :millisecond)
     amz_date = amz_date(expires_at)
-    credential = credential(config, expires_at)
+    credential = credential(config(), expires_at)
 
     encoded_policy =
       Base.encode64("""
       {
         "expiration": "#{DateTime.to_iso8601(expires_at)}",
         "conditions": [
-          {"bucket":  "#{bucket}"},
+          {"bucket":  "#{bucket()}"},
           ["eq", "$key", "#{key}"],
           {"acl": "public-read"},
           ["eq", "$Content-Type", "#{content_type}"],
@@ -74,17 +56,49 @@ defmodule SimpleS3Upload do
 
     fields = %{
       "key" => key,
-      # "acl" => "public-read",
+      "acl" => "public-read",
       "content-type" => content_type,
       "x-amz-server-side-encryption" => "AES256",
       "x-amz-credential" => credential,
       "x-amz-algorithm" => "AWS4-HMAC-SHA256",
       "x-amz-date" => amz_date,
       "policy" => encoded_policy,
-      "x-amz-signature" => signature(config, expires_at, encoded_policy)
+      "x-amz-signature" => signature(config(), expires_at, encoded_policy)
     }
 
     {:ok, fields}
+  end
+
+  def config do
+    %{
+      region: region(),
+      access_key_id: Application.fetch_env!(:marketingbsm, :access_key_id),
+      secret_access_key: Application.fetch_env!(:marketingbsm, :secret_access_key)
+      # secret_access_key: System.fetch_env!("S3_SECRET_ACCESS_KEY")
+    }
+  end
+
+  def bucket do
+    # System.fetch_env!("S3_BUCKET")
+    Application.fetch_env!(:marketingbsm, :bucket)
+  end
+
+  def region do
+    # System.fetch_env!("S3_REGION")
+    Application.fetch_env!(:marketingbsm, :region)
+  end
+
+  # def entry_url(entry) do
+  #   "http://#{bucket()}.s3.#{region()}.amazonaws.com/#{entry.uuid}.#{ext(entry)}"
+  # end
+
+  def s3_filepath(entry) do
+    "#{entry.uuid}.#{ext(entry)}"
+  end
+
+  def ext(entry) do
+    [ext | _] = MIME.extensions(entry.client_type)
+    ext
   end
 
   defp amz_date(time) do
@@ -126,4 +140,51 @@ defmodule SimpleS3Upload do
   end
 
   defp sha256(secret, msg), do: :crypto.mac(:hmac, :sha256, secret, msg)
+
+  def get_file_url(key, bucket, expires_in) do
+    [scheme, host] = System.get_env("PROJECT_URL_MEDIA") |> String.split("://")
+
+    {:ok, url} =
+      ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: nil)
+      |> ExAws.S3.presigned_url(:get, bucket, key, expires_in: expires_in)
+
+    url
+  end
+
+  def put_object(key, bucket, file) do
+    [scheme, host] = System.get_env("PROJECT_URL_MEDIA") |> String.split("://")
+
+    config =
+      if System.get_env("MIX_ENV") == "prod" do
+        ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: nil)
+      else
+        ExAws.Config.new(:s3, scheme: scheme <> "://", host: "localhost", port: 9000)
+      end
+
+    ExAws.S3.put_object(
+      bucket,
+      key,
+      file
+    )
+    |> ExAws.request!(config)
+  end
+
+  def presign_upload(entry, socket, key \\ "audio") do
+    [scheme, host] = System.get_env("PROJECT_URL_MEDIA") |> String.split("://")
+
+    config = ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: nil)
+    bucket = "marketingbsm"
+    key = "#{key}/#{entry.client_name}"
+
+    case ExAws.S3.presigned_url(config, :put, bucket, key,
+           expires_in: 3600,
+           query_params: [{"Content-Type", entry.client_type}]
+         ) do
+      {:ok, url} ->
+        {:ok, %{uploader: "S3", key: key, url: url}, socket}
+
+      {:error, reason} ->
+        {:error, %{uploader: "S3", key: key, url: ~c""}, reason}
+    end
+  end
 end

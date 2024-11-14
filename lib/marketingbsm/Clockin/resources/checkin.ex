@@ -35,7 +35,9 @@ defmodule Marketingbsm.Clockin.Checkin do
       allow_nil? false
     end
 
-    attribute :file_url, :string do
+    attribute :file, Marketingbsm.File do
+      description "The audio file of the workspace"
+
       allow_nil? false
     end
   end
@@ -50,7 +52,7 @@ defmodule Marketingbsm.Clockin.Checkin do
         :outlet_id,
         :project_id,
         :ambassador_id,
-        :file_url
+        :file
       ]
     end
 
@@ -58,7 +60,7 @@ defmodule Marketingbsm.Clockin.Checkin do
       # * accept behaves like cast/3 in ecto changesets
 
       accept [
-        :file_url
+        :file
       ]
     end
 
