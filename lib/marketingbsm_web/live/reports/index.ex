@@ -20,7 +20,7 @@ defmodule MarketingbsmWeb.ReportLive.Index do
           justify_content="start"
           class="flex-1 px-8 py-8 h-full overflow-y-auto bg-gray-50/75"
         >
-          <Layout.flex justify_content="between" class="">
+          <Layout.flex justify_content="between">
             <Layout.flex flex_direction="col" align_items="start" class="grow">
               <Text.title class="text-xl">
                 <Text.bold>Reports</Text.bold>
@@ -30,13 +30,63 @@ defmodule MarketingbsmWeb.ReportLive.Index do
                 Use this for your check-ins, check-outs and Reports.
               </Text.subtitle>
             </Layout.flex>
+          </Layout.flex>
 
-            <Button.button size="xl" phx-click={JS.patch(~p"/reports/new")}>
-              <:icon>
-                <.icon name="hero-plus" />
-              </:icon>
-              Report
-            </Button.button>
+          <Layout.flex
+            flex_direction="col"
+            justify_content="center"
+            class="border-red-400 border-2 my-10"
+          >
+            <Layout.flex flex_direction="col" align_items="center" class="grow mb-4">
+              <Text.title class="text-xl my-4">
+                <Text.bold>Check-In</Text.bold>
+              </Text.title>
+
+              <Text.subtitle color="gray" class="mb-6">
+                Upload Photo first then your details.
+              </Text.subtitle>
+
+              <Button.button size="xl" phx-click={JS.patch(~p"/checkins/new")}>
+                <:icon>
+                  <.icon name="hero-plus" />
+                </:icon>
+                Check-In
+              </Button.button>
+            </Layout.flex>
+
+            <Layout.flex flex_direction="col" align_items="center" class="grow mb-4">
+              <Text.title class="text-xl my-4">
+                <Text.bold>Check-Out</Text.bold>
+              </Text.title>
+
+              <Text.subtitle color="gray" class="mb-6">
+                Upload Photo first then your details.
+              </Text.subtitle>
+
+              <Button.button size="xl" phx-click={JS.patch(~p"/reports/new")}>
+                <:icon>
+                  <.icon name="hero-plus" />
+                </:icon>
+                Check-Out
+              </Button.button>
+            </Layout.flex>
+
+            <Layout.flex flex_direction="col" align_items="center" class="grow mb-4">
+              <Text.title class="text-xl my-4">
+                <Text.bold>Closing Report</Text.bold>
+              </Text.title>
+
+              <Text.subtitle color="gray" class="mb-6">
+                Use this to upload your closing report and enter the the details in chronological order.
+              </Text.subtitle>
+
+              <Button.button size="xl" phx-click={JS.patch(~p"/reports/new")}>
+                <:icon>
+                  <.icon name="hero-plus" />
+                </:icon>
+                Closing Report
+              </Button.button>
+            </Layout.flex>
           </Layout.flex>
 
           <.modal

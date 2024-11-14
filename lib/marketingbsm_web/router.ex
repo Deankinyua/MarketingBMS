@@ -80,6 +80,13 @@ defmodule MarketingbsmWeb.Router do
 
       live "/reports/:id", ReportLive.Show, :show
       live "/reports/:id/show/edit", ReportLive.Show, :edit
+
+      live "/checkins", CheckinLive.Index, :index
+      live "/checkins/new", CheckinLive.Index, :new
+      live "/checkins/:id/edit", CheckinLive.Index, :edit
+
+      live "/checkins/:id", CheckinLive.Show, :show
+      live "/checkins/:id/show/edit", CheckinLive.Show, :edit
     end
   end
 

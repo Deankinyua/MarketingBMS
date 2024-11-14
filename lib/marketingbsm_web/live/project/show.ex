@@ -298,7 +298,6 @@ defmodule MarketingbsmWeb.ProjectLive.Show do
 
   @impl true
   def mount(_params, _session, socket) do
-    dbg(socket.assigns)
     {:ok, socket}
   end
 

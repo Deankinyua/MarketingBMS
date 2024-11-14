@@ -37,7 +37,8 @@ config :marketingbsm,
     Marketingbsm.Outlet,
     Marketingbsm.ProjectGeneral,
     Marketingbsm.Activation,
-    Marketingbsm.Record
+    Marketingbsm.Record,
+    Marketingbsm.Clockin
   ]
 
 # Configure esbuild (the version is required)
