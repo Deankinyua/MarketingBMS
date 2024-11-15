@@ -20,7 +20,7 @@ defmodule MarketingbsmWeb.CheckinLive.Index do
           <Layout.flex justify_content="between" class="">
             <Layout.flex flex_direction="col" align_items="start" class="grow">
               <Text.title class="text-xl">
-                <Text.bold>Listing Checkins</Text.bold>
+              <Text.bold>Listing Checkins</Text.bold>
               </Text.title>
 
               <Text.subtitle color="gray">
@@ -120,6 +120,8 @@ defmodule MarketingbsmWeb.CheckinLive.Index do
 
   @impl true
   def handle_info(%{event: "notification", title: title, message: message, type: type}, socket) do
+
+
     {:noreply,
      push_event(socket, "notify", %{
        title: title,
