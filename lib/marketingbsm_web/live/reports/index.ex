@@ -32,12 +32,12 @@ defmodule MarketingbsmWeb.ReportLive.Index do
             </Layout.flex>
           </Layout.flex>
 
-          <Layout.flex
-            flex_direction="col"
-            justify_content="center"
-            class="border-red-400 border-2 my-10"
-          >
-            <Layout.flex flex_direction="col" align_items="center" class="grow mb-4">
+          <Layout.flex flex_direction="col" justify_content="center" class="my-10">
+            <Layout.flex
+              flex_direction="col"
+              align_items="center"
+              class="grow mb-4 border-gray-300 border-2 border-dotted py-8 my-10 max-w-2xl"
+            >
               <Text.title class="text-xl my-4">
                 <Text.bold>Check-In</Text.bold>
               </Text.title>
@@ -54,7 +54,11 @@ defmodule MarketingbsmWeb.ReportLive.Index do
               </Button.button>
             </Layout.flex>
 
-            <Layout.flex flex_direction="col" align_items="center" class="grow mb-4">
+            <Layout.flex
+              flex_direction="col"
+              align_items="center"
+              class="grow mb-4 border-gray-300 border-2 py-8 border-dotted my-10 max-w-2xl"
+            >
               <Text.title class="text-xl my-4">
                 <Text.bold>Check-Out</Text.bold>
               </Text.title>
@@ -71,7 +75,11 @@ defmodule MarketingbsmWeb.ReportLive.Index do
               </Button.button>
             </Layout.flex>
 
-            <Layout.flex flex_direction="col" align_items="center" class="grow mb-4">
+            <Layout.flex
+              flex_direction="col"
+              align_items="center"
+              class="grow mb-4 border-gray-300 border-2 py-8 border-dotted my-10 max-w-2xl"
+            >
               <Text.title class="text-xl my-4">
                 <Text.bold>Closing Report</Text.bold>
               </Text.title>

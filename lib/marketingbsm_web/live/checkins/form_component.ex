@@ -158,10 +158,19 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
     form = socket.assigns.form |> Form.validate(checkin_params, errors: false)
 
     {:noreply, assign(socket, form: form)}
+
+    # {:noreply, socket}
   end
 
   def handle_event("save", %{"checkin" => checkin_params}, socket) do
-    dbg(checkin_params)
+    # {date, time} = :calendar.local_time()
+
+    # time = Time.from_erl!(time)
+    # date = Date.from_erl!(date)
+
+    # datetimemap = %{"create_date" => date, "create_time" => time}
+
+    # checkin_params = Map.merge(checkin_params, datetimemap)
 
     ambassador_id = RegistryComponent.get_ambassador_id(socket, checkin_params)
     outlet_id = RegistryComponent.get_outlet_id(socket, checkin_params)

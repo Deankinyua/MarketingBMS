@@ -40,6 +40,24 @@ defmodule Marketingbsm.Clockin.Checkin do
 
       allow_nil? false
     end
+
+    create_timestamp :create_date do
+      writable? false
+      default &Date.utc_today/0
+      match_other_defaults? true
+      update_default &Date.utc_today/0
+      type Ash.Type.Date
+      allow_nil? false
+    end
+
+    create_timestamp :create_time do
+      writable? false
+      default &Time.utc_now/0
+      match_other_defaults? true
+      update_default &Time.utc_now/0
+      type Ash.Type.Time
+      allow_nil? false
+    end
   end
 
   actions do

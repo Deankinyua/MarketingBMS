@@ -1,4 +1,4 @@
-defmodule MarketingbsmWeb.CheckinLive.RowComponent do
+defmodule MarketingbsmWeb.CheckinLive.RowComponentFilter do
   use MarketingbsmWeb, :live_component
   alias Tremorx.Components.Button
 
@@ -11,14 +11,14 @@ defmodule MarketingbsmWeb.CheckinLive.RowComponent do
       <Table.table_cell>
         <div class="flex justify-between px-6">
           <Button.button>
-            <.link
-              phx-click={
-                JS.push("delete", value: %{dom_id: @dom_id, checkin_id: @checkin.id})
-                |> hide("##{@dom_id}")
-              }
-              data-confirm="Are you sure you want to Proceed? You will lose this ambassador's records!"
-            >
-              Delete
+            <.link navigate={~p"/checkins/#{@project}"}>
+              View Check-Ins
+            </.link>
+          </Button.button>
+
+          <Button.button>
+            <.link navigate={~p"/checkins/#{@project}"}>
+              View Check-Outs
             </.link>
           </Button.button>
         </div>
