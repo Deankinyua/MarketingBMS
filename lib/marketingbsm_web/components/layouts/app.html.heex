@@ -1,4 +1,10 @@
 <main>
+  <div
+    phx-update="ignore"
+    id="notifications"
+    class="fixed z-[10000] right-0 top-4 transition-all duration-100 ease-in-out"
+  >
+  </div>
   <div class="mx-auto">
     <.flash_group flash={@flash} /> <%= @inner_content %>
   </div>
