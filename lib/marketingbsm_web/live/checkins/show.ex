@@ -100,7 +100,7 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
                   </Table.table_cell>
 
                   <Table.table_cell>
-                    <%= Time.to_string(checkin.create_time) %>
+                    <%= Time.to_string(Time.add(checkin.create_time, 3, :hour)) %>
                   </Table.table_cell>
                 </.live_component>
               </Table.table_row>
@@ -159,6 +159,7 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
     ambassador_count =
       Marketingbsm.Clockin.Checkin
       |> Ash.Query.filter(project_id: id)
+      |> Ash.Query.filter(create_date: date)
       |> Ash.read!(page: [limit: 20])
 
     ambassadors = Map.get(ambassador_count, :results)
