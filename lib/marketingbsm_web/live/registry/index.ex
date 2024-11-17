@@ -1,8 +1,5 @@
 defmodule MarketingbsmWeb.RegistryLive.Index do
   use MarketingbsmWeb, :live_view
-  alias Marketingbsm.Accounts
-  alias Marketingbsm.Outlet
-  alias Marketingbsm.ProjectGeneral
 
   require Ash.Query
 
@@ -12,7 +9,11 @@ defmodule MarketingbsmWeb.RegistryLive.Index do
     <div class="w-full h-full">
       <Layout.flex align_items="start" class="h-screen overflow-y-hidden">
         <%= live_render(@socket, MarketingbsmWeb.LiveDrawer,
-          session: %{"active_tab" => "registry", "user" => "user?id=#{@current_user.id}"},
+          session: %{
+            "active_tab" => "registry",
+            "hiderr" => @hiderr,
+            "user" => "user?id=#{@current_user.id}"
+          },
           id: "live_drawer",
           sticky: true
         ) %>
@@ -115,6 +116,8 @@ defmodule MarketingbsmWeb.RegistryLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+    socket = socket |> assign(:hiderr, "")
+
     {:ok,
      socket
      |> stream(

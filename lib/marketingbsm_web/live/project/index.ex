@@ -7,7 +7,11 @@ defmodule MarketingbsmWeb.ProjectLive.Index do
     <div class="w-full h-full">
       <Layout.flex align_items="start" class="h-screen overflow-y-hidden">
         <%= live_render(@socket, MarketingbsmWeb.LiveDrawer,
-          session: %{"active_tab" => "project", "user" => "user?id=#{@current_user.id}"},
+          session: %{
+            "active_tab" => "project",
+            "hiderr" => @hiderr,
+            "user" => "user?id=#{@current_user.id}"
+          },
           id: "live_drawer",
           sticky: true
         ) %>
@@ -134,6 +138,10 @@ defmodule MarketingbsmWeb.ProjectLive.Index do
     #      |> redirect(to: "/outlets")
     #      |> put_flash(:error, "Access Denied!! You are not authorized to see that page ")}
     # end
+
+    socket =
+      socket
+      |> assign(:hiderr, "")
 
     {:ok,
      socket

@@ -9,210 +9,229 @@ defmodule MarketingbsmWeb.NavigationComponent do
 
   attr :user, :any, required: true
   attr :active_tab, :string
+  attr :hiderr, :string
 
   @doc """
   Renders a side navigation
   """
+
+  # * Put this if you want the logo
+  # <.logo_menu></.logo_menu>
   def drawer(assigns) do
     ~H"""
-    <div class="w-72 h-screen flex border-red-400 flex-col px-2 py-4 border-r">
-      <.logo_menu></.logo_menu>
-      <Layout.flex flex_direction="col" class="flex-1">
-        <Layout.grid class="border-red-400 border-4 space-y-1 w-full first:mt-3">
-          <.menu_item
-            on_click={on_live_navigate(:report, ~p"/reports")}
-            active={@active_tab == "report"}
-            name="Reports"
-          >
-            <:icon>
-              <%!-- hero-home-solid --%>
-              <.icon
-                class={
-                  Tails.classes([
-                    Theme.get_sizing_style("xl", "height"),
-                    Theme.get_sizing_style("xl", "width")
-                  ])
-                }
-                name={"hero-home" <> if(@active_tab == "report", do: "-solid", else: "")}
-              />
-            </:icon>
-          </.menu_item>
+    <div class={"#{@hiderr}"}>
+      <div class="small_nav w-72 h-screen flex border-red-400 flex-col px-2 py-4 border-r">
+        <button>
+          <.link phx-click={JS.push("close", value: %{hiderr: @hiderr})}>
+            <.icon
+              class={
+                Tails.classes([
+                  Theme.get_sizing_style("xl", "height"),
+                  Theme.get_sizing_style("xl", "width")
+                ])
+              }
+              name="hero-bars-3-solid"
+            />
+          </.link>
+        </button>
 
-          <.menu_item
-            on_click={on_live_navigate(:checkin, ~p"/checkins")}
-            active={@active_tab == "checkin"}
-            name="Check-Ins"
-          >
-            <:icon>
-              <%!-- hero-home-solid --%>
-              <.icon
-                class={
-                  Tails.classes([
-                    Theme.get_sizing_style("xl", "height"),
-                    Theme.get_sizing_style("xl", "width")
-                  ])
-                }
-                name={"hero-document-check" <> if(@active_tab == "checkin", do: "-solid", else: "")}
-              />
-            </:icon>
-          </.menu_item>
+        <Layout.flex flex_direction="col" class="flex-1">
+          <Layout.grid class="border-red-400 border-4 space-y-1 w-full first:mt-3">
+            <.menu_item
+              on_click={on_live_navigate(:report, ~p"/reports")}
+              active={@active_tab == "report"}
+              name="Reports"
+            >
+              <:icon>
+                <%!-- hero-home-solid --%>
+                <.icon
+                  class={
+                    Tails.classes([
+                      Theme.get_sizing_style("xl", "height"),
+                      Theme.get_sizing_style("xl", "width")
+                    ])
+                  }
+                  name={"hero-home" <> if(@active_tab == "report", do: "-solid", else: "")}
+                />
+              </:icon>
+            </.menu_item>
 
-          <.menu_item
-            on_click={on_live_navigate(:project, ~p"/projects")}
-            active={@active_tab == "project"}
-            name="Projects"
-          >
-            <:icon>
-              <%!-- hero-briefcase-solid --%>
-              <.icon
-                class={
-                  Tails.classes([
-                    Theme.get_sizing_style("xl", "height"),
-                    Theme.get_sizing_style("xl", "width")
-                  ])
-                }
-                name={"hero-folder-open" <> if(@active_tab == "project", do: "-solid", else: "")}
-              />
-            </:icon>
-          </.menu_item>
+            <.menu_item
+              on_click={on_live_navigate(:checkin, ~p"/checkins")}
+              active={@active_tab == "checkin"}
+              name="Check-Ins"
+            >
+              <:icon>
+                <%!-- hero-home-solid --%>
+                <.icon
+                  class={
+                    Tails.classes([
+                      Theme.get_sizing_style("xl", "height"),
+                      Theme.get_sizing_style("xl", "width")
+                    ])
+                  }
+                  name={"hero-document-check" <> if(@active_tab == "checkin", do: "-solid", else: "")}
+                />
+              </:icon>
+            </.menu_item>
 
-          <.menu_item
-            on_click={on_live_navigate(:template, ~p"/templates")}
-            active={@active_tab == "template"}
-            name="Reporting Templates"
-          >
-            <:icon>
-              <%!-- hero-briefcase-solid --%>
-              <.icon
-                class={
-                  Tails.classes([
-                    Theme.get_sizing_style("xl", "height"),
-                    Theme.get_sizing_style("xl", "width")
-                  ])
-                }
-                name={"hero-document-check" <> if(@active_tab == "template", do: "-solid", else: "")}
-              />
-            </:icon>
-          </.menu_item>
+            <.menu_item
+              on_click={on_live_navigate(:project, ~p"/projects")}
+              active={@active_tab == "project"}
+              name="Projects"
+            >
+              <:icon>
+                <%!-- hero-briefcase-solid --%>
+                <.icon
+                  class={
+                    Tails.classes([
+                      Theme.get_sizing_style("xl", "height"),
+                      Theme.get_sizing_style("xl", "width")
+                    ])
+                  }
+                  name={"hero-folder-open" <> if(@active_tab == "project", do: "-solid", else: "")}
+                />
+              </:icon>
+            </.menu_item>
 
-          <.menu_item
-            on_click={on_live_navigate(:registry, ~p"/registries")}
-            active={@active_tab == "registry"}
-            name="Registry"
-          >
-            <:icon>
-              <%!-- hero-building-office-2-solid --%>
-              <.icon
-                class={
-                  Tails.classes([
-                    Theme.get_sizing_style("xl", "height"),
-                    Theme.get_sizing_style("xl", "width")
-                  ])
-                }
-                name={"hero-clipboard-document-list" <> if(@active_tab == "registry", do: "-solid", else: "")}
-              />
-            </:icon>
-          </.menu_item>
+            <.menu_item
+              on_click={on_live_navigate(:template, ~p"/templates")}
+              active={@active_tab == "template"}
+              name="Templates"
+            >
+              <:icon>
+                <%!-- hero-briefcase-solid --%>
+                <.icon
+                  class={
+                    Tails.classes([
+                      Theme.get_sizing_style("xl", "height"),
+                      Theme.get_sizing_style("xl", "width")
+                    ])
+                  }
+                  name={"hero-document-check" <> if(@active_tab == "template", do: "-solid", else: "")}
+                />
+              </:icon>
+            </.menu_item>
 
-          <.menu_item
-            on_click={on_live_navigate(:region, ~p"/regions")}
-            active={@active_tab == "region"}
-            name="Regions"
-          >
-            <:icon>
-              <%!-- hero-rectangle-stack-solid --%>
-              <.icon
-                class={
-                  Tails.classes([
-                    Theme.get_sizing_style("xl", "height"),
-                    Theme.get_sizing_style("xl", "width")
-                  ])
-                }
-                name={"hero-building-library" <> if(@active_tab == "region", do: "-solid", else: "")}
-              />
-            </:icon>
-          </.menu_item>
+            <.menu_item
+              on_click={on_live_navigate(:registry, ~p"/registries")}
+              active={@active_tab == "registry"}
+              name="Registry"
+            >
+              <:icon>
+                <%!-- hero-building-office-2-solid --%>
+                <.icon
+                  class={
+                    Tails.classes([
+                      Theme.get_sizing_style("xl", "height"),
+                      Theme.get_sizing_style("xl", "width")
+                    ])
+                  }
+                  name={"hero-clipboard-document-list" <> if(@active_tab == "registry", do: "-solid", else: "")}
+                />
+              </:icon>
+            </.menu_item>
 
-          <.menu_item
-            on_click={on_live_navigate(:outlet, ~p"/outlets")}
-            active={@active_tab == "outlet"}
-            name="Outlets"
-          >
-            <:icon>
-              <%!-- hero-home-solid --%>
-              <.icon
-                class={
-                  Tails.classes([
-                    Theme.get_sizing_style("xl", "height"),
-                    Theme.get_sizing_style("xl", "width")
-                  ])
-                }
-                name={"hero-building-storefront" <> if(@active_tab == "outlet", do: "-solid", else: "")}
-              />
-            </:icon>
-          </.menu_item>
+            <.menu_item
+              on_click={on_live_navigate(:region, ~p"/regions")}
+              active={@active_tab == "region"}
+              name="Regions"
+            >
+              <:icon>
+                <%!-- hero-rectangle-stack-solid --%>
+                <.icon
+                  class={
+                    Tails.classes([
+                      Theme.get_sizing_style("xl", "height"),
+                      Theme.get_sizing_style("xl", "width")
+                    ])
+                  }
+                  name={"hero-building-library" <> if(@active_tab == "region", do: "-solid", else: "")}
+                />
+              </:icon>
+            </.menu_item>
 
-          <.menu_item
-            on_click={on_live_navigate(:ambassador, ~p"/ambassadors")}
-            active={@active_tab == "ambassador"}
-            name="Ambassadors"
-          >
-            <:icon>
-              <%!-- hero-rectangle-stack-solid --%>
-              <.icon
-                class={
-                  Tails.classes([
-                    Theme.get_sizing_style("xl", "height"),
-                    Theme.get_sizing_style("xl", "width")
-                  ])
-                }
-                name={"hero-user-plus" <> if(@active_tab == "ambassador", do: "-solid", else: "")}
-              />
-            </:icon>
-          </.menu_item>
-        </Layout.grid>
+            <.menu_item
+              on_click={on_live_navigate(:outlet, ~p"/outlets")}
+              active={@active_tab == "outlet"}
+              name="Outlets"
+            >
+              <:icon>
+                <%!-- hero-home-solid --%>
+                <.icon
+                  class={
+                    Tails.classes([
+                      Theme.get_sizing_style("xl", "height"),
+                      Theme.get_sizing_style("xl", "width")
+                    ])
+                  }
+                  name={"hero-building-storefront" <> if(@active_tab == "outlet", do: "-solid", else: "")}
+                />
+              </:icon>
+            </.menu_item>
 
-        <Layout.grid class="space-y-1 w-full">
-          <.menu_item
-            on_click={on_live_navigate(:outlet, ~p"/outlets")}
-            active={@active_tab == "outlet"}
-            name="Notifications"
-          >
-            <:icon>
-              <%!-- hero-bell-alert-solid --%>
-              <.icon
-                class={
-                  Tails.classes([
-                    Theme.get_sizing_style("xl", "height"),
-                    Theme.get_sizing_style("xl", "width")
-                  ])
-                }
-                name={"hero-bell-alert" <> if(@active_tab == "outlet", do: "-solid", else: "")}
-              />
-            </:icon>
-          </.menu_item>
-          <.menu_item
-            on_click={on_live_navigate(:settings, ~p"/settings")}
-            active={@active_tab == "settings"}
-            name="Settings"
-          >
-            <:icon>
-              <%!-- hero-cog-solid --%>
-              <.icon
-                class={
-                  Tails.classes([
-                    Theme.get_sizing_style("xl", "height"),
-                    Theme.get_sizing_style("xl", "width")
-                  ])
-                }
-                name={"hero-cog" <> if(@active_tab == "settings", do: "-solid", else: "")}
-              />
-            </:icon>
-          </.menu_item>
+            <.menu_item
+              on_click={on_live_navigate(:ambassador, ~p"/ambassadors")}
+              active={@active_tab == "ambassador"}
+              name="Ambassadors"
+            >
+              <:icon>
+                <%!-- hero-rectangle-stack-solid --%>
+                <.icon
+                  class={
+                    Tails.classes([
+                      Theme.get_sizing_style("xl", "height"),
+                      Theme.get_sizing_style("xl", "width")
+                    ])
+                  }
+                  name={"hero-user-plus" <> if(@active_tab == "ambassador", do: "-solid", else: "")}
+                />
+              </:icon>
+            </.menu_item>
+          </Layout.grid>
 
-          <Layout.divider />
-        </Layout.grid>
-      </Layout.flex>
+          <Layout.grid class="space-y-1 w-full">
+            <.menu_item
+              on_click={on_live_navigate(:outlet, ~p"/outlets")}
+              active={@active_tab == "outlet"}
+              name="Notifications"
+            >
+              <:icon>
+                <%!-- hero-bell-alert-solid --%>
+                <.icon
+                  class={
+                    Tails.classes([
+                      Theme.get_sizing_style("xl", "height"),
+                      Theme.get_sizing_style("xl", "width")
+                    ])
+                  }
+                  name={"hero-bell-alert" <> if(@active_tab == "outlet", do: "-solid", else: "")}
+                />
+              </:icon>
+            </.menu_item>
+            <.menu_item
+              on_click={on_live_navigate(:settings, ~p"/settings")}
+              active={@active_tab == "settings"}
+              name="Settings"
+            >
+              <:icon>
+                <%!-- hero-cog-solid --%>
+                <.icon
+                  class={
+                    Tails.classes([
+                      Theme.get_sizing_style("xl", "height"),
+                      Theme.get_sizing_style("xl", "width")
+                    ])
+                  }
+                  name={"hero-cog" <> if(@active_tab == "settings", do: "-solid", else: "")}
+                />
+              </:icon>
+            </.menu_item>
+
+            <Layout.divider />
+          </Layout.grid>
+        </Layout.flex>
+      </div>
     </div>
     """
   end

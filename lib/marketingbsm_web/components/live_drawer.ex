@@ -9,17 +9,30 @@ defmodule MarketingbsmWeb.LiveDrawer do
 
   @impl true
   def mount(_params, session, socket) do
-    %{"active_tab" => active_tab, "user" => "user?id=" <> user_id} = session
+    %{"active_tab" => active_tab, "hiderr" => hiderr, "user" => "user?id=" <> user_id} = session
 
     {:ok,
      socket
      |> assign(:current_user, User |> Ash.get(user_id))
+     |> assign(:hiderr, hiderr)
      |> assign(:active_tab, active_tab), layout: false}
   end
 
   @impl true
+  @spec handle_event(<<_::40, _::_*88>>, map(), any()) :: {:noreply, any()}
   def handle_event("on_live_navigate", %{"active_tab" => active_tab} = _params, socket) do
     {:noreply, socket |> assign(:active_tab, active_tab)}
+  end
+
+  def handle_event("close", %{"hiderr" => hiderr}, socket) do
+    new_hiderr = NavHelper.toggle_nav(hiderr)
+    dbg(new_hiderr)
+
+    socket =
+      socket
+      |> assign(hiderr: new_hiderr)
+
+    {:noreply, socket}
   end
 
   @impl true
@@ -66,7 +79,7 @@ defmodule MarketingbsmWeb.LiveDrawer do
   @impl true
   def render(assigns) do
     ~H"""
-    <NavigationComponent.drawer active_tab={@active_tab} user={@current_user} />
+    <NavigationComponent.drawer active_tab={@active_tab} user={@current_user} hiderr={@hiderr} />
     """
   end
 end

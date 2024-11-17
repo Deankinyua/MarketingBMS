@@ -9,7 +9,11 @@ defmodule MarketingbsmWeb.TemplateLive.Index do
     <div class="w-full h-full">
       <Layout.flex align_items="start" class="h-screen overflow-y-hidden">
         <%= live_render(@socket, MarketingbsmWeb.LiveDrawer,
-          session: %{"active_tab" => "template", "user" => "user?id=#{@current_user.id}"},
+          session: %{
+            "active_tab" => "template",
+            "hiderr" => @hiderr,
+            "user" => "user?id=#{@current_user.id}"
+          },
           id: "live_drawer",
           sticky: true
         ) %>
@@ -288,6 +292,7 @@ defmodule MarketingbsmWeb.TemplateLive.Index do
   @impl true
 
   def mount(_params, _session, socket) do
+    socket = socket |> assign(:hiderr, "")
     {:ok, stream(socket, :templates, ProjectGeneral.list_templates!())}
   end
 

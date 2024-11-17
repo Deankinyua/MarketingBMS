@@ -10,7 +10,11 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
     <div class="w-full h-full">
       <Layout.flex align_items="start" class="h-screen overflow-y-hidden">
         <%= live_render(@socket, MarketingbsmWeb.LiveDrawer,
-          session: %{"active_tab" => "ambassador", "user" => "user?id=#{@current_user.id}"},
+          session: %{
+            "active_tab" => "ambassador",
+            "hiderr" => @hiderr,
+            "user" => "user?id=#{@current_user.id}"
+          },
           id: "live_drawer",
           sticky: true
         ) %>
@@ -111,6 +115,7 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
     socket =
       socket
       |> assign(:count, get_count())
+      |> assign(:hiderr, "")
 
     {:ok, stream(socket, :ambassadors, get_records())}
   end

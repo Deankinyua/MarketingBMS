@@ -3,6 +3,9 @@ defmodule MarketingbsmWeb.ShopLive.Index do
 
   alias Tremorx.Components.Table
   alias Marketingbsm.Outlet
+  alias Tremorx.Theme
+
+  alias NavHelper
 
   @impl true
   def render(assigns) do
@@ -10,7 +13,11 @@ defmodule MarketingbsmWeb.ShopLive.Index do
     <div class="w-full h-full">
       <Layout.flex align_items="start" class="h-screen overflow-y-hidden">
         <%= live_render(@socket, MarketingbsmWeb.LiveDrawer,
-          session: %{"active_tab" => "outlet", "user" => "user?id=#{@current_user.id}"},
+          session: %{
+            "active_tab" => "outlet",
+            "hiderr" => @hiderr,
+            "user" => "user?id=#{@current_user.id}"
+          },
           id: "live_drawer",
           sticky: true
         ) %>
@@ -23,6 +30,19 @@ defmodule MarketingbsmWeb.ShopLive.Index do
         >
           <Layout.flex justify_content="between" class="">
             <Layout.flex flex_direction="col" align_items="start" class="grow">
+              <button>
+                <.link phx-click={JS.push("close")}>
+                  <.icon
+                    class={
+                      Tails.classes([
+                        Theme.get_sizing_style("xl", "height"),
+                        Theme.get_sizing_style("xl", "width")
+                      ])
+                    }
+                    name="hero-bars-3-solid"
+                  />
+                </.link>
+              </button>
               <Text.title class="text-xl">
                 <Text.bold>Outlets</Text.bold>
               </Text.title>
@@ -117,11 +137,17 @@ defmodule MarketingbsmWeb.ShopLive.Index do
     """
   end
 
+  # ? the table body above has been annotated with  phx-update="stream"
+  # * phx-update controls how a liveview is updated i.e removed completely or partially
+  # * in this case we use stream which stores large collections on the client
+  # * phx-update="ignore" will totally ignore all updates regardless of new changes
+
   @impl true
   def mount(_params, _session, socket) do
     socket =
       socket
       |> assign(:count, get_count())
+      |> assign(:hiderr, "")
 
     {:ok,
      socket
@@ -165,6 +191,11 @@ defmodule MarketingbsmWeb.ShopLive.Index do
       |> assign(:count, socket.assigns.count + 1)
 
     {:noreply, stream_insert(socket, :outlets, shop)}
+  end
+
+  def handle_event("close", params, socket) do
+    dbg(params)
+    {:noreply, redirect(socket, to: "/outlets")}
   end
 
   @impl true
