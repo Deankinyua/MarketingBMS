@@ -5,9 +5,9 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
 
   alias Marketingbsm.ProjectGeneral
 
-  alias Marketingbsm.Accounts
-
   alias MarketingbsmWeb.RegistryLive.FormComponent
+
+  alias Marketingbsm.Record
 
   @impl true
   def render(assigns) do
@@ -43,47 +43,6 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
                 <%= name %>
               </:item>
             </Select.select>
-          </Layout.col>
-
-          <Layout.col class="space-y-1.5">
-            <label>
-              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
-                Ambassador Name
-              </Text.text>
-            </label>
-
-            <Select.search_select
-              id="ambassador[:ambassador_id]"
-              name={@form[:ambassador_id].name}
-              placeholder="Select..."
-              value={@form[:ambassador_id].value}
-              phx-update="ignore"
-              required={true}
-            >
-              <:item :for={%{id: _id, name: name} <- @ambassadors}>
-                <%= name %>
-              </:item>
-            </Select.search_select>
-          </Layout.col>
-
-          <Layout.col class="space-y-1.5">
-            <label>
-              <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
-                Outlet Name
-              </Text.text>
-            </label>
-
-            <Select.search_select
-              id="outlet[:outlet_id]"
-              name={@form[:outlet_id].name}
-              placeholder="Select..."
-              value={@form[:outlet_id].value}
-              phx-update="ignore"
-            >
-              <:item :for={%{id: _id, name: name} <- @outlets}>
-                <%= name %>
-              </:item>
-            </Select.search_select>
           </Layout.col>
 
           <Layout.col class="space-y-1.5">
@@ -241,38 +200,12 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
      socket
      |> assign(assigns)
      |> assign(result: result)
-     |> fetch_promoters()
      |> fetch_projects_unfreezed()
-     |> fetch_outlets()
      |> assign_form()}
   end
 
   def get_class(attribute) do
     if attribute == nil, do: "hidden"
-  end
-
-  def fetch_promoters(socket) do
-    query_results =
-      Marketingbsm.Record.Registry
-      |> Ash.Query.filter(should_activate: true)
-      |> Ash.Query.load([])
-      |> Ash.read!(page: [limit: 20])
-
-    ambassadors = Map.get(query_results, :results)
-
-    socket |> assign(ambassadors: ambassador_selector(ambassadors))
-  end
-
-  def fetch_outlets(socket) do
-    query_results =
-      Marketingbsm.Outlet.Shop
-      |> Ash.Query.load([])
-      |> Ash.Query.sort(created_at: :desc)
-      |> Ash.read!(page: [limit: 20])
-
-    outlets = Map.get(query_results, :results)
-
-    socket |> assign(outlets: outlets)
   end
 
   @impl true
@@ -283,59 +216,57 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
 
     {:noreply,
      socket
-     |> assign(form: AshPhoenix.Form.validate(socket.assigns.form, report_params))
+     #  |> assign(form: AshPhoenix.Form.validate(socket.assigns.form, report_params))
      |> assign(result: result)}
   end
 
   def handle_event("save", %{"report" => report_params}, socket) do
-    ambassador_id = FormComponent.get_ambassador_id(socket, report_params)
-    outlet_id = FormComponent.get_outlet_id(socket, report_params)
-    project_id = FormComponent.get_project_id(socket, report_params)
+    id = socket.assigns.current_user
 
-    report_params =
-      Map.merge(report_params, %{
-        "ambassador_id" => ambassador_id,
-        "project_id" => project_id,
-        "outlet_id" => outlet_id
-      })
+    case Record.get_user_by_id(id) do
+      {:ok, registry} ->
+        ambassador_id = registry.ambassador_id
+        outlet_id = registry.outlet_id
+        project_id = FormComponent.get_project_id(socket, report_params)
 
-    report_params = get_complete_params(report_params)
-    ambassador_id = report_params["ambassador_id"]
-    outlet_id = report_params["outlet_id"]
-    project_id = report_params["project_id"]
-    user = Marketingbsm.Record.get_user_by_id!(ambassador_id)
+        report_params =
+          Map.merge(report_params, %{
+            "ambassador_id" => ambassador_id,
+            "project_id" => project_id,
+            "outlet_id" => outlet_id
+          })
 
-    user =
-      if is_list(user) do
-        new_user = Enum.at(user, 0)
-        new_user
-      else
-        user
-      end
+        report_params = get_complete_params(report_params)
 
-    if outlet_id == user.outlet_id && project_id == user.project_id do
-      case AshPhoenix.Form.submit(socket.assigns.form, params: report_params) do
-        {:ok, report} ->
-          user_params = %{days_worked: user.days_worked + 1}
+        if project_id == registry.project_id do
+          case AshPhoenix.Form.submit(socket.assigns.form, params: report_params) do
+            {:ok, report} ->
+              user_params = %{days_worked: registry.days_worked + 1}
 
-          Marketingbsm.Record.update_ambassador(user, user_params)
-          notify_parent({:saved, report})
+              Marketingbsm.Record.update_ambassador(registry, user_params)
 
-          socket =
-            socket
-            |> put_flash(:info, "Your Report has been received successfully")
-            |> push_patch(to: socket.assigns.patch)
+              socket =
+                socket
+                |> put_flash(:info, "Your Report has been received successfully")
+                |> push_patch(to: socket.assigns.patch)
 
-          {:noreply, socket}
+              {:noreply, socket}
 
-        {:error, form} ->
-          {:noreply, assign(socket, form: form)}
-      end
-    else
-      {:noreply,
-       socket
-       |> push_patch(to: socket.assigns.patch)
-       |> put_flash(:error, "Report Not Submitted!! Please enter the correct details")}
+            {:error, form} ->
+              {:noreply, assign(socket, form: form)}
+          end
+        else
+          {:noreply,
+           socket
+           |> push_patch(to: socket.assigns.patch)
+           |> put_flash(:error, "Report Not Submitted!! Please enter the correct details")}
+        end
+
+      {:error, _error} ->
+        {:noreply,
+         socket
+         |> push_patch(to: socket.assigns.patch)
+         |> put_flash(:error, "Report Not Submitted!! You are not scheduled to activate")}
     end
   end
 
@@ -352,8 +283,6 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
 
     Map.merge(params, new_map)
   end
-
-  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 
   defp assign_form(%{assigns: %{report: report}} = socket) do
     form =
@@ -382,13 +311,5 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
     projects = Map.get(query_results, :results)
 
     socket |> assign(projects: projects)
-  end
-
-  def ambassador_selector(ambassadors) do
-    for item <- ambassadors do
-      user = Accounts.get_user_by_id!(item.ambassador_id)
-
-      user
-    end
   end
 end

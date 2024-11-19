@@ -210,9 +210,9 @@ defmodule MarketingbsmWeb.NavigationComponent do
               </:icon>
             </.menu_item>
             <.menu_item
-              on_click={on_live_navigate(:settings, ~p"/settings")}
-              active={@active_tab == "settings"}
-              name="Settings"
+              on_click={on_live_navigate(:management, ~p"/management")}
+              active={@active_tab == "management"}
+              name="Management"
             >
               <:icon>
                 <%!-- hero-cog-solid --%>
@@ -223,7 +223,7 @@ defmodule MarketingbsmWeb.NavigationComponent do
                       Theme.get_sizing_style("xl", "width")
                     ])
                   }
-                  name={"hero-cog" <> if(@active_tab == "settings", do: "-solid", else: "")}
+                  name={"hero-cog" <> if(@active_tab == "management", do: "-solid", else: "")}
                 />
               </:icon>
             </.menu_item>

@@ -117,13 +117,15 @@ defmodule MarketingbsmWeb.CheckinLive.Index do
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "Check In")
-    |> assign(:report, nil)
   end
 
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing checkins")
-    |> assign(:report, nil)
+  end
+
+  defp apply_action(socket, :see, _params) do
+    socket
   end
 
   @impl true

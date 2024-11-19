@@ -1,9 +1,6 @@
 defmodule MarketingbsmWeb.RegistryLive.FormComponent do
   use MarketingbsmWeb, :live_component
 
-  import MarketingbsmWeb.ReportLive.FormComponent,
-    only: [fetch_outlets: 1]
-
   import MarketingbsmWeb.TemplateLive.FormComponent, only: [fetch_projects: 1]
 
   alias Marketingbsm.Accounts
@@ -142,6 +139,18 @@ defmodule MarketingbsmWeb.RegistryLive.FormComponent do
     dbg(ambassadors)
 
     socket |> assign(ambassadors: ambassador_selector(ambassadors))
+  end
+
+  def fetch_outlets(socket) do
+    query_results =
+      Marketingbsm.Outlet.Shop
+      |> Ash.Query.load([])
+      |> Ash.Query.sort(created_at: :desc)
+      |> Ash.read!(page: [limit: 20])
+
+    outlets = Map.get(query_results, :results)
+
+    socket |> assign(outlets: outlets)
   end
 
   @impl true

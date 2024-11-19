@@ -28,11 +28,9 @@ defmodule MarketingbsmWeb.LiveDrawer do
     new_hiderr = NavHelper.toggle_nav(hiderr)
     dbg(new_hiderr)
 
-    socket =
-      socket
-      |> assign(hiderr: new_hiderr)
-
-    {:noreply, socket}
+    {:noreply,
+     socket
+     |> assign(hiderr: new_hiderr)}
   end
 
   @impl true

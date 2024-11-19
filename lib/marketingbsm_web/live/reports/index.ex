@@ -1,8 +1,6 @@
 defmodule MarketingbsmWeb.ReportLive.Index do
   use MarketingbsmWeb, :live_view
 
-  import MarketingbsmWeb.TemplateLive.FormComponent
-
   @impl true
   def render(assigns) do
     ~H"""
@@ -111,7 +109,7 @@ defmodule MarketingbsmWeb.ReportLive.Index do
               module={MarketingbsmWeb.ReportLive.FormComponent}
               id={(@report && @report.project_id) || :new}
               title={@page_title}
-              current_user={@current_user}
+              current_user={@current_user.id}
               action={@live_action}
               report={@report}
               patch={~p"/reports"}
@@ -127,14 +125,14 @@ defmodule MarketingbsmWeb.ReportLive.Index do
   def mount(_params, _session, socket) do
     socket = socket |> assign(:hiderr, "")
 
-    {:ok,
-     socket
-     |> stream(
-       :report,
-       Ash.read!(Marketingbsm.Record.Report, actor: socket.assigns[:current_user])
-     )
-     |> fetch_projects()
-     |> assign_new(:current_user, fn -> nil end)}
+    {
+      :ok,
+      socket
+      |> stream(
+        :report,
+        Ash.read!(Marketingbsm.Record.Report, actor: socket.assigns[:current_user])
+      )
+    }
   end
 
   @impl true

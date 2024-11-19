@@ -2,9 +2,11 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
   use MarketingbsmWeb, :live_component
 
   alias SimpleS3Upload
+  require Ash.Query
 
   alias Marketingbsm.File
   alias AshPhoenix.Form
+  alias Marketingbsm.Accounts
 
   alias MarketingbsmWeb.ReportLive.FormComponent
   alias MarketingbsmWeb.RegistryLive.FormComponent, as: RegistryComponent
@@ -147,10 +149,34 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> FormComponent.fetch_promoters()
+     |> fetch_promoters()
      |> FormComponent.fetch_projects_unfreezed()
-     |> FormComponent.fetch_outlets()
+     |> fetch_outlets()
      |> assign_form()}
+  end
+
+  def fetch_promoters(socket) do
+    query_results =
+      Marketingbsm.Record.Registry
+      |> Ash.Query.filter(should_activate: true)
+      |> Ash.Query.load([])
+      |> Ash.read!(page: [limit: 20])
+
+    ambassadors = Map.get(query_results, :results)
+
+    socket |> assign(ambassadors: ambassador_selector(ambassadors))
+  end
+
+  def fetch_outlets(socket) do
+    query_results =
+      Marketingbsm.Outlet.Shop
+      |> Ash.Query.load([])
+      |> Ash.Query.sort(created_at: :desc)
+      |> Ash.read!(page: [limit: 20])
+
+    outlets = Map.get(query_results, :results)
+
+    socket |> assign(outlets: outlets)
   end
 
   @impl true
@@ -291,6 +317,14 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
         )
 
         {:noreply, assign(socket, form: form)}
+    end
+  end
+
+  def ambassador_selector(ambassadors) do
+    for item <- ambassadors do
+      user = Accounts.get_user_by_id!(item.ambassador_id)
+
+      user
     end
   end
 end

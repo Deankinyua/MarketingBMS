@@ -35,6 +35,32 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
               </Text.subtitle>
             </Layout.flex>
           </Layout.flex>
+          <Layout.flex justify_content="between">
+            <section :for={{dom_id, checkin} <- @streams.checkins} id={"photos#{dom_id}"}>
+              <Layout.flex
+                flex_direction="row"
+                align_items="start"
+                justify_content="start"
+                class="flex-1 px-8 py-8 h-full overflow-y-auto bg-gray-50/75"
+              >
+                <div
+                  class="border-red-400 border-2"
+                  phx-click={JS.push("picture", value: %{file_name: checkin.file.original_filename})}
+                >
+                  <.live_component
+                    module={MarketingbsmWeb.PictureLive.Component}
+                    id={dom_id}
+                    checkin={call(checkin.file.original_filename)}
+                    dom_id={dom_id}
+                  >
+                    <Text.text class="font-semibold text-center">
+                      <%= Outlet.get_outlet!(checkin.outlet_id).name %>
+                    </Text.text>
+                  </.live_component>
+                </div>
+              </Layout.flex>
+            </section>
+          </Layout.flex>
 
           <Table.table class="w-full">
             <Table.table_head class="rounded-t-md border-b-[1px]">
@@ -107,17 +133,6 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
             </Table.table_body>
           </Table.table>
 
-          <section :for={{dom_id, checkin} <- @streams.checkins} id={"photos#{dom_id}"}>
-            <.live_component
-              module={MarketingbsmWeb.PictureLive.Component}
-              id={dom_id}
-              checkin={call(checkin.file.original_filename)}
-              dom_id={dom_id}
-            >
-              <p><%= Outlet.get_outlet!(checkin.outlet_id).name %></p>
-            </.live_component>
-          </section>
-
           <Button.button size="xl" class="mt-2 w-min">
             <.link navigate={~p"/checkins"}>
               Back to Check-Ins
@@ -185,5 +200,11 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
     Ash.destroy!(checkin, actor: socket.assigns.current_user)
 
     {:noreply, stream_delete(socket, :checkins, checkin)}
+  end
+
+  @impl true
+  def handle_event("picture", %{"file_name" => file_name}, socket) do
+    dbg(file_name)
+    {:noreply, socket}
   end
 end
