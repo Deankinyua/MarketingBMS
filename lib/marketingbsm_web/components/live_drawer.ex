@@ -5,11 +5,11 @@ defmodule MarketingbsmWeb.LiveDrawer do
   use MarketingbsmWeb, :live_view
   alias MarketingbsmWeb.NavigationComponent
 
-  alias Marketingbsm.Accounts.User
   alias Marketingbsm.Accounts
 
   @impl true
   def mount(_params, session, socket) do
+    Phoenix.PubSub.subscribe(Marketingbsm.PubSub, "close_drawer")
     %{"active_tab" => active_tab, "hiderr" => hiderr, "user" => "user?id=" <> user_id} = session
 
     current_user = Accounts.get_user_by_id!(user_id)
@@ -27,9 +27,9 @@ defmodule MarketingbsmWeb.LiveDrawer do
     {:noreply, socket |> assign(:active_tab, active_tab)}
   end
 
-  def handle_event("close", %{"hiderr" => hiderr}, socket) do
+  def handle_info({:close_modal}, socket) do
+    hiderr = socket.assigns.hiderr
     new_hiderr = NavHelper.toggle_nav(hiderr)
-    dbg(new_hiderr)
 
     {:noreply,
      socket

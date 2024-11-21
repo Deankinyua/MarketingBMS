@@ -1,5 +1,6 @@
 defmodule MarketingbsmWeb.RegistryLive.Index do
   use MarketingbsmWeb, :live_view
+  alias Tremorx.Theme
 
   require Ash.Query
 
@@ -26,6 +27,19 @@ defmodule MarketingbsmWeb.RegistryLive.Index do
         >
           <Layout.flex justify_content="between" class="">
             <Layout.flex flex_direction="col" align_items="start" class="grow">
+              <div class="ml-4">
+                <.link phx-click={JS.push("close")}>
+                  <.icon
+                    class={
+                      Tails.classes([
+                        Theme.get_sizing_style("xl", "height"),
+                        Theme.get_sizing_style("xl", "width")
+                      ])
+                    }
+                    name="hero-bars-3-solid"
+                  />
+                </.link>
+              </div>
               <Text.title class="text-xl">
                 <Text.bold>Registries</Text.bold>
               </Text.title>
@@ -159,5 +173,10 @@ defmodule MarketingbsmWeb.RegistryLive.Index do
   @impl true
   def handle_info({MarketingbsmWeb.RegistryLive.FormComponent, {:saved, registry}}, socket) do
     {:noreply, stream_insert(socket, :registries, registry)}
+  end
+
+  def handle_event("close", _params, socket) do
+    Phoenix.PubSub.broadcast(Marketingbsm.PubSub, "close_drawer", {:close_modal})
+    {:noreply, socket}
   end
 end

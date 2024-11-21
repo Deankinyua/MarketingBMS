@@ -1,5 +1,6 @@
 defmodule MarketingbsmWeb.CheckoutLive.Index do
   use MarketingbsmWeb, :live_view
+  alias Tremorx.Theme
 
   @impl true
   def render(assigns) do
@@ -37,6 +38,19 @@ defmodule MarketingbsmWeb.CheckoutLive.Index do
             align_items="center"
             class="grow mb-4 border-gray-300 border-2 py-8 border-dotted my-10 max-w-2xl"
           >
+            <div class="ml-4">
+              <.link phx-click={JS.push("close")}>
+                <.icon
+                  class={
+                    Tails.classes([
+                      Theme.get_sizing_style("xl", "height"),
+                      Theme.get_sizing_style("xl", "width")
+                    ])
+                  }
+                  name="hero-bars-3-solid"
+                />
+              </.link>
+            </div>
             <Text.title class="text-xl my-4">
               <Text.bold>Closing Report</Text.bold>
             </Text.title>
@@ -94,5 +108,10 @@ defmodule MarketingbsmWeb.CheckoutLive.Index do
        message: message,
        type: type
      })}
+  end
+
+  def handle_event("close", _params, socket) do
+    Phoenix.PubSub.broadcast(Marketingbsm.PubSub, "close_drawer", {:close_modal})
+    {:noreply, socket}
   end
 end

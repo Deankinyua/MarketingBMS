@@ -3,6 +3,8 @@ defmodule MarketingbsmWeb.TemplateLive.Index do
 
   alias Marketingbsm.ProjectGeneral
 
+  alias Tremorx.Theme
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -26,6 +28,19 @@ defmodule MarketingbsmWeb.TemplateLive.Index do
         >
           <Layout.flex justify_content="between" class="">
             <Layout.flex flex_direction="col" align_items="start" class="grow">
+              <div class="ml-4">
+                <.link phx-click={JS.push("close")}>
+                  <.icon
+                    class={
+                      Tails.classes([
+                        Theme.get_sizing_style("xl", "height"),
+                        Theme.get_sizing_style("xl", "width")
+                      ])
+                    }
+                    name="hero-bars-3-solid"
+                  />
+                </.link>
+              </div>
               <Text.title class="text-xl">
                 <Text.bold>Reporting Templates</Text.bold>
               </Text.title>
@@ -327,5 +342,10 @@ defmodule MarketingbsmWeb.TemplateLive.Index do
   @impl true
   def handle_info({MarketingbsmWeb.TemplateLive.FormComponent, {:saved, template}}, socket) do
     {:noreply, stream_insert(socket, :templates, template)}
+  end
+
+  def handle_event("close", _params, socket) do
+    Phoenix.PubSub.broadcast(Marketingbsm.PubSub, "close_drawer", {:close_modal})
+    {:noreply, socket}
   end
 end

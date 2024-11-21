@@ -30,7 +30,7 @@ defmodule MarketingbsmWeb.ShopLive.Index do
         >
           <Layout.flex justify_content="between" class="">
             <Layout.flex flex_direction="col" align_items="start" class="grow">
-              <button>
+              <div class="ml-4">
                 <.link phx-click={JS.push("close")}>
                   <.icon
                     class={
@@ -42,7 +42,7 @@ defmodule MarketingbsmWeb.ShopLive.Index do
                     name="hero-bars-3-solid"
                   />
                 </.link>
-              </button>
+              </div>
               <Text.title class="text-xl">
                 <Text.bold>Outlets</Text.bold>
               </Text.title>
@@ -193,9 +193,9 @@ defmodule MarketingbsmWeb.ShopLive.Index do
     {:noreply, stream_insert(socket, :outlets, shop)}
   end
 
-  def handle_event("close", params, socket) do
-    dbg(params)
-    {:noreply, redirect(socket, to: "/outlets")}
+  def handle_event("close", _params, socket) do
+    Phoenix.PubSub.broadcast(Marketingbsm.PubSub, "close_drawer", {:close_modal})
+    {:noreply, socket}
   end
 
   @impl true

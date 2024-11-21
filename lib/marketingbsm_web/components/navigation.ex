@@ -17,24 +17,24 @@ defmodule MarketingbsmWeb.NavigationComponent do
 
   # * Put this if you want the logo
   # <.logo_menu></.logo_menu>
+
+  #   <button>
+  #   <.link phx-click={JS.push("close", value: %{hiderr: @hiderr})}>
+  #     <.icon
+  #       class={
+  #         Tails.classes([
+  #           Theme.get_sizing_style("xl", "height"),
+  #           Theme.get_sizing_style("xl", "width")
+  #         ])
+  #       }
+  #       name="hero-bars-3-solid"
+  #     />
+  #   </.link>
+  # </button>
   def drawer(assigns) do
     ~H"""
     <div class={"#{@hiderr}"}>
       <div class="small_nav w-72 h-screen flex border-red-400 flex-col px-2 py-4 border-r">
-        <button>
-          <.link phx-click={JS.push("close", value: %{hiderr: @hiderr})}>
-            <.icon
-              class={
-                Tails.classes([
-                  Theme.get_sizing_style("xl", "height"),
-                  Theme.get_sizing_style("xl", "width")
-                ])
-              }
-              name="hero-bars-3-solid"
-            />
-          </.link>
-        </button>
-
         <Layout.flex flex_direction="col" class="flex-1">
           <Layout.grid class="border-red-400 border-4 space-y-1 w-full first:mt-3">
             <.menu_item

@@ -3,6 +3,7 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
 
   alias Marketingbsm.Activation
   alias Marketingbsm.Accounts
+  alias Tremorx.Theme
 
   @impl true
   def render(assigns) do
@@ -27,6 +28,19 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
         >
           <Layout.flex justify_content="between" class="">
             <Layout.flex flex_direction="col" align_items="start" class="grow">
+              <div class="ml-4">
+                <.link phx-click={JS.push("close")}>
+                  <.icon
+                    class={
+                      Tails.classes([
+                        Theme.get_sizing_style("xl", "height"),
+                        Theme.get_sizing_style("xl", "width")
+                      ])
+                    }
+                    name="hero-bars-3-solid"
+                  />
+                </.link>
+              </div>
               <Text.title class="text-xl">
                 <Text.bold>Brand Ambassadors</Text.bold>
               </Text.title>
@@ -165,5 +179,10 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
       |> assign(:count, socket.assigns.count + 1)
 
     {:noreply, stream_insert(socket, :ambassadors, ambassador)}
+  end
+
+  def handle_event("close", _params, socket) do
+    Phoenix.PubSub.broadcast(Marketingbsm.PubSub, "close_drawer", {:close_modal})
+    {:noreply, socket}
   end
 end

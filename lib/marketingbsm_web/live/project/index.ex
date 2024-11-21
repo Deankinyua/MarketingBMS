@@ -1,6 +1,8 @@
 defmodule MarketingbsmWeb.ProjectLive.Index do
   use MarketingbsmWeb, :live_view
 
+  alias Tremorx.Theme
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -24,6 +26,19 @@ defmodule MarketingbsmWeb.ProjectLive.Index do
         >
           <Layout.flex justify_content="between">
             <Layout.flex flex_direction="col" align_items="start" class="grow">
+              <div class="ml-4">
+                <.link phx-click={JS.push("close")}>
+                  <.icon
+                    class={
+                      Tails.classes([
+                        Theme.get_sizing_style("xl", "height"),
+                        Theme.get_sizing_style("xl", "width")
+                      ])
+                    }
+                    name="hero-bars-3-solid"
+                  />
+                </.link>
+              </div>
               <Text.title class="text-xl">
                 <Text.bold>Projects</Text.bold>
               </Text.title>
@@ -190,5 +205,10 @@ defmodule MarketingbsmWeb.ProjectLive.Index do
     Ash.destroy!(project, actor: socket.assigns.current_user)
 
     {:noreply, stream_delete(socket, :projects, project)}
+  end
+
+  def handle_event("close", _params, socket) do
+    Phoenix.PubSub.broadcast(Marketingbsm.PubSub, "close_drawer", {:close_modal})
+    {:noreply, socket}
   end
 end
