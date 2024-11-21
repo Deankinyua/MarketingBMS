@@ -1,10 +1,9 @@
-defmodule MarketingbsmWeb.CheckinLive.Show do
+defmodule MarketingbsmWeb.CheckoutLive.Show do
   use MarketingbsmWeb, :live_view
 
   require Ash.Query
 
   alias Marketingbsm.ProjectGeneral
-  alias Marketingbsm.Accounts
   alias Marketingbsm.Outlet
 
   @impl true
@@ -35,94 +34,23 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
               </Text.title>
 
               <Text.subtitle color="gray" class="mb-10">
-                <strong><%= @count %></strong> Brand Ambassadors have checked In
+                <strong><%= @count %></strong> Brand Ambassadors have checked out
               </Text.subtitle>
             </Layout.flex>
           </Layout.flex>
 
-          <Table.table class="w-full">
-            <Table.table_head class="rounded-t-md border-b-[1px]">
-              <Table.table_row class="hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted">
-                <Table.table_cell>
-                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    Ambassador Name
-                  </Text.text>
-                </Table.table_cell>
-
-                <Table.table_cell>
-                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    Project Name
-                  </Text.text>
-                </Table.table_cell>
-
-                <Table.table_cell>
-                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    Outlet Name
-                  </Text.text>
-                </Table.table_cell>
-
-                <Table.table_cell>
-                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    Time In
-                  </Text.text>
-                </Table.table_cell>
-
-                <Table.table_cell>
-                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    Actions
-                  </Text.text>
-                </Table.table_cell>
-              </Table.table_row>
-            </Table.table_head>
-
-            <Table.table_body
-              id="table_stream_registries"
-              phx-update="stream"
-              class="divide-y overflow-y-auto"
-            >
-              <Table.table_row
-                :for={{dom_id, checkin} <- @streams.checkins}
-                id={"#{dom_id}"}
-                class="group hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted"
-              >
-                <.live_component
-                  module={MarketingbsmWeb.CheckinLive.RowComponent}
-                  id={dom_id}
-                  checkin={checkin}
-                  dom_id={dom_id}
-                >
-                  <Table.table_cell>
-                    <%= Accounts.get_user_by_id!(checkin.ambassador_id).name %>
-                  </Table.table_cell>
-
-                  <Table.table_cell>
-                    <%= ProjectGeneral.get_project_by_id!(checkin.project_id).name %>
-                  </Table.table_cell>
-
-                  <Table.table_cell>
-                    <%= Outlet.get_outlet!(checkin.outlet_id).name %>
-                  </Table.table_cell>
-
-                  <Table.table_cell>
-                    <%= Time.to_string(Time.add(checkin.create_time, 3, :hour)) %>
-                  </Table.table_cell>
-                </.live_component>
-              </Table.table_row>
-            </Table.table_body>
-          </Table.table>
-
           <div class="hidden sm:block md:hidden">
             <Layout.grid num_items="2">
-              <section :for={{dom_id, checkin} <- @streams.checkins} id={"photos#{dom_id}"}>
+              <section :for={{dom_id, checkout} <- @streams.checkouts} id={"photos#{dom_id}"}>
                 <div class="mr-4 mb-4">
                   <.live_component
                     module={MarketingbsmWeb.PictureLive.Component}
                     id={"medium#{dom_id}"}
-                    checkin={call(checkin.file.original_filename)}
+                    checkin={call(checkout.file.original_filename)}
                     dom_id={dom_id}
                   >
                     <Text.text class="font-semibold text-center">
-                      <%= Outlet.get_outlet!(checkin.outlet_id).name %>
+                      <%= Outlet.get_outlet!(checkout.outlet_id).name %>
                     </Text.text>
                   </.live_component>
                 </div>
@@ -132,16 +60,16 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
 
           <div class="hidden md:block">
             <Layout.grid num_items="5">
-              <section :for={{dom_id, checkin} <- @streams.checkins} id={"photos#{dom_id}"}>
+              <section :for={{dom_id, checkout} <- @streams.checkouts} id={"photos#{dom_id}"}>
                 <div class="mr-4 mb-4">
                   <.live_component
                     module={MarketingbsmWeb.PictureLive.Component}
                     id={"large#{dom_id}"}
-                    checkin={call(checkin.file.original_filename)}
+                    checkin={call(checkout.file.original_filename)}
                     dom_id={dom_id}
                   >
                     <Text.text class="font-semibold text-center">
-                      <%= Outlet.get_outlet!(checkin.outlet_id).name %>
+                      <%= Outlet.get_outlet!(checkout.outlet_id).name %>
                     </Text.text>
                   </.live_component>
                 </div>
@@ -151,16 +79,16 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
 
           <div class="sm:hidden">
             <Layout.grid num_items="1">
-              <section :for={{dom_id, checkin} <- @streams.checkins} id={"photos#{dom_id}"}>
+              <section :for={{dom_id, checkout} <- @streams.checkouts} id={"photos#{dom_id}"}>
                 <div class="mr-4 mb-4">
                   <.live_component
                     module={MarketingbsmWeb.PictureLive.Component}
                     id={"small#{dom_id}"}
-                    checkin={call(checkin.file.original_filename)}
+                    checkin={call(checkout.file.original_filename)}
                     dom_id={dom_id}
                   >
                     <Text.text class="font-semibold text-center">
-                      <%= Outlet.get_outlet!(checkin.outlet_id).name %>
+                      <%= Outlet.get_outlet!(checkout.outlet_id).name %>
                     </Text.text>
                   </.live_component>
                 </div>
@@ -202,16 +130,16 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
       Date.utc_today()
 
     query_results =
-      Marketingbsm.Clockin.Checkin
+      Marketingbsm.Clockin.Checkout
       |> Ash.Query.filter(project_id: id)
       |> Ash.Query.filter(create_date: date)
       # |> Ash.Query.sort(days_worked: :desc)
       |> Ash.read!(page: [limit: 50])
 
-    checkins = Map.get(query_results, :results)
+    checkouts = Map.get(query_results, :results)
 
     ambassador_count =
-      Marketingbsm.Clockin.Checkin
+      Marketingbsm.Clockin.Checkout
       |> Ash.Query.filter(project_id: id)
       |> Ash.Query.filter(create_date: date)
       |> Ash.read!(page: [limit: 150])
@@ -223,8 +151,8 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
     {:noreply,
      socket
      |> stream(
-       :checkins,
-       checkins
+       :checkouts,
+       checkouts
      )
      |> assign(:count, count)
      |> assign(
@@ -235,10 +163,10 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
 
   @impl true
   def handle_event("delete", %{"checkin_id" => id}, socket) do
-    checkin = Ash.get!(Marketingbsm.Clockin.Checkin, id, actor: socket.assigns.current_user)
-    Ash.destroy!(checkin, actor: socket.assigns.current_user)
+    checkout = Ash.get!(Marketingbsm.Clockin.Checkout, id, actor: socket.assigns.current_user)
+    Ash.destroy!(checkout, actor: socket.assigns.current_user)
 
-    {:noreply, stream_delete(socket, :checkins, checkin)}
+    {:noreply, stream_delete(socket, :checkouts, checkout)}
   end
 
   @impl true

@@ -14,4 +14,12 @@ defmodule Marketingbsm.Clockin do
       define :read_data, action: :read
     end
   end
+
+  resources do
+    resource Marketingbsm.Clockin.Checkout do
+      define :add_data_checkout, action: :create
+      define :update_data_checkout, action: :update
+      define :read_data_checkout, action: :read
+    end
+  end
 end

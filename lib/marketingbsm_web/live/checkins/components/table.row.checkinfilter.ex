@@ -17,7 +17,7 @@ defmodule MarketingbsmWeb.CheckinLive.RowComponentFilter do
           </Button.button>
 
           <Button.button>
-            <.link navigate={~p"/checkins/#{@project}"}>
+            <.link navigate={~p"/checkouts/#{@project}"}>
               View Check-Outs
             </.link>
           </Button.button>

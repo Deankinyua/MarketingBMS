@@ -69,7 +69,7 @@ defmodule MarketingbsmWeb.ReportLive.Index do
                 Upload Photo first then your details.
               </Text.subtitle>
 
-              <Button.button size="xl" phx-click={JS.patch(~p"/reports/new")}>
+              <Button.button size="xl" phx-click={JS.patch(~p"/checkouts/new")}>
                 <:icon>
                   <.icon name="hero-plus" />
                 </:icon>

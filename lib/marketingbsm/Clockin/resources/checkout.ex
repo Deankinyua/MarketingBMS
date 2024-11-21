@@ -1,4 +1,4 @@
-defmodule Marketingbsm.Clockin.Checkin do
+defmodule Marketingbsm.Clockin.Checkout do
   use Ash.Resource,
     # Tells Ash where the generated code interface belongs
     domain: Marketingbsm.Clockin,
@@ -10,12 +10,12 @@ defmodule Marketingbsm.Clockin.Checkin do
     from MinIO
     """
 
-    plural_name :checkins
-    short_name :checkin
+    plural_name :checkouts
+    short_name :checkout
   end
 
   postgres do
-    table "checkins"
+    table "checkouts"
     repo Marketingbsm.Repo
   end
 

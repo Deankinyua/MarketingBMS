@@ -28,7 +28,10 @@ defmodule MarketingbsmWeb.CheckinLive.Index do
               </Text.title>
 
               <Text.subtitle color="gray">
-                Here you will be able to identify who has checked in and who has not.
+                Here you will be able to identify who has checked in
+              </Text.subtitle>
+              <Text.subtitle color="gray">
+                and who has not and there respective times.
               </Text.subtitle>
             </Layout.flex>
           </Layout.flex>
