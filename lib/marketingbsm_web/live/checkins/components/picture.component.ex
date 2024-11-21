@@ -4,18 +4,11 @@ defmodule MarketingbsmWeb.PictureLive.Component do
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
-      <Layout.flex
-        flex_direction="col"
-        align_items="start"
-        justify_content="start"
-        class="flex-1  h-full overflow-y-auto bg-gray-50/75 w-48"
-      >
-        <div><img src={@checkin} height="150" /></div>
-        <div>
-          <%= render_slot(@inner_block) %>
-        </div>
-      </Layout.flex>
+    <div phx="showPicture">
+      <div><img src={@checkin} height="150" /></div>
+      <div>
+        <%= render_slot(@inner_block) %>
+      </div>
     </div>
     """
   end

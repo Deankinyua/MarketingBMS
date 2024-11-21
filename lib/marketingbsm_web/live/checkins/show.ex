@@ -13,7 +13,11 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
     <div class="w-full h-full">
       <Layout.flex align_items="start" class="h-screen overflow-y-hidden">
         <%= live_render(@socket, MarketingbsmWeb.LiveDrawer,
-          session: %{"active_tab" => "checkin", "user" => "user?id=#{@current_user.id}"},
+          session: %{
+            "active_tab" => "checkin",
+            "hiderr" => @hiderr,
+            "user" => "user?id=#{@current_user.id}"
+          },
           id: "live_drawer",
           sticky: true
         ) %>
@@ -34,32 +38,6 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
                 <strong><%= @count %></strong> Brand Ambassadors have checked In
               </Text.subtitle>
             </Layout.flex>
-          </Layout.flex>
-          <Layout.flex justify_content="between">
-            <section :for={{dom_id, checkin} <- @streams.checkins} id={"photos#{dom_id}"}>
-              <Layout.flex
-                flex_direction="row"
-                align_items="start"
-                justify_content="start"
-                class="flex-1 px-8 py-8 h-full overflow-y-auto bg-gray-50/75"
-              >
-                <div
-                  class="border-red-400 border-2"
-                  phx-click={JS.push("picture", value: %{file_name: checkin.file.original_filename})}
-                >
-                  <.live_component
-                    module={MarketingbsmWeb.PictureLive.Component}
-                    id={dom_id}
-                    checkin={call(checkin.file.original_filename)}
-                    dom_id={dom_id}
-                  >
-                    <Text.text class="font-semibold text-center">
-                      <%= Outlet.get_outlet!(checkin.outlet_id).name %>
-                    </Text.text>
-                  </.live_component>
-                </div>
-              </Layout.flex>
-            </section>
           </Layout.flex>
 
           <Table.table class="w-full">
@@ -133,6 +111,63 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
             </Table.table_body>
           </Table.table>
 
+          <div class="hidden sm:block md:hidden">
+            <Layout.grid num_items="2">
+              <section :for={{dom_id, checkin} <- @streams.checkins} id={"photos#{dom_id}"}>
+                <div class="mr-4 mb-4">
+                  <.live_component
+                    module={MarketingbsmWeb.PictureLive.Component}
+                    id={"medium#{dom_id}"}
+                    checkin={call(checkin.file.original_filename)}
+                    dom_id={dom_id}
+                  >
+                    <Text.text class="font-semibold text-center">
+                      <%= Outlet.get_outlet!(checkin.outlet_id).name %>
+                    </Text.text>
+                  </.live_component>
+                </div>
+              </section>
+            </Layout.grid>
+          </div>
+
+          <div class="hidden md:block">
+            <Layout.grid num_items="5">
+              <section :for={{dom_id, checkin} <- @streams.checkins} id={"photos#{dom_id}"}>
+                <div class="mr-4 mb-4">
+                  <.live_component
+                    module={MarketingbsmWeb.PictureLive.Component}
+                    id={"large#{dom_id}"}
+                    checkin={call(checkin.file.original_filename)}
+                    dom_id={dom_id}
+                  >
+                    <Text.text class="font-semibold text-center">
+                      <%= Outlet.get_outlet!(checkin.outlet_id).name %>
+                    </Text.text>
+                  </.live_component>
+                </div>
+              </section>
+            </Layout.grid>
+          </div>
+
+          <div class="sm:hidden">
+            <Layout.grid num_items="1">
+              <section :for={{dom_id, checkin} <- @streams.checkins} id={"photos#{dom_id}"}>
+                <div class="mr-4 mb-4">
+                  <.live_component
+                    module={MarketingbsmWeb.PictureLive.Component}
+                    id={"small#{dom_id}"}
+                    checkin={call(checkin.file.original_filename)}
+                    dom_id={dom_id}
+                  >
+                    <Text.text class="font-semibold text-center">
+                      <%= Outlet.get_outlet!(checkin.outlet_id).name %>
+                    </Text.text>
+                  </.live_component>
+                </div>
+              </section>
+            </Layout.grid>
+          </div>
+
           <Button.button size="xl" class="mt-2 w-min">
             <.link navigate={~p"/checkins"}>
               Back to Check-Ins
@@ -146,6 +181,10 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
 
   @impl true
   def mount(_params, _session, socket) do
+    socket =
+      socket
+      |> assign(:hiderr, "")
+
     {:ok, socket}
   end
 
@@ -175,7 +214,7 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
       Marketingbsm.Clockin.Checkin
       |> Ash.Query.filter(project_id: id)
       |> Ash.Query.filter(create_date: date)
-      |> Ash.read!(page: [limit: 20])
+      |> Ash.read!(page: [limit: 150])
 
     ambassadors = Map.get(ambassador_count, :results)
 
