@@ -70,7 +70,7 @@ defmodule MarketingbsmWeb.NavigationComponent do
                       Theme.get_sizing_style("xl", "width")
                     ])
                   }
-                  name={"hero-document-check" <> if(@active_tab == "checkin", do: "-solid", else: "")}
+                  name={"hero-camera" <> if(@active_tab == "checkin", do: "-solid", else: "")}
                 />
               </:icon>
             </.menu_item>
@@ -89,7 +89,7 @@ defmodule MarketingbsmWeb.NavigationComponent do
                       Theme.get_sizing_style("xl", "width")
                     ])
                   }
-                  name={"hero-folder-open" <> if(@active_tab == "project", do: "-solid", else: "")}
+                  name={"hero-clipboard-document-list" <> if(@active_tab == "project", do: "-solid", else: "")}
                 />
               </:icon>
             </.menu_item>
@@ -127,7 +127,7 @@ defmodule MarketingbsmWeb.NavigationComponent do
                       Theme.get_sizing_style("xl", "width")
                     ])
                   }
-                  name={"hero-clipboard-document-list" <> if(@active_tab == "registry", do: "-solid", else: "")}
+                  name={"hero-eye" <> if(@active_tab == "registry", do: "-solid", else: "")}
                 />
               </:icon>
             </.menu_item>
