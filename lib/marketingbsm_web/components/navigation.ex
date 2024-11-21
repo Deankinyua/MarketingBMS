@@ -192,24 +192,6 @@ defmodule MarketingbsmWeb.NavigationComponent do
 
           <Layout.grid class="space-y-1 w-full">
             <.menu_item
-              on_click={on_live_navigate(:outlet, ~p"/outlets")}
-              active={@active_tab == "outlet"}
-              name="Notifications"
-            >
-              <:icon>
-                <%!-- hero-bell-alert-solid --%>
-                <.icon
-                  class={
-                    Tails.classes([
-                      Theme.get_sizing_style("xl", "height"),
-                      Theme.get_sizing_style("xl", "width")
-                    ])
-                  }
-                  name={"hero-bell-alert" <> if(@active_tab == "outlet", do: "-solid", else: "")}
-                />
-              </:icon>
-            </.menu_item>
-            <.menu_item
               on_click={on_live_navigate(:management, ~p"/management")}
               active={@active_tab == "management"}
               name="Management"
@@ -229,6 +211,8 @@ defmodule MarketingbsmWeb.NavigationComponent do
             </.menu_item>
 
             <Layout.divider />
+            <.profile_menu :if={@user == nil} name="Juma Mosi" email="jumamosi@gmail.com" />
+            <.profile_menu :if={@user != nil} name={@user.name} email={@user.email} avatar={nil} />
           </Layout.grid>
         </Layout.flex>
       </div>

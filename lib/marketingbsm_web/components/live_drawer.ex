@@ -6,14 +6,17 @@ defmodule MarketingbsmWeb.LiveDrawer do
   alias MarketingbsmWeb.NavigationComponent
 
   alias Marketingbsm.Accounts.User
+  alias Marketingbsm.Accounts
 
   @impl true
   def mount(_params, session, socket) do
     %{"active_tab" => active_tab, "hiderr" => hiderr, "user" => "user?id=" <> user_id} = session
 
+    current_user = Accounts.get_user_by_id!(user_id)
+
     {:ok,
      socket
-     |> assign(:current_user, User |> Ash.get(user_id))
+     |> assign(:current_user, current_user)
      |> assign(:hiderr, hiderr)
      |> assign(:active_tab, active_tab), layout: false}
   end
