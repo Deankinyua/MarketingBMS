@@ -112,7 +112,12 @@ defmodule MarketingbsmWeb.CheckoutLive.Index do
 
   @impl true
   def handle_event("close", _params, socket) do
-    Phoenix.PubSub.broadcast(Marketingbsm.PubSub, "close_drawer", {:close_modal})
+    Phoenix.PubSub.broadcast(
+      Marketingbsm.PubSub,
+      "close_drawer",
+      {:close_modal, "#{socket.assigns.current_user.id}"}
+    )
+
     {:noreply, socket}
   end
 end

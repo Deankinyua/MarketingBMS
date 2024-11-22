@@ -9,14 +9,17 @@ defmodule MarketingbsmWeb.LiveDrawer do
 
   @impl true
   def mount(_params, session, socket) do
-    Phoenix.PubSub.subscribe(Marketingbsm.PubSub, "close_drawer")
     %{"active_tab" => active_tab, "hiderr" => hiderr, "user" => "user?id=" <> user_id} = session
-
     current_user = Accounts.get_user_by_id!(user_id)
+
+    socket =
+      socket
+      |> assign(:current_user, current_user)
+
+    Phoenix.PubSub.subscribe(Marketingbsm.PubSub, "#{socket.assigns.current_user.id}")
 
     {:ok,
      socket
-     |> assign(:current_user, current_user)
      |> assign(:hiderr, hiderr)
      |> assign(:active_tab, active_tab), layout: false}
   end
