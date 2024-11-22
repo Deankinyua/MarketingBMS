@@ -53,7 +53,7 @@ defmodule MarketingbsmWeb.AmbassadorLive.FormComponent do
   end
 
   @impl true
-  def handle_event("validate", %{"ambassador" => ambassador_params} = params, socket) do
+  def handle_event("validate", %{"ambassador" => ambassador_params}, socket) do
     {:noreply,
      assign(socket, form: AshPhoenix.Form.validate(socket.assigns.form, ambassador_params))}
   end

@@ -164,6 +164,7 @@ defmodule MarketingbsmWeb.RegionLive.Index do
     {:noreply, stream_delete(socket, :regions, region)}
   end
 
+  @impl true
   def handle_event("close", _params, socket) do
     Phoenix.PubSub.broadcast(Marketingbsm.PubSub, "close_drawer", {:close_modal})
     {:noreply, socket}

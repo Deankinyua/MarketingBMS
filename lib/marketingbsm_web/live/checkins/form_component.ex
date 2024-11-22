@@ -21,7 +21,7 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
         </Text.title>
 
         <Text.subtitle color="gray">
-          Use this form for checkin .
+          Use this form for check-in.
         </Text.subtitle>
 
         <Layout.divider class="my-4" />

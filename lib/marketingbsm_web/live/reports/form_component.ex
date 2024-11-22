@@ -240,7 +240,7 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
 
         if project_id == registry.project_id do
           case AshPhoenix.Form.submit(socket.assigns.form, params: report_params) do
-            {:ok, report} ->
+            {:ok, _report} ->
               user_params = %{days_worked: registry.days_worked + 1}
 
               Marketingbsm.Record.update_ambassador(registry, user_params)

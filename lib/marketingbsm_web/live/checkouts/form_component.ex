@@ -21,7 +21,7 @@ defmodule MarketingbsmWeb.CheckoutLive.FormComponent do
         </Text.title>
 
         <Text.subtitle color="gray">
-          Use this form for checkin .
+          Use this form for check-out.
         </Text.subtitle>
 
         <Layout.divider class="my-4" />
@@ -124,7 +124,7 @@ defmodule MarketingbsmWeb.CheckoutLive.FormComponent do
               <p class="alert alert-danger"><%= error_to_string(err) %></p>
             <% end %>
             <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Submitting...">
-              Submit Check-In
+              Submit Check-Out
             </Button.button>
           </.form>
         </Layout.col>

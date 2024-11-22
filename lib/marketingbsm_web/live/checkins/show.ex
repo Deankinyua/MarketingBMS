@@ -242,7 +242,7 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
   end
 
   @impl true
-  def handle_event("picture", %{"file_name" => file_name}, socket) do
+  def handle_event("picture", %{"file_name" => _file_name}, socket) do
     {:noreply, socket}
   end
 end

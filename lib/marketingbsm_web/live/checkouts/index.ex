@@ -88,12 +88,12 @@ defmodule MarketingbsmWeb.CheckoutLive.Index do
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "Check In")
+    |> assign(:page_title, "Check Out")
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing checkins")
+    |> assign(:page_title, "Listing checkouts")
   end
 
   defp apply_action(socket, :see, _params) do
@@ -110,6 +110,7 @@ defmodule MarketingbsmWeb.CheckoutLive.Index do
      })}
   end
 
+  @impl true
   def handle_event("close", _params, socket) do
     Phoenix.PubSub.broadcast(Marketingbsm.PubSub, "close_drawer", {:close_modal})
     {:noreply, socket}

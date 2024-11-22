@@ -207,6 +207,7 @@ defmodule MarketingbsmWeb.ProjectLive.Index do
     {:noreply, stream_delete(socket, :projects, project)}
   end
 
+  @impl true
   def handle_event("close", _params, socket) do
     Phoenix.PubSub.broadcast(Marketingbsm.PubSub, "close_drawer", {:close_modal})
     {:noreply, socket}

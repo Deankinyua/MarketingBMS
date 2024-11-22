@@ -176,6 +176,7 @@ defmodule MarketingbsmWeb.ReportLive.Index do
     |> assign(:report, nil)
   end
 
+  @impl true
   def handle_event("close", _params, socket) do
     Phoenix.PubSub.broadcast(Marketingbsm.PubSub, "close_drawer", {:close_modal})
     {:noreply, socket}
