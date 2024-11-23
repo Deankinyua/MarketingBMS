@@ -7,6 +7,7 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
   alias Marketingbsm.File
   alias AshPhoenix.Form
   alias Marketingbsm.Accounts
+  alias Marketingbsm.Clockin
 
   alias MarketingbsmWeb.ReportLive.FormComponent
   alias MarketingbsmWeb.RegistryLive.FormComponent, as: RegistryComponent
@@ -231,72 +232,75 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
   end
 
   def handle_event("save", %{"checkin" => checkin_params}, socket) do
-    # {date, time} = :calendar.local_time()
-
-    # time = Time.from_erl!(time)
-    # date = Date.from_erl!(date)
-
-    # datetimemap = %{"create_date" => date, "create_time" => time}
-
-    # checkin_params = Map.merge(checkin_params, datetimemap)
-
     ambassador_id = RegistryComponent.get_ambassador_id(socket, checkin_params)
-    outlet_id = RegistryComponent.get_outlet_id(socket, checkin_params)
-    project_id = RegistryComponent.get_project_id(socket, checkin_params)
 
-    checkin_params =
-      Map.merge(checkin_params, %{
-        "ambassador_id" => ambassador_id,
-        "project_id" => project_id,
-        "outlet_id" => outlet_id
-      })
+    date = Date.utc_today()
 
-    consume_uploaded_entries(socket, :checkinphoto, fn _meta, entry ->
-      client_name = Map.get(entry, :client_name)
-      filename = Map.get(entry, :uuid) <> "." <> SimpleS3Upload.ext(entry)
+    case Clockin.verify_checkin(ambassador_id, date) do
+      {:ok, _record} ->
+        {:noreply,
+         socket
+         |> put_flash(:error, "You have already checked in !!")
+         |> push_patch(to: "/checkins")}
 
-      {:ok,
-       %File{
-         filename: filename,
-         original_filename: client_name
-       }}
-    end)
-    |> case do
-      [] ->
-        socket =
-          socket
-          |> assign(:audio_errors, %{filename: "is required"})
+      {:error, _error} ->
+        outlet_id = RegistryComponent.get_outlet_id(socket, checkin_params)
+        project_id = RegistryComponent.get_project_id(socket, checkin_params)
 
-        send_update(__MODULE__,
-          id: socket.assigns.form_name,
-          update: :toggle_submit,
-          value: false
-        )
+        checkin_params =
+          Map.merge(checkin_params, %{
+            "ambassador_id" => ambassador_id,
+            "project_id" => project_id,
+            "outlet_id" => outlet_id
+          })
 
-        {:noreply, socket}
+        consume_uploaded_entries(socket, :checkinphoto, fn _meta, entry ->
+          client_name = Map.get(entry, :client_name)
+          filename = Map.get(entry, :uuid) <> "." <> SimpleS3Upload.ext(entry)
 
-      [%File{} = file] ->
-        checkin_params = Map.merge(checkin_params, %{"file" => file})
-        form = socket.assigns.form |> Form.validate(checkin_params)
-
-        Form.errors(form)
+          {:ok,
+           %File{
+             filename: filename,
+             original_filename: client_name
+           }}
+        end)
         |> case do
           [] ->
-            submit_form(socket, checkin_params, file)
+            socket =
+              socket
+              |> assign(:audio_errors, %{filename: "is required"})
 
-          errors ->
             send_update(__MODULE__,
               id: socket.assigns.form_name,
               update: :toggle_submit,
               value: false
             )
 
-            socket =
-              socket
-              |> assign(:form, form)
-              |> assign(:errors, errors)
-
             {:noreply, socket}
+
+          [%File{} = file] ->
+            checkin_params = Map.merge(checkin_params, %{"file" => file})
+            form = socket.assigns.form |> Form.validate(checkin_params)
+
+            Form.errors(form)
+            |> case do
+              [] ->
+                submit_form(socket, checkin_params, file)
+
+              errors ->
+                send_update(__MODULE__,
+                  id: socket.assigns.form_name,
+                  update: :toggle_submit,
+                  value: false
+                )
+
+                socket =
+                  socket
+                  |> assign(:form, form)
+                  |> assign(:errors, errors)
+
+                {:noreply, socket}
+            end
         end
     end
   end

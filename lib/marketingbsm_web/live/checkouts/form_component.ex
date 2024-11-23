@@ -7,6 +7,7 @@ defmodule MarketingbsmWeb.CheckoutLive.FormComponent do
   alias Marketingbsm.File
   alias AshPhoenix.Form
   alias Marketingbsm.Accounts
+  alias Marketingbsm.Clockin
 
   alias MarketingbsmWeb.CheckinLive.FormComponent, as: CheckinComponent
   alias MarketingbsmWeb.ReportLive.FormComponent
@@ -226,62 +227,74 @@ defmodule MarketingbsmWeb.CheckoutLive.FormComponent do
 
   def handle_event("save", %{"checkout" => checkout_params}, socket) do
     ambassador_id = RegistryComponent.get_ambassador_id(socket, checkout_params)
-    outlet_id = RegistryComponent.get_outlet_id(socket, checkout_params)
-    project_id = RegistryComponent.get_project_id(socket, checkout_params)
 
-    checkout_params =
-      Map.merge(checkout_params, %{
-        "ambassador_id" => ambassador_id,
-        "project_id" => project_id,
-        "outlet_id" => outlet_id
-      })
+    date = Date.utc_today()
 
-    consume_uploaded_entries(socket, :checkoutphoto, fn _meta, entry ->
-      client_name = Map.get(entry, :client_name)
-      filename = Map.get(entry, :uuid) <> "." <> SimpleS3Upload.ext(entry)
+    case Clockin.get_user_by_id(ambassador_id, date) do
+      {:ok, _record} ->
+        {:noreply,
+         socket
+         |> put_flash(:error, "You have already checked Out !!")
+         |> push_patch(to: "/checkouts")}
 
-      {:ok,
-       %File{
-         filename: filename,
-         original_filename: client_name
-       }}
-    end)
-    |> case do
-      [] ->
-        socket =
-          socket
-          |> assign(:audio_errors, %{filename: "is required"})
+      {:error, _error} ->
+        outlet_id = RegistryComponent.get_outlet_id(socket, checkout_params)
+        project_id = RegistryComponent.get_project_id(socket, checkout_params)
 
-        send_update(__MODULE__,
-          id: socket.assigns.form_name,
-          update: :toggle_submit,
-          value: false
-        )
+        checkout_params =
+          Map.merge(checkout_params, %{
+            "ambassador_id" => ambassador_id,
+            "project_id" => project_id,
+            "outlet_id" => outlet_id
+          })
 
-        {:noreply, socket}
+        consume_uploaded_entries(socket, :checkoutphoto, fn _meta, entry ->
+          client_name = Map.get(entry, :client_name)
+          filename = Map.get(entry, :uuid) <> "." <> SimpleS3Upload.ext(entry)
 
-      [%File{} = file] ->
-        checkout_params = Map.merge(checkout_params, %{"file" => file})
-        form = socket.assigns.form |> Form.validate(checkout_params)
-
-        Form.errors(form)
+          {:ok,
+           %File{
+             filename: filename,
+             original_filename: client_name
+           }}
+        end)
         |> case do
           [] ->
-            submit_form(socket, checkout_params, file)
+            socket =
+              socket
+              |> assign(:audio_errors, %{filename: "is required"})
 
-          errors ->
             send_update(__MODULE__,
               id: socket.assigns.form_name,
               update: :toggle_submit,
               value: false
             )
 
-            socket =
-              socket
-              |> assign(:form, form)
-              |> assign(:errors, errors)
-
             {:noreply, socket}
+
+          [%File{} = file] ->
+            checkout_params = Map.merge(checkout_params, %{"file" => file})
+            form = socket.assigns.form |> Form.validate(checkout_params)
+
+            Form.errors(form)
+            |> case do
+              [] ->
+                submit_form(socket, checkout_params, file)
+
+              errors ->
+                send_update(__MODULE__,
+                  id: socket.assigns.form_name,
+                  update: :toggle_submit,
+                  value: false
+                )
+
+                socket =
+                  socket
+                  |> assign(:form, form)
+                  |> assign(:errors, errors)
+
+                {:noreply, socket}
+            end
         end
     end
   end

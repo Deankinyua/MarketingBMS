@@ -83,13 +83,15 @@ defmodule Marketingbsm.Clockin.Checkin do
     end
 
     read :by_id do
-      # This action has one argument :id of type :ci_string
       argument :ambassador_id, :uuid, allow_nil?: false
+      argument :create_date, :date, allow_nil?: false
       # Tells us we expect this action to return a single result
       get? true
       # Filters the `:id` given in the argument
       # against the `id` of each element in the resource
       filter expr(ambassador_id == ^arg(:ambassador_id))
+      # filter expr(create_date == ^arg(:create_date))
+      filter expr(create_date == ^arg(:create_date))
     end
   end
 end

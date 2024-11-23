@@ -12,6 +12,7 @@ defmodule Marketingbsm.Clockin do
       define :add_data, action: :create
       define :update_data, action: :update
       define :read_data, action: :read
+      define :verify_checkin, args: [:ambassador_id, :create_date], action: :by_id
     end
   end
 
