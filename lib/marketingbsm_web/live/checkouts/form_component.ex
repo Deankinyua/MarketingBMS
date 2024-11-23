@@ -8,6 +8,7 @@ defmodule MarketingbsmWeb.CheckoutLive.FormComponent do
   alias AshPhoenix.Form
   alias Marketingbsm.Accounts
 
+  alias MarketingbsmWeb.CheckinLive.FormComponent, as: CheckinComponent
   alias MarketingbsmWeb.ReportLive.FormComponent
   alias MarketingbsmWeb.RegistryLive.FormComponent, as: RegistryComponent
 
@@ -90,39 +91,74 @@ defmodule MarketingbsmWeb.CheckoutLive.FormComponent do
             </Layout.col>
 
             <fieldset>
-              <.live_file_input type="file" upload={@uploads.photo} />
+              <.live_file_input
+                type="file"
+                upload={@uploads.checkoutphoto}
+                class="hidden pointer-events-none"
+                capture="environment"
+              />
             </fieldset>
 
-            <%= for entry <- @uploads.photo.entries
+            <CheckinComponent.droptarget
+              for={@uploads.checkoutphoto.ref}
+              on_click={JS.dispatch("click", to: "##{@uploads.checkoutphoto.ref}", bubbles: false)}
+              drop_target_ref={@uploads.checkoutphoto.ref}
+            />
+
+            <%= for entry <- @uploads.checkoutphoto.entries
     do %>
               <article class="upload-entry">
                 <figure>
                   <.live_img_preview entry={entry} height="40" />
-                  <figcaption><%= entry.client_name %></figcaption>
                 </figure>
 
-                <progress value="{entry.progress}" max="100">
-                  <%= entry.progress %>%
-                </progress>
+                <Layout.flex justify_content="start" align_items="center" class="space-x-4">
+                  <Layout.flex
+                    justify_content="center"
+                    class="w-16 h-16 bg-tremor-brand text-white rounded-md flex-shrink-0"
+                  >
+                    <.icon name="hero-camera" class="h-6 w-6" />
+                  </Layout.flex>
 
-                <button
-                  type="button"
-                  phx-click="cancel-upload"
-                  phx-value-ref={entry.ref}
-                  aria-label="cancel"
-                >
-                  cancel
-                </button>
+                  <Layout.flex flex_direction="col" align_items="start">
+                    <Layout.flex class="space-x-4">
+                      <Layout.flex class="" flex_direction="col" align_items="start">
+                        <div class="w-full flex-1">
+                          <Text.subtitle color="black" class="text-ellipsis">
+                            <%= entry.client_name %>
+                          </Text.subtitle>
+                        </div>
+                      </Layout.flex>
 
-                <%= for err <- upload_errors(@uploads.photo, entry) do %>
+                      <Button.button
+                        class="mt-2 flex-shrink-0"
+                        variant="secondary"
+                        color="rose"
+                        size="xs"
+                        phx-click="cancel-upload"
+                        phx-value-ref={entry.ref}
+                        aria-label="cancel"
+                        phx-target={@myself}
+                      >
+                        Cancel
+                      </Button.button>
+                    </Layout.flex>
+
+                    <Bar.progress_bar
+                      :if={entry.progress > 0}
+                      class="mt-3"
+                      value={entry.progress}
+                      show_animation={true}
+                    />
+                  </Layout.flex>
+                </Layout.flex>
+
+                <%= for err <- upload_errors(@uploads.checkoutphoto, entry) do %>
                   <p class="alert alert-danger"><%= error_to_string(err) %></p>
                 <% end %>
               </article>
             <% end %>
 
-            <%= for err <- upload_errors(@uploads.photo) do %>
-              <p class="alert alert-danger"><%= error_to_string(err) %></p>
-            <% end %>
             <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Submitting...">
               Submit Check-Out
             </Button.button>
@@ -138,12 +174,14 @@ defmodule MarketingbsmWeb.CheckoutLive.FormComponent do
     socket =
       socket
       |> assign(:uploaded_files, [])
-      |> allow_upload(:photo,
+      |> allow_upload(:checkoutphoto,
         accept: ~w(.png .jpg .jpeg),
         max_entries: 1,
         id: "image_file",
         max_file_size: 80_000_000,
-        external: fn entry, socket -> SimpleS3Upload.presign_upload(entry, socket, "photo") end
+        external: fn entry, socket ->
+          SimpleS3Upload.presign_upload(entry, socket, "checkoutphoto")
+        end
       )
 
     {:ok,
@@ -198,7 +236,7 @@ defmodule MarketingbsmWeb.CheckoutLive.FormComponent do
         "outlet_id" => outlet_id
       })
 
-    consume_uploaded_entries(socket, :photo, fn _meta, entry ->
+    consume_uploaded_entries(socket, :checkoutphoto, fn _meta, entry ->
       client_name = Map.get(entry, :client_name)
       filename = Map.get(entry, :uuid) <> "." <> SimpleS3Upload.ext(entry)
 

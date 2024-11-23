@@ -16,7 +16,7 @@ defmodule MarketingbsmWeb.ProjectLive.FormComponent do
 
         <Layout.divider class="my-4" />
 
-        <.form :let={f} for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
+        <.form :let={f} for={@form} phx-target={@myself} phx-submit="save">
           <%= if @form.source.type == :create do %>
             <Layout.col class="space-y-1.5">
               <label for="name_field">
@@ -54,14 +54,20 @@ defmodule MarketingbsmWeb.ProjectLive.FormComponent do
                 value={@form[:name].value}
                 required="true"
               />
+              <Layout.col class="space-y-1.5">
+                <label for="status">
+                  <Text.text class="text-tremor-content">
+                    Freezed Status
+                  </Text.text>
+                </label>
 
-              <label for="status">
-                <Text.text class="text-tremor-content">
-                  Project Status
-                </Text.text>
-              </label>
-
-              <.input id="status" field={@form[:is_freezed]} type="select" options={@freeze_selector} />
+                <.input
+                  id="status"
+                  field={@form[:is_freezed]}
+                  type="select"
+                  options={@freeze_selector}
+                />
+              </Layout.col>
             </Layout.col>
           <% end %>
 
@@ -88,16 +94,19 @@ defmodule MarketingbsmWeb.ProjectLive.FormComponent do
   end
 
   defp freeze_selector(socket) do
-    socket |> assign(freeze_selector: [true, false])
+    socket |> assign(freeze_selector: ["Yes", "No"])
   end
 
   @impl true
-  def handle_event("validate", %{"project" => project_params}, socket) do
-    {:noreply,
-     assign(socket, form: AshPhoenix.Form.validate(socket.assigns.form, project_params))}
-  end
-
   def handle_event("save", %{"project" => project_params}, socket) do
+    freeze_status = project_params["is_freezed"]
+    freeze_status = return_status(freeze_status)
+
+    project_params =
+      Map.merge(project_params, %{
+        "is_freezed" => freeze_status
+      })
+
     case AshPhoenix.Form.submit(socket.assigns.form, params: project_params) do
       {:ok, project} ->
         notify_parent({:saved, project})
@@ -131,5 +140,13 @@ defmodule MarketingbsmWeb.ProjectLive.FormComponent do
       end
 
     assign(socket, form: to_form(form))
+  end
+
+  def return_status(status) do
+    if status == "Yes" do
+      true
+    else
+      false
+    end
   end
 end

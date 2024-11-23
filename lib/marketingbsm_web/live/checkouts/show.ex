@@ -30,7 +30,7 @@ defmodule MarketingbsmWeb.CheckoutLive.Show do
           <Layout.flex justify_content="between">
             <Layout.flex flex_direction="col" align_items="start" class="grow">
               <Text.title class="text-xl">
-                <Text.bold><%= @project.name %> Project Check-Ins</Text.bold>
+                <Text.bold><%= @project.name %> Project Check-Outs</Text.bold>
               </Text.title>
 
               <Text.subtitle color="gray" class="mb-10">
@@ -117,7 +117,7 @@ defmodule MarketingbsmWeb.CheckoutLive.Show do
   end
 
   def call(filename) do
-    "http://127.0.0.1:9000/marketingbsm/photo/#{filename}"
+    "http://127.0.0.1:9000/marketingbsm/checkoutphoto/#{filename}"
   end
 
   def call_outlet(outlet) do

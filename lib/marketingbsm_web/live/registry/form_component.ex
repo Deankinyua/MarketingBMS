@@ -4,6 +4,7 @@ defmodule MarketingbsmWeb.RegistryLive.FormComponent do
   import MarketingbsmWeb.TemplateLive.FormComponent, only: [fetch_projects: 1]
 
   alias Marketingbsm.Accounts
+  alias MarketingbsmWeb.ProjectLive.FormComponent, as: ProjectComponent
   @impl true
   def render(assigns) do
     ~H"""
@@ -19,13 +20,7 @@ defmodule MarketingbsmWeb.RegistryLive.FormComponent do
 
         <Layout.divider class="my-4" />
 
-        <.simple_form
-          for={@form}
-          id="registry-form"
-          phx-target={@myself}
-          phx-change="validate"
-          phx-submit="save"
-        >
+        <.simple_form for={@form} id="registry-form" phx-target={@myself} phx-submit="save">
           <%= if @form.source.type == :create do %>
             <Layout.col class="space-y-1.5">
               <label for="ambassador[:ambassador_id]">
@@ -95,7 +90,7 @@ defmodule MarketingbsmWeb.RegistryLive.FormComponent do
               field={@form[:should_activate]}
               type="select"
               options={@activate_selector}
-              label="Should Activate"
+              label="Can Activate?"
             />
           <% end %>
 
@@ -125,7 +120,7 @@ defmodule MarketingbsmWeb.RegistryLive.FormComponent do
   end
 
   defp activate_selector(socket) do
-    socket |> assign(activate_selector: [true, false])
+    socket |> assign(activate_selector: ["Yes", "No"])
   end
 
   defp fetch_promoters(socket) do
@@ -135,8 +130,6 @@ defmodule MarketingbsmWeb.RegistryLive.FormComponent do
       |> Ash.read!(page: [limit: 20])
 
     ambassadors = Map.get(query_results, :results)
-
-    dbg(ambassadors)
 
     socket |> assign(ambassadors: ambassador_selector(ambassadors))
   end
@@ -154,13 +147,10 @@ defmodule MarketingbsmWeb.RegistryLive.FormComponent do
   end
 
   @impl true
-  def handle_event("validate", %{"registry" => registry_params}, socket) do
-    {:noreply,
-     assign(socket, form: AshPhoenix.Form.validate(socket.assigns.form, registry_params))}
-  end
-
   def handle_event("save", %{"registry" => registry_params}, socket) do
     ambassador_id = get_ambassador_id(socket, registry_params)
+    activate_status = registry_params["should_activate"]
+    activate_status = ProjectComponent.return_status(activate_status)
 
     outlet_id = get_outlet_id(socket, registry_params)
 
@@ -170,7 +160,8 @@ defmodule MarketingbsmWeb.RegistryLive.FormComponent do
       Map.merge(registry_params, %{
         "ambassador_id" => ambassador_id,
         "project_id" => project_id,
-        "outlet_id" => outlet_id
+        "outlet_id" => outlet_id,
+        "should_activate" => activate_status
       })
 
     case AshPhoenix.Form.submit(socket.assigns.form, params: registry_params) do

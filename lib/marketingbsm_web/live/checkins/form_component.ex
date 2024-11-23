@@ -92,36 +92,31 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
             <fieldset>
               <.live_file_input
                 type="file"
-                upload={@uploads.photo}
+                upload={@uploads.checkinphoto}
                 class="hidden pointer-events-none"
                 capture="environment"
               />
             </fieldset>
 
             <.droptarget
-              for={@uploads.photo.ref}
-              on_click={JS.dispatch("click", to: "##{@uploads.photo.ref}", bubbles: false)}
-              drop_target_ref={@uploads.photo.ref}
+              for={@uploads.checkinphoto.ref}
+              on_click={JS.dispatch("click", to: "##{@uploads.checkinphoto.ref}", bubbles: false)}
+              drop_target_ref={@uploads.checkinphoto.ref}
             />
 
-            <%= for entry <- @uploads.photo.entries
+            <%= for entry <- @uploads.checkinphoto.entries
     do %>
               <article class="upload-entry">
                 <figure>
                   <.live_img_preview entry={entry} height="40" />
-                  <figcaption><%= entry.client_name %></figcaption>
                 </figure>
-
-                <progress value="{entry.progress}" max="100">
-                  <%= entry.progress %>%
-                </progress>
 
                 <Layout.flex justify_content="start" align_items="center" class="space-x-4">
                   <Layout.flex
                     justify_content="center"
                     class="w-16 h-16 bg-tremor-brand text-white rounded-md flex-shrink-0"
                   >
-                    <.icon name="hero-musical-note" class="h-6 w-6" />
+                    <.icon name="hero-camera" class="h-6 w-6" />
                   </Layout.flex>
 
                   <Layout.flex flex_direction="col" align_items="start">
@@ -157,15 +152,12 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
                   </Layout.flex>
                 </Layout.flex>
 
-                <%= for err <- upload_errors(@uploads.photo, entry) do %>
+                <%= for err <- upload_errors(@uploads.checkinphoto, entry) do %>
                   <p class="alert alert-danger"><%= error_to_string(err) %></p>
                 <% end %>
               </article>
             <% end %>
 
-            <%= for err <- upload_errors(@uploads.photo) do %>
-              <p class="alert alert-danger"><%= error_to_string(err) %></p>
-            <% end %>
             <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Submitting...">
               Submit Check-In
             </Button.button>
@@ -181,12 +173,14 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
     socket =
       socket
       |> assign(:uploaded_files, [])
-      |> allow_upload(:photo,
+      |> allow_upload(:checkinphoto,
         accept: ~w(.png .jpg .jpeg),
         max_entries: 1,
         id: "image_file",
         max_file_size: 80_000_000,
-        external: fn entry, socket -> SimpleS3Upload.presign_upload(entry, socket, "photo") end
+        external: fn entry, socket ->
+          SimpleS3Upload.presign_upload(entry, socket, "checkinphoto")
+        end
       )
 
     {:ok,
@@ -224,7 +218,7 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
 
   @impl true
   def handle_event("cancel-upload", %{"ref" => ref, "value" => _value}, socket) do
-    {:noreply, cancel_upload(socket, :photo, ref)}
+    {:noreply, cancel_upload(socket, :checkinphoto, ref)}
   end
 
   @impl true
@@ -257,7 +251,7 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
         "outlet_id" => outlet_id
       })
 
-    consume_uploaded_entries(socket, :photo, fn _meta, entry ->
+    consume_uploaded_entries(socket, :checkinphoto, fn _meta, entry ->
       client_name = Map.get(entry, :client_name)
       filename = Map.get(entry, :uuid) <> "." <> SimpleS3Upload.ext(entry)
 

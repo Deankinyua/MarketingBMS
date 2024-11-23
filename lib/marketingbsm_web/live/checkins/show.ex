@@ -4,7 +4,6 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
   require Ash.Query
 
   alias Marketingbsm.ProjectGeneral
-  alias Marketingbsm.Accounts
   alias Marketingbsm.Outlet
 
   @impl true
@@ -118,7 +117,7 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
   end
 
   def call(filename) do
-    "http://127.0.0.1:9000/marketingbsm/photo/#{filename}"
+    "http://127.0.0.1:9000/marketingbsm/checkinphoto/#{filename}"
   end
 
   def call_outlet(outlet) do

@@ -67,7 +67,7 @@ defmodule MarketingbsmWeb.RegistryLive.Show do
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    Should Activate
+                    Can Activate?
                   </Text.text>
                 </Table.table_cell>
 
@@ -112,7 +112,11 @@ defmodule MarketingbsmWeb.RegistryLive.Show do
                   </Table.table_cell>
 
                   <Table.table_cell>
-                    <%= registry.should_activate %>
+                    <%= if registry.should_activate== true do %>
+                      Yes
+                    <% else %>
+                      No
+                    <% end %>
                   </Table.table_cell>
                 </.live_component>
               </Table.table_row>
