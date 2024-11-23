@@ -45,7 +45,7 @@ defmodule MarketingbsmWeb.RegistryLive.Index do
               </Text.title>
 
               <Text.subtitle color="gray">
-                Use this to manage multiple ambassadors assigned to the same outlet.
+                Multiple Ambassadors can be assigned to the same outlet.
               </Text.subtitle>
 
               <Text.subtitle color="gray">
@@ -53,7 +53,7 @@ defmodule MarketingbsmWeb.RegistryLive.Index do
               </Text.subtitle>
 
               <Text.subtitle color="gray">
-                There are people activating the same outlet.
+                No Ambassador can activate 2 places at the same time.
               </Text.subtitle>
             </Layout.flex>
 
