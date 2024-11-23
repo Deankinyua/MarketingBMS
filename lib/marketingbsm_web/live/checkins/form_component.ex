@@ -90,8 +90,19 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
             </Layout.col>
 
             <fieldset>
-              <.live_file_input type="file" upload={@uploads.photo} />
+              <.live_file_input
+                type="file"
+                upload={@uploads.photo}
+                class="hidden pointer-events-none"
+                capture="environment"
+              />
             </fieldset>
+
+            <.droptarget
+              for={@uploads.photo.ref}
+              on_click={JS.dispatch("click", to: "##{@uploads.photo.ref}", bubbles: false)}
+              drop_target_ref={@uploads.photo.ref}
+            />
 
             <%= for entry <- @uploads.photo.entries
     do %>
@@ -105,14 +116,46 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
                   <%= entry.progress %>%
                 </progress>
 
-                <button
-                  type="button"
-                  phx-click="cancel-upload"
-                  phx-value-ref={entry.ref}
-                  aria-label="cancel"
-                >
-                  cancel
-                </button>
+                <Layout.flex justify_content="start" align_items="center" class="space-x-4">
+                  <Layout.flex
+                    justify_content="center"
+                    class="w-16 h-16 bg-tremor-brand text-white rounded-md flex-shrink-0"
+                  >
+                    <.icon name="hero-musical-note" class="h-6 w-6" />
+                  </Layout.flex>
+
+                  <Layout.flex flex_direction="col" align_items="start">
+                    <Layout.flex class="space-x-4">
+                      <Layout.flex class="" flex_direction="col" align_items="start">
+                        <div class="w-full flex-1">
+                          <Text.subtitle color="black" class="text-ellipsis">
+                            <%= entry.client_name %>
+                          </Text.subtitle>
+                        </div>
+                      </Layout.flex>
+
+                      <Button.button
+                        class="mt-2 flex-shrink-0"
+                        variant="secondary"
+                        color="rose"
+                        size="xs"
+                        phx-click="cancel-upload"
+                        phx-value-ref={entry.ref}
+                        aria-label="cancel"
+                        phx-target={@myself}
+                      >
+                        Cancel
+                      </Button.button>
+                    </Layout.flex>
+
+                    <Bar.progress_bar
+                      :if={entry.progress > 0}
+                      class="mt-3"
+                      value={entry.progress}
+                      show_animation={true}
+                    />
+                  </Layout.flex>
+                </Layout.flex>
 
                 <%= for err <- upload_errors(@uploads.photo, entry) do %>
                   <p class="alert alert-danger"><%= error_to_string(err) %></p>
@@ -177,6 +220,11 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
     outlets = Map.get(query_results, :results)
 
     socket |> assign(outlets: outlets)
+  end
+
+  @impl true
+  def handle_event("cancel-upload", %{"ref" => ref, "value" => _value}, socket) do
+    {:noreply, cancel_upload(socket, :photo, ref)}
   end
 
   @impl true
@@ -326,5 +374,29 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
 
       user
     end
+  end
+
+  attr :on_click, JS, required: true
+  attr :drop_target_ref, :string, required: true
+  attr :for, :string, required: true
+
+  @doc """
+  Renders a drop target to upload files
+  """
+
+  def droptarget(assigns) do
+    ~H"""
+    <div
+      phx-click={@on_click}
+      phx-drop-target={@drop_target_ref}
+      for={@for}
+      class="flex flex-col items-center max-w-2xl w-full py-8 px-6 mx-auto mt-2 text-center border-2 border-gray-300 border-dashed cursor-pointer dark:bg-gray-900 dark:border-gray-700 rounded-md"
+    >
+      <.icon name="hero-camera" class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" />
+      <Text.title>
+        Take Your Photo
+      </Text.title>
+    </div>
+    """
   end
 end

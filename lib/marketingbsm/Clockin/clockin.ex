@@ -20,6 +20,7 @@ defmodule Marketingbsm.Clockin do
       define :add_data_checkout, action: :create
       define :update_data_checkout, action: :update
       define :read_data_checkout, action: :read
+      define :get_user_by_id, args: [:ambassador_id, :create_date], action: :by_id
     end
   end
 end

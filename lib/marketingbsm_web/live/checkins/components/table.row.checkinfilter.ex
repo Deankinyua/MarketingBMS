@@ -23,7 +23,7 @@ defmodule MarketingbsmWeb.CheckinLive.RowComponentFilter do
           </Button.button>
 
           <Button.button>
-            <.link navigate={~p"/checkouts/#{@project}"}>
+            <.link navigate={~p"/summary/#{@project}"}>
               Summary
             </.link>
           </Button.button>

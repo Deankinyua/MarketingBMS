@@ -94,6 +94,13 @@ defmodule MarketingbsmWeb.Router do
 
       live "/checkouts/:id", CheckoutLive.Show, :show
       live "/checkouts/:id/show/edit", CheckoutLive.Show, :edit
+
+      live "/summary", SummaryLive.Index, :index
+      live "/summary/new", SummaryLive.Index, :new
+      live "/summary/:id/edit", SummaryLive.Index, :edit
+
+      live "/summary/:id", SummaryLive.Show, :show
+      live "/summary/:id/show/edit", SummaryLive.Show, :edit
     end
   end
 
