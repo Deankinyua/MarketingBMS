@@ -16,7 +16,34 @@ defmodule MarketingbsmWeb.CheckoutLive.Index do
           id: "live_drawer",
           sticky: true
         ) %>
-        <Layout.flex flex_direction="col" justify_content="center" class="my-10">
+
+        <Layout.flex
+          flex_direction="col"
+          align_items="center"
+          justify_content="start"
+          class="flex-1 px-8 py-8 h-full overflow-y-auto bg-gray-50/75"
+        >
+          <Layout.flex
+            flex_direction="col"
+            align_items="start"
+            justify_content="start"
+            class="flex-1 px-8 py-8 h-full overflow-y-auto bg-gray-50/75"
+          >
+            <div class="ml-4">
+              <.link phx-click={JS.push("close")}>
+                <.icon
+                  class={
+                    Tails.classes([
+                      Theme.get_sizing_style("xl", "height"),
+                      Theme.get_sizing_style("xl", "width")
+                    ])
+                  }
+                  name="hero-bars-3-solid"
+                />
+              </.link>
+            </div>
+          </Layout.flex>
+
           <.modal
             :if={@live_action in [:new, :edit]}
             id="checkouts-modal"
@@ -36,21 +63,9 @@ defmodule MarketingbsmWeb.CheckoutLive.Index do
           <Layout.flex
             flex_direction="col"
             align_items="center"
+            justify_content="between"
             class="grow mb-4 border-gray-300 border-2 py-8 border-dotted my-10 max-w-2xl"
           >
-            <div class="ml-4">
-              <.link phx-click={JS.push("close")}>
-                <.icon
-                  class={
-                    Tails.classes([
-                      Theme.get_sizing_style("xl", "height"),
-                      Theme.get_sizing_style("xl", "width")
-                    ])
-                  }
-                  name="hero-bars-3-solid"
-                />
-              </.link>
-            </div>
             <Text.title class="text-xl my-4">
               <Text.bold>Closing Report</Text.bold>
             </Text.title>
@@ -114,8 +129,8 @@ defmodule MarketingbsmWeb.CheckoutLive.Index do
   def handle_event("close", _params, socket) do
     Phoenix.PubSub.broadcast(
       Marketingbsm.PubSub,
-      "close_drawer",
-      {:close_modal, "#{socket.assigns.current_user.id}"}
+      "#{socket.assigns.current_user.id}",
+      {:toggle_drawer}
     )
 
     {:noreply, socket}

@@ -194,21 +194,21 @@ defmodule MarketingbsmWeb.ShopLive.Index do
   end
 
   @impl true
-  def handle_event("close", _params, socket) do
-    Phoenix.PubSub.broadcast(
-      Marketingbsm.PubSub,
-      "#{socket.assigns.current_user.id}",
-      {:close_modal}
-    )
-
-    {:noreply, socket}
-  end
-
-  @impl true
   def handle_event("delete", %{"outlet_id" => id}, socket) do
     outlet = Ash.get!(Marketingbsm.Outlet.Shop, id)
     Ash.destroy!(outlet)
 
     {:noreply, stream_delete(socket, :outlets, outlet)}
+  end
+
+  @impl true
+  def handle_event("close", _params, socket) do
+    Phoenix.PubSub.broadcast(
+      Marketingbsm.PubSub,
+      "#{socket.assigns.current_user.id}",
+      {:toggle_drawer}
+    )
+
+    {:noreply, socket}
   end
 end

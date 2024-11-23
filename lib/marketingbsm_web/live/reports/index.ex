@@ -181,7 +181,7 @@ defmodule MarketingbsmWeb.ReportLive.Index do
     Phoenix.PubSub.broadcast(
       Marketingbsm.PubSub,
       "#{socket.assigns.current_user.id}",
-      {:close_modal}
+      {:toggle_drawer}
     )
 
     {:noreply, socket}

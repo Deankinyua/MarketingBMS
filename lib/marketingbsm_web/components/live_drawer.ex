@@ -30,7 +30,7 @@ defmodule MarketingbsmWeb.LiveDrawer do
     {:noreply, socket |> assign(:active_tab, active_tab)}
   end
 
-  def handle_info({:close_modal}, socket) do
+  def handle_info({:toggle_drawer}, socket) do
     hiderr = socket.assigns.hiderr
     new_hiderr = NavHelper.toggle_nav(hiderr)
 

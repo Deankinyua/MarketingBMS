@@ -65,14 +65,14 @@ defmodule MarketingbsmWeb.SummaryLive.Index do
      })}
   end
 
-  @impl true
-  def handle_event("close", _params, socket) do
-    Phoenix.PubSub.broadcast(
-      Marketingbsm.PubSub,
-      "#{socket.assigns.current_user.id}",
-      {:close_modal}
-    )
+  # @impl true
+  # def handle_event("close", _params, socket) do
+  #   Phoenix.PubSub.broadcast(
+  #     Marketingbsm.PubSub,
+  #     "#{socket.assigns.current_user.id}",
+  #     {:toggle_drawer}
+  #   )
 
-    {:noreply, socket}
-  end
+  #   {:noreply, socket}
+  # end
 end
