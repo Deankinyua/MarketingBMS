@@ -1,7 +1,8 @@
 defmodule Marketingbsm.Outlet.Shop do
   use Ash.Resource,
     domain: Marketingbsm.Outlet,
-    data_layer: AshPostgres.DataLayer
+    data_layer: AshPostgres.DataLayer,
+    extensions: [AshArchival.Resource]
 
   resource do
     description """
@@ -15,6 +16,10 @@ defmodule Marketingbsm.Outlet.Shop do
   postgres do
     repo Marketingbsm.Repo
     table "shops"
+
+    references do
+      reference :region, on_delete: :delete
+    end
   end
 
   attributes do
@@ -76,14 +81,4 @@ defmodule Marketingbsm.Outlet.Shop do
       attribute_writable? true
     end
   end
-
-  # pub_sub do
-  #   module Marketingbsm
-  #   prefix "region"
-  #   broadcast_type :phoenix_broadcast
-
-  #   publish :update, ["updated", :id]
-
-  #   publish_all :create, "created"
-  # end
 end

@@ -17,38 +17,57 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "ambassador_id",
-      "type": "uuid"
+      "source": "name",
+      "type": "text"
     },
     {
       "allow_nil?": false,
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
-      "references": null,
+      "references": {
+        "deferrable": false,
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "index?": false,
+        "match_type": null,
+        "match_with": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "shops_region_id_fkey",
+        "on_delete": "delete",
+        "on_update": null,
+        "primary_key?": true,
+        "schema": "public",
+        "table": "regions"
+      },
       "size": null,
-      "source": "project_id",
+      "source": "region_id",
       "type": "uuid"
     },
     {
       "allow_nil?": false,
-      "default": "nil",
+      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "outlet_id",
-      "type": "uuid"
+      "source": "created_at",
+      "type": "utc_datetime_usec"
     },
     {
       "allow_nil?": false,
-      "default": "nil",
+      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "file",
-      "type": "map"
+      "source": "updated_at",
+      "type": "utc_datetime_usec"
     }
   ],
   "base_filter": null,
@@ -56,7 +75,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "57AA57BBE6A47448C18600DF98AD4B517BF8EBE201317BE219812E0E2394173D",
+  "hash": "72A8D72A03BA6D69BA56CE35ECAAB6941E809BAF1CCF1908C992E9C8B67AC85C",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -65,5 +84,5 @@
   },
   "repo": "Elixir.Marketingbsm.Repo",
   "schema": null,
-  "table": "checkins"
+  "table": "shops"
 }

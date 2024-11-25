@@ -2,7 +2,7 @@
   "attributes": [
     {
       "allow_nil?": false,
-      "default": "fragment(\"gen_random_uuid()\")",
+      "default": "nil",
       "generated?": false,
       "primary_key?": true,
       "references": null,
@@ -12,33 +12,23 @@
     },
     {
       "allow_nil?": false,
-      "default": "nil",
+      "default": "\"Occupied\"",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "project_id",
-      "type": "uuid"
+      "source": "availability",
+      "type": "text"
     },
     {
       "allow_nil?": false,
-      "default": "nil",
+      "default": "\"Not Set\"",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "ambassador_id",
-      "type": "uuid"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "outlet_id",
-      "type": "uuid"
+      "source": "location",
+      "type": "text"
     },
     {
       "allow_nil?": false,
@@ -47,18 +37,8 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "days_worked",
+      "source": "total_days_worked",
       "type": "bigint"
-    },
-    {
-      "allow_nil?": false,
-      "default": "false",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "should_activate",
-      "type": "boolean"
     }
   ],
   "base_filter": null,
@@ -66,7 +46,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "E650F7A121A204A22ABEA44450D665C0C27FE1EEC2087AD2F82907ED5B3CFF61",
+  "hash": "F974BC816A0C4EFE8D57EBDC313CDF8B1A5AB233CF47B37F1EF98F3BB5B2DC92",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -75,5 +55,5 @@
   },
   "repo": "Elixir.Marketingbsm.Repo",
   "schema": null,
-  "table": "registries"
+  "table": "ambassadors"
 }

@@ -1,4 +1,4 @@
-defmodule Marketingbsm.Repo.Migrations.MigrateResources1 do
+defmodule Marketingbsm.Repo.Migrations.Initial do
   @moduledoc """
   Updates resources based on their most recent snapshots.
 
@@ -135,7 +135,8 @@ defmodule Marketingbsm.Repo.Migrations.MigrateResources1 do
                column: :id,
                name: "shops_region_id_fkey",
                type: :uuid,
-               prefix: "public"
+               prefix: "public",
+               on_delete: :delete_all
              )
     end
 
@@ -151,18 +152,126 @@ defmodule Marketingbsm.Repo.Migrations.MigrateResources1 do
         default: fragment("(now() AT TIME ZONE 'utc')")
     end
 
-    create table(:projectgeneral, primary_key: false) do
+    create table(:projects, primary_key: false) do
       add :id, :uuid, null: false, default: fragment("gen_random_uuid()"), primary_key: true
+    end
+
+    alter table(:templates) do
+      modify :project_id,
+             references(:projects,
+               column: :id,
+               name: "templates_project_id_fkey",
+               type: :uuid,
+               prefix: "public",
+               on_delete: :delete_all
+             )
+    end
+
+    alter table(:reports) do
+      modify :project_id,
+             references(:projects,
+               column: :id,
+               name: "reports_project_id_fkey",
+               type: :uuid,
+               prefix: "public",
+               on_delete: :delete_all
+             )
+
+      modify :outlet_id,
+             references(:shops,
+               column: :id,
+               name: "reports_outlet_id_fkey",
+               type: :uuid,
+               prefix: "public",
+               on_delete: :delete_all
+             )
+    end
+
+    alter table(:registries) do
+      modify :project_id,
+             references(:projects,
+               column: :id,
+               name: "registries_project_id_fkey",
+               type: :uuid,
+               prefix: "public",
+               on_delete: :delete_all
+             )
+
+      modify :outlet_id,
+             references(:shops,
+               column: :id,
+               name: "registries_outlet_id_fkey",
+               type: :uuid,
+               prefix: "public",
+               on_delete: :delete_all
+             )
+    end
+
+    alter table(:projects) do
       add :name, :text, null: false
       add :is_freezed, :boolean, null: false, default: false
+    end
+
+    create table(:managers, primary_key: false) do
+      add :id, :uuid, null: false, primary_key: true
+    end
+
+    create table(:checkouts, primary_key: false) do
+      add :id, :uuid, null: false, default: fragment("gen_random_uuid()"), primary_key: true
+      add :ambassador_id, :uuid, null: false
+
+      add :project_id,
+          references(:projects,
+            column: :id,
+            name: "checkouts_project_id_fkey",
+            type: :uuid,
+            prefix: "public",
+            on_delete: :delete_all
+          ),
+          null: false
+
+      add :outlet_id,
+          references(:shops,
+            column: :id,
+            name: "checkouts_outlet_id_fkey",
+            type: :uuid,
+            prefix: "public",
+            on_delete: :delete_all
+          ),
+          null: false
+
+      add :file, :map, null: false
+      add :create_date, :date, null: false, default: fragment("CURRENT_DATE")
+      add :create_time, :time, null: false
     end
 
     create table(:checkins, primary_key: false) do
       add :id, :uuid, null: false, default: fragment("gen_random_uuid()"), primary_key: true
       add :ambassador_id, :uuid, null: false
-      add :project_id, :uuid, null: false
-      add :outlet_id, :uuid, null: false
+
+      add :project_id,
+          references(:projects,
+            column: :id,
+            name: "checkins_project_id_fkey",
+            type: :uuid,
+            prefix: "public",
+            on_delete: :delete_all
+          ),
+          null: false
+
+      add :outlet_id,
+          references(:shops,
+            column: :id,
+            name: "checkins_outlet_id_fkey",
+            type: :uuid,
+            prefix: "public",
+            on_delete: :delete_all
+          ),
+          null: false
+
       add :file, :map, null: false
+      add :create_date, :date, null: false, default: fragment("CURRENT_DATE")
+      add :create_time, :time, null: false
     end
 
     create table(:ambassadors, primary_key: false) do
@@ -176,9 +285,50 @@ defmodule Marketingbsm.Repo.Migrations.MigrateResources1 do
   def down do
     drop table(:ambassadors)
 
+    drop constraint(:checkins, "checkins_project_id_fkey")
+
+    drop constraint(:checkins, "checkins_outlet_id_fkey")
+
     drop table(:checkins)
 
-    drop table(:projectgeneral)
+    drop constraint(:checkouts, "checkouts_project_id_fkey")
+
+    drop constraint(:checkouts, "checkouts_outlet_id_fkey")
+
+    drop table(:checkouts)
+
+    drop table(:managers)
+
+    alter table(:projects) do
+      remove :is_freezed
+      remove :name
+    end
+
+    drop constraint(:registries, "registries_project_id_fkey")
+
+    drop constraint(:registries, "registries_outlet_id_fkey")
+
+    alter table(:registries) do
+      modify :outlet_id, :uuid
+      modify :project_id, :uuid
+    end
+
+    drop constraint(:reports, "reports_project_id_fkey")
+
+    drop constraint(:reports, "reports_outlet_id_fkey")
+
+    alter table(:reports) do
+      modify :outlet_id, :uuid
+      modify :project_id, :uuid
+    end
+
+    drop constraint(:templates, "templates_project_id_fkey")
+
+    alter table(:templates) do
+      modify :project_id, :uuid
+    end
+
+    drop table(:projects)
 
     alter table(:regions) do
       remove :updated_at

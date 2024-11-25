@@ -49,6 +49,15 @@ defmodule MarketingbsmWeb.RegionLive.Index do
               <Text.subtitle color="gray">
                 Regions hold Outlets.
               </Text.subtitle>
+
+              <Text.subtitle color="gray" class="mb-10">
+                <Text.bold>DELETING</Text.bold>
+                a region will delete
+                <Text.bold>ALL</Text.bold>
+                of the
+                <Text.bold>OUTLETS</Text.bold>
+                in that region!!
+              </Text.subtitle>
             </Layout.flex>
 
             <Button.button size="xl" phx-click={JS.patch(~p"/regions/new")}>

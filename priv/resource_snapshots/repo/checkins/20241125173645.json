@@ -25,7 +25,26 @@
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
-      "references": null,
+      "references": {
+        "deferrable": false,
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "index?": false,
+        "match_type": null,
+        "match_with": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "checkins_project_id_fkey",
+        "on_delete": "delete",
+        "on_update": null,
+        "primary_key?": true,
+        "schema": "public",
+        "table": "projects"
+      },
       "size": null,
       "source": "project_id",
       "type": "uuid"
@@ -35,7 +54,26 @@
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
-      "references": null,
+      "references": {
+        "deferrable": false,
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "index?": false,
+        "match_type": null,
+        "match_with": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "checkins_outlet_id_fkey",
+        "on_delete": "delete",
+        "on_update": null,
+        "primary_key?": true,
+        "schema": "public",
+        "table": "shops"
+      },
       "size": null,
       "source": "outlet_id",
       "type": "uuid"
@@ -76,7 +114,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "A62B1851E0BA5D3AE37F2B24BD0204F3687A59C223A70D102232F6DED8EB1BA9",
+  "hash": "DB9F383A8D6C67FDC5064326A9B18250FB487348E888B651793CFEE7F89AAD9F",
   "identities": [],
   "multitenancy": {
     "attribute": null,

@@ -2,6 +2,7 @@ defmodule MarketingbsmWeb.TemplateLive.FormComponent do
   use MarketingbsmWeb, :live_component
 
   alias MarketingbsmWeb.RegistryLive.FormComponent
+  alias Marketingbsm.ProjectGeneral
 
   @impl true
   def render(assigns) do
@@ -400,27 +401,39 @@ defmodule MarketingbsmWeb.TemplateLive.FormComponent do
 
     project_id = FormComponent.get_project_id(socket, template_params)
 
-    template_params =
-      Map.merge(template_params, %{
-        "project_id" => project_id
-      })
-
-    case AshPhoenix.Form.submit(socket.assigns.form, params: template_params) do
+    case ProjectGeneral.get_template_by_project_id(project_id) do
       {:ok, template} ->
-        notify_parent({:saved, template})
+        {:noreply,
+         socket
+         |> put_flash(
+           :error,
+           "Reporting template already exists"
+         )
+         |> push_patch(to: "/templates")}
 
-        socket =
-          socket
-          |> put_flash(
-            :info,
-            "Reporting Template #{socket.assigns.form.source.type}d successfully"
-          )
-          |> push_patch(to: socket.assigns.patch)
+      {:error, error} ->
+        template_params =
+          Map.merge(template_params, %{
+            "project_id" => project_id
+          })
 
-        {:noreply, socket}
+        case AshPhoenix.Form.submit(socket.assigns.form, params: template_params) do
+          {:ok, template} ->
+            notify_parent({:saved, template})
 
-      {:error, form} ->
-        {:noreply, assign(socket, form: form)}
+            socket =
+              socket
+              |> put_flash(
+                :info,
+                "Reporting Template #{socket.assigns.form.source.type}d successfully"
+              )
+              |> push_patch(to: socket.assigns.patch)
+
+            {:noreply, socket}
+
+          {:error, form} ->
+            {:noreply, assign(socket, form: form)}
+        end
     end
   end
 

@@ -46,8 +46,15 @@ defmodule MarketingbsmWeb.ProjectLive.Index do
               <Text.subtitle color="gray">
                 This is where you will create a project.
               </Text.subtitle>
+              <Text.subtitle color="gray">
+                Afterwards go to the
+                <Text.bold>Templates</Text.bold>
+                page to create the respective templates.
+              </Text.subtitle>
               <Text.subtitle color="gray" class="mb-10">
-                Afterwards go to the reporting templates page to create the respective templates.
+                <Text.bold>DELETING</Text.bold>
+                a project will delete all of the
+                <Text.bold>PROJECT'S DATA!!</Text.bold>
               </Text.subtitle>
             </Layout.flex>
 

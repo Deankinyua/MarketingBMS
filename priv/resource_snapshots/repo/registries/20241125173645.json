@@ -15,10 +15,39 @@
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
+      "references": {
+        "deferrable": false,
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "index?": false,
+        "match_type": null,
+        "match_with": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "registries_project_id_fkey",
+        "on_delete": "delete",
+        "on_update": null,
+        "primary_key?": true,
+        "schema": "public",
+        "table": "projects"
+      },
+      "size": null,
+      "source": "project_id",
+      "type": "uuid"
+    },
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "name",
-      "type": "text"
+      "source": "ambassador_id",
+      "type": "uuid"
     },
     {
       "allow_nil?": false,
@@ -38,36 +67,36 @@
           "global": null,
           "strategy": null
         },
-        "name": "shops_region_id_fkey",
-        "on_delete": null,
+        "name": "registries_outlet_id_fkey",
+        "on_delete": "delete",
         "on_update": null,
         "primary_key?": true,
         "schema": "public",
-        "table": "regions"
+        "table": "shops"
       },
       "size": null,
-      "source": "region_id",
+      "source": "outlet_id",
       "type": "uuid"
     },
     {
       "allow_nil?": false,
-      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
+      "default": "0",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "created_at",
-      "type": "utc_datetime_usec"
+      "source": "days_worked",
+      "type": "bigint"
     },
     {
       "allow_nil?": false,
-      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
+      "default": "false",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "updated_at",
-      "type": "utc_datetime_usec"
+      "source": "should_activate",
+      "type": "boolean"
     }
   ],
   "base_filter": null,
@@ -75,7 +104,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "89C183A253E36D2CC5C8E0283B5C6D4E8D6DE36FB728898506B963317DCC35C0",
+  "hash": "92FF7B4306D4690BA3B005C8B92650E293E29B74A19589B688D2ED6A4F37475A",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -84,5 +113,5 @@
   },
   "repo": "Elixir.Marketingbsm.Repo",
   "schema": null,
-  "table": "shops"
+  "table": "registries"
 }

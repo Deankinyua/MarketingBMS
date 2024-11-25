@@ -52,6 +52,15 @@ defmodule MarketingbsmWeb.ShopLive.Index do
               </Text.subtitle>
 
               <Text.subtitle color="gray">
+                <Text.bold>DELETING</Text.bold>
+                an outlet will delete
+                <Text.bold>ALL</Text.bold>
+                of the
+                <Text.bold>DATA</Text.bold>
+                associated with that outlet!!
+              </Text.subtitle>
+
+              <Text.subtitle color="gray">
                 There are <strong><%= @count %></strong> Outlets.
               </Text.subtitle>
             </Layout.flex>
