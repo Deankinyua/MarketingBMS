@@ -36,7 +36,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "1B87932206E6340C49E9205B6659EB04F0A07D452EF55ED26C8139D165CD79EB",
+  "hash": "B5AD3355B47A6E8E06B16233B31E8D26C414B2A69834B62601EABFE83FC96214",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -45,5 +45,5 @@
   },
   "repo": "Elixir.Marketingbsm.Repo",
   "schema": null,
-  "table": "projectgeneral"
+  "table": "projects"
 }

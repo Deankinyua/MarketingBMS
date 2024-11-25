@@ -28,15 +28,54 @@
           "global": null,
           "strategy": null
         },
-        "name": "templates_project_id_fkey",
+        "name": "reports_project_id_fkey",
         "on_delete": "delete",
         "on_update": null,
         "primary_key?": true,
         "schema": "public",
-        "table": "projectgeneral"
+        "table": "projects"
       },
       "size": null,
       "source": "project_id",
+      "type": "uuid"
+    },
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "source": "ambassador_id",
+      "type": "uuid"
+    },
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "primary_key?": false,
+      "references": {
+        "deferrable": false,
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "index?": false,
+        "match_type": null,
+        "match_with": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "reports_outlet_id_fkey",
+        "on_delete": "delete",
+        "on_update": null,
+        "primary_key?": true,
+        "schema": "public",
+        "table": "shops"
+      },
+      "size": null,
+      "source": "outlet_id",
       "type": "uuid"
     },
     {
@@ -47,7 +86,7 @@
       "references": null,
       "size": null,
       "source": "field_1",
-      "type": "text"
+      "type": "bigint"
     },
     {
       "allow_nil?": true,
@@ -57,7 +96,7 @@
       "references": null,
       "size": null,
       "source": "field_2",
-      "type": "text"
+      "type": "bigint"
     },
     {
       "allow_nil?": true,
@@ -67,7 +106,7 @@
       "references": null,
       "size": null,
       "source": "field_3",
-      "type": "text"
+      "type": "bigint"
     },
     {
       "allow_nil?": true,
@@ -77,7 +116,7 @@
       "references": null,
       "size": null,
       "source": "field_4",
-      "type": "text"
+      "type": "bigint"
     },
     {
       "allow_nil?": true,
@@ -87,7 +126,7 @@
       "references": null,
       "size": null,
       "source": "field_5",
-      "type": "text"
+      "type": "bigint"
     },
     {
       "allow_nil?": true,
@@ -97,7 +136,7 @@
       "references": null,
       "size": null,
       "source": "field_6",
-      "type": "text"
+      "type": "bigint"
     },
     {
       "allow_nil?": true,
@@ -107,7 +146,7 @@
       "references": null,
       "size": null,
       "source": "field_7",
-      "type": "text"
+      "type": "bigint"
     },
     {
       "allow_nil?": true,
@@ -117,7 +156,7 @@
       "references": null,
       "size": null,
       "source": "field_8",
-      "type": "text"
+      "type": "bigint"
     },
     {
       "allow_nil?": true,
@@ -127,7 +166,7 @@
       "references": null,
       "size": null,
       "source": "field_9",
-      "type": "text"
+      "type": "bigint"
     },
     {
       "allow_nil?": true,
@@ -137,7 +176,7 @@
       "references": null,
       "size": null,
       "source": "field_10",
-      "type": "text"
+      "type": "bigint"
     },
     {
       "allow_nil?": true,
@@ -147,7 +186,7 @@
       "references": null,
       "size": null,
       "source": "field_11",
-      "type": "text"
+      "type": "bigint"
     },
     {
       "allow_nil?": true,
@@ -157,7 +196,7 @@
       "references": null,
       "size": null,
       "source": "field_12",
-      "type": "text"
+      "type": "bigint"
     },
     {
       "allow_nil?": true,
@@ -167,7 +206,7 @@
       "references": null,
       "size": null,
       "source": "field_13",
-      "type": "text"
+      "type": "bigint"
     },
     {
       "allow_nil?": true,
@@ -177,7 +216,7 @@
       "references": null,
       "size": null,
       "source": "field_14",
-      "type": "text"
+      "type": "bigint"
     },
     {
       "allow_nil?": true,
@@ -187,7 +226,7 @@
       "references": null,
       "size": null,
       "source": "field_15",
-      "type": "text"
+      "type": "bigint"
     },
     {
       "allow_nil?": true,
@@ -197,7 +236,7 @@
       "references": null,
       "size": null,
       "source": "field_16",
-      "type": "text"
+      "type": "bigint"
     },
     {
       "allow_nil?": true,
@@ -207,7 +246,7 @@
       "references": null,
       "size": null,
       "source": "field_17",
-      "type": "text"
+      "type": "bigint"
     },
     {
       "allow_nil?": true,
@@ -217,7 +256,7 @@
       "references": null,
       "size": null,
       "source": "field_18",
-      "type": "text"
+      "type": "bigint"
     },
     {
       "allow_nil?": true,
@@ -227,7 +266,7 @@
       "references": null,
       "size": null,
       "source": "field_19",
-      "type": "text"
+      "type": "bigint"
     },
     {
       "allow_nil?": true,
@@ -237,7 +276,37 @@
       "references": null,
       "size": null,
       "source": "field_20",
-      "type": "text"
+      "type": "bigint"
+    },
+    {
+      "allow_nil?": true,
+      "default": "nil",
+      "generated?": false,
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "source": "total_sales",
+      "type": "bigint"
+    },
+    {
+      "allow_nil?": false,
+      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
+      "generated?": false,
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "source": "created_at",
+      "type": "utc_datetime_usec"
+    },
+    {
+      "allow_nil?": false,
+      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
+      "generated?": false,
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "source": "updated_at",
+      "type": "utc_datetime_usec"
     }
   ],
   "base_filter": null,
@@ -245,7 +314,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "F9AFBA92A68CDD1BA2C3DE0BC36392FC77B22F67D4B11EBA1F34F4DDD2FBBB33",
+  "hash": "FDE20F3E41F230D8176D9B63BBA7ED8382B0D6E71C831C69E4FDBDE625E66CBE",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -254,5 +323,5 @@
   },
   "repo": "Elixir.Marketingbsm.Repo",
   "schema": null,
-  "table": "templates"
+  "table": "reports"
 }

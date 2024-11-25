@@ -15,6 +15,16 @@
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
+      "references": null,
+      "size": null,
+      "source": "ambassador_id",
+      "type": "uuid"
+    },
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "primary_key?": false,
       "references": {
         "deferrable": false,
         "destination_attribute": "id",
@@ -28,12 +38,12 @@
           "global": null,
           "strategy": null
         },
-        "name": "registries_project_id_fkey",
+        "name": "checkins_project_id_fkey",
         "on_delete": "delete",
         "on_update": null,
         "primary_key?": true,
         "schema": "public",
-        "table": "projectgeneral"
+        "table": "projects"
       },
       "size": null,
       "source": "project_id",
@@ -44,9 +54,28 @@
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
-      "references": null,
+      "references": {
+        "deferrable": false,
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "index?": false,
+        "match_type": null,
+        "match_with": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "checkins_outlet_id_fkey",
+        "on_delete": "delete",
+        "on_update": null,
+        "primary_key?": true,
+        "schema": "public",
+        "table": "shops"
+      },
       "size": null,
-      "source": "ambassador_id",
+      "source": "outlet_id",
       "type": "uuid"
     },
     {
@@ -56,28 +85,28 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "outlet_id",
-      "type": "uuid"
+      "source": "file",
+      "type": "map"
     },
     {
       "allow_nil?": false,
-      "default": "0",
+      "default": "fragment(\"CURRENT_DATE\")",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "days_worked",
-      "type": "bigint"
+      "source": "create_date",
+      "type": "date"
     },
     {
       "allow_nil?": false,
-      "default": "false",
+      "default": "nil",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "should_activate",
-      "type": "boolean"
+      "source": "create_time",
+      "type": "time"
     }
   ],
   "base_filter": null,
@@ -85,7 +114,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "14852E4E817958607C4D85B627C12E2DEE7AF63A2475C2E498B15A1BAC988D95",
+  "hash": "DB9F383A8D6C67FDC5064326A9B18250FB487348E888B651793CFEE7F89AAD9F",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -94,5 +123,5 @@
   },
   "repo": "Elixir.Marketingbsm.Repo",
   "schema": null,
-  "table": "registries"
+  "table": "checkins"
 }

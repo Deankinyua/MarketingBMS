@@ -2,7 +2,7 @@
   "attributes": [
     {
       "allow_nil?": false,
-      "default": "nil",
+      "default": "fragment(\"gen_random_uuid()\")",
       "generated?": false,
       "primary_key?": true,
       "references": null,
@@ -12,33 +12,33 @@
     },
     {
       "allow_nil?": false,
-      "default": "\"Occupied\"",
+      "default": "nil",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "availability",
+      "source": "name",
       "type": "text"
     },
     {
       "allow_nil?": false,
-      "default": "\"Not Set\"",
+      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "location",
-      "type": "text"
+      "source": "created_at",
+      "type": "utc_datetime_usec"
     },
     {
       "allow_nil?": false,
-      "default": "0",
+      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "total_days_worked",
-      "type": "bigint"
+      "source": "updated_at",
+      "type": "utc_datetime_usec"
     }
   ],
   "base_filter": null,
@@ -46,7 +46,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "E95A101BFBD7A8832043D0F5EE491AFC18292F1E7BEEE0DEF369D6899EDE4B7D",
+  "hash": "4039497EBEBC9668B5B5ABB411A038CB32E546F1D0E20CD2A1F7D2DFED8616A2",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -55,5 +55,5 @@
   },
   "repo": "Elixir.Marketingbsm.Repo",
   "schema": null,
-  "table": "ambassadors"
+  "table": "regions"
 }

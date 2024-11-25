@@ -21,6 +21,7 @@ defmodule Marketingbsm.Record.Registry do
 
     references do
       reference :project, on_delete: :delete
+      reference :outlet, on_delete: :delete
     end
   end
 
@@ -83,6 +84,10 @@ defmodule Marketingbsm.Record.Registry do
   relationships do
     # relationship_type - relationship_name - destination_resource
     belongs_to :project, Marketingbsm.ProjectGeneral.Project do
+      attribute_writable? true
+    end
+
+    belongs_to :outlet, Marketingbsm.Outlet.Shop do
       attribute_writable? true
     end
   end

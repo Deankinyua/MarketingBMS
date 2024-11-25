@@ -43,7 +43,7 @@
         "on_update": null,
         "primary_key?": true,
         "schema": "public",
-        "table": "projectgeneral"
+        "table": "projects"
       },
       "size": null,
       "source": "project_id",
@@ -54,7 +54,26 @@
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
-      "references": null,
+      "references": {
+        "deferrable": false,
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "index?": false,
+        "match_type": null,
+        "match_with": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "checkouts_outlet_id_fkey",
+        "on_delete": "delete",
+        "on_update": null,
+        "primary_key?": true,
+        "schema": "public",
+        "table": "shops"
+      },
       "size": null,
       "source": "outlet_id",
       "type": "uuid"
@@ -95,7 +114,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "2F03AD99EE41A04AF5D1C8348F1883498D413AD749B8C620FF3CED11A353D5D8",
+  "hash": "D6E391A757B2E8D22062644410723296BAF1B9AAD111DB16859B2F999FDF729C",
   "identities": [],
   "multitenancy": {
     "attribute": null,

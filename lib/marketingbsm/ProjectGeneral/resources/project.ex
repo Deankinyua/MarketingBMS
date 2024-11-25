@@ -15,7 +15,7 @@ defmodule Marketingbsm.ProjectGeneral.Project do
 
   postgres do
     repo Marketingbsm.Repo
-    table "projectgeneral"
+    table "projects"
   end
 
   attributes do
