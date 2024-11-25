@@ -15,7 +15,26 @@
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
-      "references": null,
+      "references": {
+        "deferrable": false,
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "index?": false,
+        "match_type": null,
+        "match_with": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "templates_project_id_fkey",
+        "on_delete": "delete",
+        "on_update": null,
+        "primary_key?": true,
+        "schema": "public",
+        "table": "projectgeneral"
+      },
       "size": null,
       "source": "project_id",
       "type": "uuid"
@@ -226,7 +245,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "ABFDD7BAAE8A64768E9E696FCCECCEFA7C2AB286FAB8B8CF90D2C60F218B7A80",
+  "hash": "F9AFBA92A68CDD1BA2C3DE0BC36392FC77B22F67D4B11EBA1F34F4DDD2FBBB33",
   "identities": [],
   "multitenancy": {
     "attribute": null,

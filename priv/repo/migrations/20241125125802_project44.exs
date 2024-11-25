@@ -1,4 +1,4 @@
-defmodule Marketingbsm.Repo.Migrations.MigrateResources1 do
+defmodule Marketingbsm.Repo.Migrations.Project44 do
   @moduledoc """
   Updates resources based on their most recent snapshots.
 
@@ -135,7 +135,8 @@ defmodule Marketingbsm.Repo.Migrations.MigrateResources1 do
                column: :id,
                name: "shops_region_id_fkey",
                type: :uuid,
-               prefix: "public"
+               prefix: "public",
+               on_delete: :delete_all
              )
     end
 
@@ -153,8 +154,36 @@ defmodule Marketingbsm.Repo.Migrations.MigrateResources1 do
 
     create table(:projectgeneral, primary_key: false) do
       add :id, :uuid, null: false, default: fragment("gen_random_uuid()"), primary_key: true
+    end
+
+    alter table(:templates) do
+      modify :project_id,
+             references(:projectgeneral,
+               column: :id,
+               name: "templates_project_id_fkey",
+               type: :uuid,
+               prefix: "public",
+               on_delete: :delete_all
+             )
+    end
+
+    alter table(:projectgeneral) do
       add :name, :text, null: false
       add :is_freezed, :boolean, null: false, default: false
+    end
+
+    create table(:managers, primary_key: false) do
+      add :id, :uuid, null: false, primary_key: true
+    end
+
+    create table(:checkouts, primary_key: false) do
+      add :id, :uuid, null: false, default: fragment("gen_random_uuid()"), primary_key: true
+      add :ambassador_id, :uuid, null: false
+      add :project_id, :uuid, null: false
+      add :outlet_id, :uuid, null: false
+      add :file, :map, null: false
+      add :create_date, :date, null: false, default: fragment("CURRENT_DATE")
+      add :create_time, :time, null: false
     end
 
     create table(:checkins, primary_key: false) do
@@ -163,6 +192,8 @@ defmodule Marketingbsm.Repo.Migrations.MigrateResources1 do
       add :project_id, :uuid, null: false
       add :outlet_id, :uuid, null: false
       add :file, :map, null: false
+      add :create_date, :date, null: false, default: fragment("CURRENT_DATE")
+      add :create_time, :time, null: false
     end
 
     create table(:ambassadors, primary_key: false) do
@@ -177,6 +208,21 @@ defmodule Marketingbsm.Repo.Migrations.MigrateResources1 do
     drop table(:ambassadors)
 
     drop table(:checkins)
+
+    drop table(:checkouts)
+
+    drop table(:managers)
+
+    alter table(:projectgeneral) do
+      remove :is_freezed
+      remove :name
+    end
+
+    drop constraint(:templates, "templates_project_id_fkey")
+
+    alter table(:templates) do
+      modify :project_id, :uuid
+    end
 
     drop table(:projectgeneral)
 

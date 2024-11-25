@@ -17,6 +17,10 @@ defmodule Marketingbsm.Clockin.Checkout do
   postgres do
     table "checkouts"
     repo Marketingbsm.Repo
+
+    references do
+      reference :project, on_delete: :delete
+    end
   end
 
   # Attributes are simple pieces of data that exist in your resource
@@ -93,6 +97,13 @@ defmodule Marketingbsm.Clockin.Checkout do
       filter expr(ambassador_id == ^arg(:ambassador_id))
       # filter expr(create_date == ^arg(:create_date))
       filter expr(create_date == ^arg(:create_date))
+    end
+  end
+
+  relationships do
+    # relationship_type - relationship_name - destination_resource
+    belongs_to :project, Marketingbsm.ProjectGeneral.Project do
+      attribute_writable? true
     end
   end
 end

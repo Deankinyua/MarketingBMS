@@ -69,18 +69,4 @@ defmodule Marketingbsm.ProjectGeneral.Project do
       primary? true
     end
   end
-
-  # relationships do
-  #   has_many :shops, Marketingbsm.Outlet.Shop
-  # end
-
-  # pub_sub do
-  #   module Marketingbsm
-  #   prefix "project"
-  #   broadcast_type :phoenix_broadcast
-
-  #   publish :update, ["updated", :id]
-
-  #   publish_all :create, "created"
-  # end
 end

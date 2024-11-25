@@ -25,7 +25,26 @@
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
-      "references": null,
+      "references": {
+        "deferrable": false,
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "index?": false,
+        "match_type": null,
+        "match_with": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "checkins_project_id_fkey",
+        "on_delete": "delete",
+        "on_update": null,
+        "primary_key?": true,
+        "schema": "public",
+        "table": "projectgeneral"
+      },
       "size": null,
       "source": "project_id",
       "type": "uuid"
@@ -59,6 +78,16 @@
       "size": null,
       "source": "create_date",
       "type": "date"
+    },
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "source": "create_time",
+      "type": "time"
     }
   ],
   "base_filter": null,
@@ -66,7 +95,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "973D311CAA5F8DE6DABEA155D59D0947338E9E19961A00D400676479A98AACCF",
+  "hash": "6E8CC82892C45F3E001B9FBAE672B6C3D1FE5A3C08AA444B8346A57B911DBEE0",
   "identities": [],
   "multitenancy": {
     "attribute": null,

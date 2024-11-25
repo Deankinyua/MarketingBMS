@@ -1,7 +1,8 @@
 defmodule Marketingbsm.Outlet.Shop do
   use Ash.Resource,
     domain: Marketingbsm.Outlet,
-    data_layer: AshPostgres.DataLayer
+    data_layer: AshPostgres.DataLayer,
+    extensions: [AshArchival.Resource]
 
   resource do
     description """
@@ -15,6 +16,10 @@ defmodule Marketingbsm.Outlet.Shop do
   postgres do
     repo Marketingbsm.Repo
     table "shops"
+
+    references do
+      reference :region, on_delete: :delete
+    end
   end
 
   attributes do

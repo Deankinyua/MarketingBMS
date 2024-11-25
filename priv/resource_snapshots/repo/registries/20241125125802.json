@@ -17,7 +17,7 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "ambassador_id",
+      "source": "project_id",
       "type": "uuid"
     },
     {
@@ -27,7 +27,7 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "project_id",
+      "source": "ambassador_id",
       "type": "uuid"
     },
     {
@@ -42,13 +42,23 @@
     },
     {
       "allow_nil?": false,
-      "default": "nil",
+      "default": "0",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "file",
-      "type": "map"
+      "source": "days_worked",
+      "type": "bigint"
+    },
+    {
+      "allow_nil?": false,
+      "default": "false",
+      "generated?": false,
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "source": "should_activate",
+      "type": "boolean"
     }
   ],
   "base_filter": null,
@@ -56,7 +66,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "57AA57BBE6A47448C18600DF98AD4B517BF8EBE201317BE219812E0E2394173D",
+  "hash": "DBD321464083346FAC5D95319255D01FED94312092D9827DB7849C6D1F7B5281",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -65,5 +75,5 @@
   },
   "repo": "Elixir.Marketingbsm.Repo",
   "schema": null,
-  "table": "checkins"
+  "table": "registries"
 }

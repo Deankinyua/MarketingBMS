@@ -151,7 +151,6 @@ defmodule MarketingbsmWeb.SummaryLive.Show do
       Marketingbsm.Clockin.Checkin
       |> Ash.Query.filter(project_id: id)
       |> Ash.Query.filter(create_date: date)
-      # |> Ash.Query.sort(days_worked: :desc)
       |> Ash.read!(page: [limit: 50])
 
     checkins = Map.get(query_results, :results)

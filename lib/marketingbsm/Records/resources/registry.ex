@@ -18,6 +18,10 @@ defmodule Marketingbsm.Record.Registry do
   postgres do
     table "registries"
     repo Marketingbsm.Repo
+
+    references do
+      reference :project, on_delete: :delete
+    end
   end
 
   # Attributes are simple pieces of data that exist in your resource
@@ -73,6 +77,13 @@ defmodule Marketingbsm.Record.Registry do
       # against the `id` of each element in the resource
       filter expr(ambassador_id == ^arg(:ambassador_id))
       filter expr(should_activate == true)
+    end
+  end
+
+  relationships do
+    # relationship_type - relationship_name - destination_resource
+    belongs_to :project, Marketingbsm.ProjectGeneral.Project do
+      attribute_writable? true
     end
   end
 end

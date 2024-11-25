@@ -2,7 +2,7 @@
   "attributes": [
     {
       "allow_nil?": false,
-      "default": "fragment(\"gen_random_uuid()\")",
+      "default": "nil",
       "generated?": false,
       "primary_key?": true,
       "references": null,
@@ -12,23 +12,33 @@
     },
     {
       "allow_nil?": false,
-      "default": "nil",
+      "default": "\"Occupied\"",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "name",
+      "source": "availability",
       "type": "text"
     },
     {
       "allow_nil?": false,
-      "default": "false",
+      "default": "\"Not Set\"",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "is_freezed",
-      "type": "boolean"
+      "source": "location",
+      "type": "text"
+    },
+    {
+      "allow_nil?": false,
+      "default": "0",
+      "generated?": false,
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "source": "total_days_worked",
+      "type": "bigint"
     }
   ],
   "base_filter": null,
@@ -36,7 +46,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "C2B9A5A912519B141E7DDF44B324E1BBBDA1A98124CC62E7CAEAB15519103D1B",
+  "hash": "E95A101BFBD7A8832043D0F5EE491AFC18292F1E7BEEE0DEF369D6899EDE4B7D",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -45,5 +55,5 @@
   },
   "repo": "Elixir.Marketingbsm.Repo",
   "schema": null,
-  "table": "projectgeneral"
+  "table": "ambassadors"
 }

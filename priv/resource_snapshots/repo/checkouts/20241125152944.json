@@ -25,7 +25,26 @@
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
-      "references": null,
+      "references": {
+        "deferrable": false,
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "index?": false,
+        "match_type": null,
+        "match_with": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "checkouts_project_id_fkey",
+        "on_delete": "delete",
+        "on_update": null,
+        "primary_key?": true,
+        "schema": "public",
+        "table": "projectgeneral"
+      },
       "size": null,
       "source": "project_id",
       "type": "uuid"
@@ -52,13 +71,23 @@
     },
     {
       "allow_nil?": false,
-      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
+      "default": "fragment(\"CURRENT_DATE\")",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "created_at",
-      "type": "utc_datetime_usec"
+      "source": "create_date",
+      "type": "date"
+    },
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "source": "create_time",
+      "type": "time"
     }
   ],
   "base_filter": null,
@@ -66,7 +95,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "3D9EF2D06FB8C6267E5FA67CD54C813EC1026832BC08F0D72A942BE94C9632D2",
+  "hash": "2F03AD99EE41A04AF5D1C8348F1883498D413AD749B8C620FF3CED11A353D5D8",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -75,5 +104,5 @@
   },
   "repo": "Elixir.Marketingbsm.Repo",
   "schema": null,
-  "table": "checkins"
+  "table": "checkouts"
 }

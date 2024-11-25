@@ -15,9 +15,28 @@
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
-      "references": null,
+      "references": {
+        "deferrable": false,
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "index?": false,
+        "match_type": null,
+        "match_with": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "registries_project_id_fkey",
+        "on_delete": "delete",
+        "on_update": null,
+        "primary_key?": true,
+        "schema": "public",
+        "table": "projectgeneral"
+      },
       "size": null,
-      "source": "ambassador_id",
+      "source": "project_id",
       "type": "uuid"
     },
     {
@@ -27,7 +46,7 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "project_id",
+      "source": "ambassador_id",
       "type": "uuid"
     },
     {
@@ -42,33 +61,23 @@
     },
     {
       "allow_nil?": false,
-      "default": "nil",
+      "default": "0",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "file",
-      "type": "map"
+      "source": "days_worked",
+      "type": "bigint"
     },
     {
       "allow_nil?": false,
-      "default": "fragment(\"CURRENT_DATE\")",
+      "default": "false",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "create_date",
-      "type": "date"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "create_time",
-      "type": "time"
+      "source": "should_activate",
+      "type": "boolean"
     }
   ],
   "base_filter": null,
@@ -76,7 +85,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "A62B1851E0BA5D3AE37F2B24BD0204F3687A59C223A70D102232F6DED8EB1BA9",
+  "hash": "14852E4E817958607C4D85B627C12E2DEE7AF63A2475C2E498B15A1BAC988D95",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -85,5 +94,5 @@
   },
   "repo": "Elixir.Marketingbsm.Repo",
   "schema": null,
-  "table": "checkins"
+  "table": "registries"
 }

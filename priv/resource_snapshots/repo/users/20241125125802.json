@@ -17,8 +17,8 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "ambassador_id",
-      "type": "uuid"
+      "source": "email",
+      "type": "citext"
     },
     {
       "allow_nil?": false,
@@ -27,8 +27,8 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "project_id",
-      "type": "uuid"
+      "source": "hashed_password",
+      "type": "text"
     },
     {
       "allow_nil?": false,
@@ -37,38 +37,28 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "outlet_id",
-      "type": "uuid"
+      "source": "name",
+      "type": "text"
     },
     {
       "allow_nil?": false,
-      "default": "nil",
+      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "file",
-      "type": "map"
+      "source": "created_at",
+      "type": "utc_datetime_usec"
     },
     {
       "allow_nil?": false,
-      "default": "fragment(\"CURRENT_DATE\")",
+      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "create_date",
-      "type": "date"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "create_time",
-      "type": "time"
+      "source": "updated_at",
+      "type": "utc_datetime_usec"
     }
   ],
   "base_filter": null,
@@ -76,8 +66,23 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "31E85236696230D6A425D71AB26DA8BEF28C0C45C1F2B6EA7FB02326FD3431AD",
-  "identities": [],
+  "hash": "18276D64D74EB31ABB90992D62AE3F71DB216B7DA1316FF210760B94A208A0AD",
+  "identities": [
+    {
+      "all_tenants?": false,
+      "base_filter": null,
+      "index_name": "users_unique_email_index",
+      "keys": [
+        {
+          "type": "atom",
+          "value": "email"
+        }
+      ],
+      "name": "unique_email",
+      "nils_distinct?": true,
+      "where": null
+    }
+  ],
   "multitenancy": {
     "attribute": null,
     "global": null,
@@ -85,5 +90,5 @@
   },
   "repo": "Elixir.Marketingbsm.Repo",
   "schema": null,
-  "table": "checkouts"
+  "table": "users"
 }
