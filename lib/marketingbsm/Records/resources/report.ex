@@ -137,7 +137,11 @@ defmodule Marketingbsm.Record.Report do
 
   relationships do
     # relationship_type - relationship_name - destination_resource
+    # * Relationships will validate that their configured attributes exist at compile time
+    # * Attributes used by those relationships must exist
     belongs_to :outlet, Marketingbsm.Outlet.Shop do
+      # * default source attribute -> :<relationship_name>_id in this case :outlet_id
+      # * default destination attribute -> :id
       attribute_writable? true
     end
 
