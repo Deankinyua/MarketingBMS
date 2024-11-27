@@ -22,7 +22,7 @@ defmodule MarketingbsmWeb.ShopLive.FormComponent do
 
         <Layout.divider class="my-4" />
 
-        <.form :let={f} for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
+        <.form for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
           <%= if @form.source.type == :create do %>
             <Layout.col class="space-y-1.5">
               <label for="name_field">
