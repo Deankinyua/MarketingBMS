@@ -168,7 +168,6 @@ defmodule MarketingbsmWeb.ShopLive.FormComponent do
         {:noreply, socket}
 
       {:error, _form} ->
-
         {:noreply,
          socket
          |> put_flash(:error, "You are not authorized to perform this action")
