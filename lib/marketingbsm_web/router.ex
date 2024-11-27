@@ -101,6 +101,13 @@ defmodule MarketingbsmWeb.Router do
 
       live "/summary/:id", SummaryLive.Show, :show
       live "/summary/:id/show/edit", SummaryLive.Show, :edit
+
+      live "/management", ManagementLive.Index, :index
+      live "/management/new", ManagementLive.Index, :new
+      live "/management/:id/edit", ManagementLive.Index, :edit
+
+      live "/management/:id", ManagementLive.Show, :show
+      live "/management/:id/show/edit", ManagementLive.Show, :edit
     end
   end
 

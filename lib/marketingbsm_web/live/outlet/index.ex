@@ -5,7 +5,7 @@ defmodule MarketingbsmWeb.ShopLive.Index do
   alias Marketingbsm.Outlet
   alias Tremorx.Theme
 
-  alias NavHelper
+  alias Marketingbsm.Management
 
   @impl true
   def render(assigns) do
@@ -158,12 +158,20 @@ defmodule MarketingbsmWeb.ShopLive.Index do
       |> assign(:count, get_count())
       |> assign(:hiderr, "")
 
-    {:ok,
-     socket
-     |> stream(
-       :outlets,
-       Ash.read!(Marketingbsm.Outlet.Shop, actor: socket.assigns[:current_user])
-     )}
+    id = socket.assigns.current_user.id
+
+    case Management.get_manager(id) do
+      {:ok, _result} ->
+        {:ok,
+         socket
+         |> stream(
+           :outlets,
+           Ash.read!(Marketingbsm.Outlet.Shop)
+         )}
+
+      {:error, _error} ->
+        {:ok, stream(socket, :outlets, [])}
+    end
   end
 
   def get_count do
@@ -178,7 +186,9 @@ defmodule MarketingbsmWeb.ShopLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Shop")
-    |> assign(:shop, Ash.get!(Marketingbsm.Outlet.Shop, id, actor: socket.assigns.current_user))
+    |> assign(:shop, Ash.get!(Marketingbsm.Outlet.Shop, id))
+
+    # |> assign(:shop, Ash.get!(Marketingbsm.Outlet.Shop, id, actor: socket.assigns.current_user))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -205,7 +215,7 @@ defmodule MarketingbsmWeb.ShopLive.Index do
   @impl true
   def handle_event("delete", %{"outlet_id" => id}, socket) do
     outlet = Ash.get!(Marketingbsm.Outlet.Shop, id)
-    Ash.destroy!(outlet)
+    Ash.destroy!(outlet, actor: socket.assigns.current_user)
 
     {:noreply, stream_delete(socket, :outlets, outlet)}
   end

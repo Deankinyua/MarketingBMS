@@ -22,7 +22,7 @@ defmodule MarketingbsmWeb.ShopLive.FormComponent do
 
         <Layout.divider class="my-4" />
 
-        <.form :let={f} for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
+        <.form for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
           <%= if @form.source.type == :create do %>
             <Layout.col class="space-y-1.5">
               <label for="name_field">
@@ -167,8 +167,11 @@ defmodule MarketingbsmWeb.ShopLive.FormComponent do
 
         {:noreply, socket}
 
-      {:error, form} ->
-        {:noreply, assign(socket, form: form)}
+      {:error, _form} ->
+        {:noreply,
+         socket
+         |> put_flash(:error, "You are not authorized to perform this action")
+         |> push_patch(to: socket.assigns.patch)}
     end
   end
 

@@ -1,11 +1,9 @@
-defmodule MarketingbsmWeb.RegionLive.Index do
+defmodule MarketingbsmWeb.ManagementLive.Index do
   use MarketingbsmWeb, :live_view
 
-  alias Tremorx.Components.Text
-  alias Tremorx.Components.Table
-  alias Tremorx.Components.Button
-  alias Tremorx.Theme
   alias Marketingbsm.Management
+  alias Marketingbsm.Accounts
+  alias Tremorx.Theme
 
   @impl true
   def render(assigns) do
@@ -14,7 +12,7 @@ defmodule MarketingbsmWeb.RegionLive.Index do
       <Layout.flex align_items="start" class="h-screen overflow-y-hidden">
         <%= live_render(@socket, MarketingbsmWeb.LiveDrawer,
           session: %{
-            "active_tab" => "organization",
+            "active_tab" => "management",
             "hiderr" => @hiderr,
             "user" => "user?id=#{@current_user.id}"
           },
@@ -44,28 +42,17 @@ defmodule MarketingbsmWeb.RegionLive.Index do
                 </.link>
               </div>
               <Text.title class="text-xl">
-                <Text.bold>Regions</Text.bold>
+                <Text.bold>Project Managers</Text.bold>
               </Text.title>
 
-              <Text.subtitle color="gray">
-                Regions hold Outlets.
-              </Text.subtitle>
-
-              <Text.subtitle color="gray" class="mb-10">
-                <Text.bold>DELETING</Text.bold>
-                a region will delete
-                <Text.bold>ALL</Text.bold>
-                of the
-                <Text.bold>OUTLETS</Text.bold>
-                in that region!!
-              </Text.subtitle>
+              <Text.subtitle color="gray"></Text.subtitle>
             </Layout.flex>
 
-            <Button.button size="xl" phx-click={JS.patch(~p"/regions/new")}>
+            <Button.button size="xl" phx-click={JS.patch(~p"/management/new")}>
               <:icon>
                 <.icon name="hero-plus" />
               </:icon>
-              New Region
+              Add a Manager
             </Button.button>
           </Layout.flex>
 
@@ -74,56 +61,43 @@ defmodule MarketingbsmWeb.RegionLive.Index do
               <Table.table_row class="hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted">
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    Name
-                  </Text.text>
-                </Table.table_cell>
-
-                <Table.table_cell>
-                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis text-center">
-                    Actions
+                    Manager Name
                   </Text.text>
                 </Table.table_cell>
               </Table.table_row>
             </Table.table_head>
 
             <Table.table_body
-              id="table_stream_regions"
+              id="table_stream_outlets"
               phx-update="stream"
               class="divide-y overflow-y-auto"
             >
               <Table.table_row
-                :for={{dom_id, region} <- @streams.regions}
+                :for={{dom_id, manager} <- @streams.managers}
                 id={"#{dom_id}"}
                 class="group hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted"
               >
-                <.live_component
-                  module={MarketingbsmWeb.RegionLive.RowComponent}
-                  id={dom_id}
-                  region={region}
-                  dom_id={dom_id}
-                >
-                  <Table.table_cell>
-                    <%= region.name %>
-                  </Table.table_cell>
-                </.live_component>
+                <Table.table_cell>
+                  <%= Accounts.get_user_by_id!(manager.id).name %>
+                </Table.table_cell>
               </Table.table_row>
             </Table.table_body>
           </Table.table>
 
           <.modal
             :if={@live_action in [:new, :edit]}
-            id="region-modal"
+            id="manager-modal"
             show
-            on_cancel={JS.patch(~p"/regions")}
+            on_cancel={JS.patch(~p"/management")}
           >
             <.live_component
-              module={MarketingbsmWeb.RegionLive.FormComponent}
-              id={(@region && @region.id) || :new}
+              module={MarketingbsmWeb.ManagementLive.FormComponent}
+              id={@manager || :new}
               title={@page_title}
-              action={@live_action}
-              region={@region}
-              patch={~p"/regions"}
               current_user={@current_user}
+              action={@live_action}
+              manager={@manager}
+              patch={~p"/management"}
             />
           </.modal>
         </Layout.flex>
@@ -134,16 +108,18 @@ defmodule MarketingbsmWeb.RegionLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    socket = socket |> assign(:hiderr, "")
+    socket =
+      socket
+      |> assign(:hiderr, "")
 
-    id = socket.assigns.current_user.id
+    {:ok, stream(socket, :managers, get_records())}
+  end
 
-    case Management.get_manager(id) do
-      {:ok, _result} ->
-        {:ok, stream(socket, :regions, Ash.read!(Marketingbsm.Outlet.Region))}
+  def get_records do
+    managers = Management.list_managers!()
 
-      {:error, _error} ->
-        {:ok, stream(socket, :regions, [])}
+    for manager <- managers do
+      manager
     end
   end
 
@@ -154,34 +130,28 @@ defmodule MarketingbsmWeb.RegionLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit Region")
-    |> assign(:region, Ash.get!(Marketingbsm.Outlet.Region, id))
+    |> assign(:page_title, "Edit Manager")
+    |> assign(
+      :manager,
+      Ash.get!(Marketingbsm.Management.ProjectManager, id, actor: socket.assigns.current_user)
+    )
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "New Region")
-    |> assign(:region, nil)
+    |> assign(:page_title, "New Manager")
+    |> assign(:manager, nil)
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Regions")
-    |> assign(:region, nil)
+    |> assign(:page_title, "Listing Managers")
+    |> assign(:manager, nil)
   end
 
   @impl true
-  def handle_info({MarketingbsmWeb.RegionLive.FormComponent, {:saved, region}}, socket) do
-    {:noreply, stream_insert(socket, :regions, region)}
-  end
-
-  @impl true
-  def handle_event("delete", %{"region_id" => id} = params, socket) do
-    dbg(params)
-    region = Ash.get!(Marketingbsm.Outlet.Region, id)
-    Ash.destroy!(region, actor: socket.assigns.current_user)
-
-    {:noreply, stream_delete(socket, :regions, region)}
+  def handle_info({MarketingbsmWeb.ManagementLive.FormComponent, {:saved, manager}}, socket) do
+    {:noreply, stream_insert(socket, :managers, manager)}
   end
 
   @impl true

@@ -1,8 +1,11 @@
 defmodule Marketingbsm.Outlet.Shop do
+  alias Marketingbsm.Checks.IsAdmin
+
   use Ash.Resource,
     domain: Marketingbsm.Outlet,
     data_layer: AshPostgres.DataLayer,
-    extensions: [AshArchival.Resource]
+    extensions: [AshArchival.Resource],
+    authorizers: [Ash.Policy.Authorizer]
 
   resource do
     description """
@@ -79,6 +82,20 @@ defmodule Marketingbsm.Outlet.Shop do
     # relationship_type - relationship_name - destination_resource
     belongs_to :region, Marketingbsm.Outlet.Region do
       attribute_writable? true
+    end
+  end
+
+  policies do
+    policy action_type(:read) do
+      authorize_if always()
+    end
+
+    policy action_type(:create) do
+      authorize_if IsAdmin
+    end
+
+    policy action_type(:destroy) do
+      authorize_if IsAdmin
     end
   end
 end
