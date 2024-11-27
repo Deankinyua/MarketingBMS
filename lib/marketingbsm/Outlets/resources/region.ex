@@ -1,7 +1,10 @@
 defmodule Marketingbsm.Outlet.Region do
+  alias Marketingbsm.Checks.IsAdmin
+
   use Ash.Resource,
     domain: Marketingbsm.Outlet,
-    data_layer: AshPostgres.DataLayer
+    data_layer: AshPostgres.DataLayer,
+    authorizers: [Ash.Policy.Authorizer]
 
   resource do
     description """
@@ -73,13 +76,17 @@ defmodule Marketingbsm.Outlet.Region do
     has_many :shops, Marketingbsm.Outlet.Shop
   end
 
-  # pub_sub do
-  #   module Marketingbsm
-  #   prefix "region"
-  #   broadcast_type :phoenix_broadcast
+  policies do
+    policy action_type(:read) do
+      authorize_if always()
+    end
 
-  #   publish :update, ["updated", :id]
+    policy action_type(:create) do
+      authorize_if IsAdmin
+    end
 
-  #   publish_all :create, "created"
-  # end
+    policy action_type(:destroy) do
+      authorize_if IsAdmin
+    end
+  end
 end

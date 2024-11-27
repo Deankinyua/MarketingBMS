@@ -19,7 +19,7 @@ defmodule MarketingbsmWeb.RegionLive.FormComponent do
           Use this form to manage Region records in your database.
         </Text.subtitle>
 
-        <.form :let={f} for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
+        <.form for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
           <%= if @form.source.type == :create do %>
             <Layout.col class="space-y-1.5">
               <label for="region[region_id]">
@@ -98,8 +98,14 @@ defmodule MarketingbsmWeb.RegionLive.FormComponent do
 
         {:noreply, socket}
 
-      {:error, form} ->
-        {:noreply, assign(socket, form: form)}
+      {:error, _form} ->
+        # errors = form.source.source.errors
+        # Ash.Error.Forbidden.Policy.report(errors)
+
+        {:noreply,
+         socket
+         |> put_flash(:error, "You are not authorized to perform this action")
+         |> push_patch(to: socket.assigns.patch)}
     end
   end
 
@@ -108,9 +114,15 @@ defmodule MarketingbsmWeb.RegionLive.FormComponent do
   defp assign_form(%{assigns: %{region: region}} = socket) do
     form =
       if region do
-        AshPhoenix.Form.for_update(region, :update_region, as: "region")
+        AshPhoenix.Form.for_update(region, :update_region,
+          as: "region",
+          actor: socket.assigns.current_user
+        )
       else
-        AshPhoenix.Form.for_create(Marketingbsm.Outlet.Region, :new, as: "region")
+        AshPhoenix.Form.for_create(Marketingbsm.Outlet.Region, :new,
+          as: "region",
+          actor: socket.assigns.current_user
+        )
       end
 
     assign(socket, form: to_form(form))
