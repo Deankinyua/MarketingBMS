@@ -1,8 +1,11 @@
 defmodule Marketingbsm.Clockin.Checkin do
+  alias Marketingbsm.Checks.IsAdmin
+
   use Ash.Resource,
     # Tells Ash where the generated code interface belongs
     domain: Marketingbsm.Clockin,
-    data_layer: AshPostgres.DataLayer
+    data_layer: AshPostgres.DataLayer,
+    authorizers: [Ash.Policy.Authorizer]
 
   resource do
     description """
@@ -98,16 +101,34 @@ defmodule Marketingbsm.Clockin.Checkin do
       # filter expr(create_date == ^arg(:create_date))
       filter expr(create_date == ^arg(:create_date))
     end
+  end
 
-    relationships do
-      # relationship_type - relationship_name - destination_resource
-      belongs_to :project, Marketingbsm.ProjectGeneral.Project do
-        attribute_writable? true
-      end
+  relationships do
+    # relationship_type - relationship_name - destination_resource
+    belongs_to :project, Marketingbsm.ProjectGeneral.Project do
+      attribute_writable? true
+    end
 
-      belongs_to :outlet, Marketingbsm.Outlet.Shop do
-        attribute_writable? true
-      end
+    belongs_to :outlet, Marketingbsm.Outlet.Shop do
+      attribute_writable? true
+    end
+  end
+
+  policies do
+    policy action_type(:read) do
+      authorize_if always()
+    end
+
+    policy action_type(:create) do
+      authorize_if always()
+    end
+
+    policy action_type(:update) do
+      authorize_if IsAdmin
+    end
+
+    policy action_type(:destroy) do
+      authorize_if IsAdmin
     end
   end
 end
