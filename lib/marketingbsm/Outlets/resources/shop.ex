@@ -94,6 +94,10 @@ defmodule Marketingbsm.Outlet.Shop do
       authorize_if IsAdmin
     end
 
+    policy action_type(:update) do
+      authorize_if IsAdmin
+    end
+
     policy action_type(:destroy) do
       authorize_if IsAdmin
     end

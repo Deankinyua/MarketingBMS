@@ -402,7 +402,7 @@ defmodule MarketingbsmWeb.TemplateLive.FormComponent do
     project_id = FormComponent.get_project_id(socket, template_params)
 
     case ProjectGeneral.get_template_by_project_id(project_id) do
-      {:ok, template} ->
+      {:ok, _template} ->
         {:noreply,
          socket
          |> put_flash(
@@ -411,7 +411,7 @@ defmodule MarketingbsmWeb.TemplateLive.FormComponent do
          )
          |> push_patch(to: "/templates")}
 
-      {:error, error} ->
+      {:error, _error} ->
         template_params =
           Map.merge(template_params, %{
             "project_id" => project_id
@@ -431,8 +431,11 @@ defmodule MarketingbsmWeb.TemplateLive.FormComponent do
 
             {:noreply, socket}
 
-          {:error, form} ->
-            {:noreply, assign(socket, form: form)}
+          {:error, _form} ->
+            {:noreply,
+             socket
+             |> put_flash(:error, "You are not authorized to perform this action")
+             |> push_patch(to: socket.assigns.patch)}
         end
     end
   end

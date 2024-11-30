@@ -175,8 +175,11 @@ defmodule MarketingbsmWeb.RegistryLive.FormComponent do
 
         {:noreply, socket}
 
-      {:error, form} ->
-        {:noreply, assign(socket, form: form)}
+      {:error, _form} ->
+        {:noreply,
+         socket
+         |> put_flash(:error, "You are not authorized to perform this action")
+         |> push_patch(to: socket.assigns.patch)}
     end
   end
 

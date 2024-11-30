@@ -1,8 +1,11 @@
 defmodule Marketingbsm.Record.Registry do
+  alias Marketingbsm.Checks.IsAdmin
+
   use Ash.Resource,
     # Tells Ash where the generated code interface belongs
     domain: Marketingbsm.Record,
-    data_layer: AshPostgres.DataLayer
+    data_layer: AshPostgres.DataLayer,
+    authorizers: [Ash.Policy.Authorizer]
 
   resource do
     description """
@@ -89,6 +92,24 @@ defmodule Marketingbsm.Record.Registry do
 
     belongs_to :outlet, Marketingbsm.Outlet.Shop do
       attribute_writable? true
+    end
+  end
+
+  policies do
+    policy action_type(:read) do
+      authorize_if always()
+    end
+
+    policy action_type(:create) do
+      authorize_if IsAdmin
+    end
+
+    policy action_type(:update) do
+      authorize_if IsAdmin
+    end
+
+    policy action_type(:destroy) do
+      authorize_if IsAdmin
     end
   end
 end
