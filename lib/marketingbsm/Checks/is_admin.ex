@@ -24,7 +24,7 @@ defmodule Marketingbsm.Checks.IsAdmin do
     end
   end
 
-  def match?(_, _, _), do: false
+  # def match?(_, _, _), do: false
 end
 
 # Management.get_manager("2c2fcab5-70ea-4b77-999a-1f257f2adfb3")
