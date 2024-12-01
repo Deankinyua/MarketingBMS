@@ -24,7 +24,7 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
 
         <Layout.divider class="my-4" />
 
-        <.form :let={f} for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
+        <.form for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
           <Layout.col class="space-y-1.5">
             <label>
               <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
