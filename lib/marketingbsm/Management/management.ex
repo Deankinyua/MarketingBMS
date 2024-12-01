@@ -19,4 +19,16 @@ defmodule Marketingbsm.Management do
       define :destroy_manager, action: :destroy
     end
   end
+
+  resources do
+    resource Marketingbsm.Management.TeamLeader do
+      # Define an interface for calling resource actions.
+      # We use the Function when we executing code
+      # <Function> <Action>
+      define :create_leader, action: :create
+      define :list_leaders, action: :read
+      define :get_leader, args: [:id], action: :by_id
+      define :destroy_leader, action: :destroy
+    end
+  end
 end

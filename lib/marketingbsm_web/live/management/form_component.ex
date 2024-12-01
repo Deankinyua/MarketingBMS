@@ -2,6 +2,7 @@ defmodule MarketingbsmWeb.ManagementLive.FormComponent do
   use MarketingbsmWeb, :live_component
 
   alias Marketingbsm.Accounts
+  alias Marketingbsm.Management
 
   @impl true
   def render(assigns) do
@@ -33,6 +34,8 @@ defmodule MarketingbsmWeb.ManagementLive.FormComponent do
               field={f[:manager_email]}
               value={f[:manager_email].value}
             />
+
+            <.input field={@form[:role]} type="select" options={@role_selector} label="Choose Role" />
           </Layout.col>
 
           <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Creating...">
@@ -49,7 +52,12 @@ defmodule MarketingbsmWeb.ManagementLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
+     |> role_selector()
      |> assign_form()}
+  end
+
+  defp role_selector(socket) do
+    socket |> assign(role_selector: ["Project Leader", "Team Leader"])
   end
 
   @impl true
@@ -61,27 +69,58 @@ defmodule MarketingbsmWeb.ManagementLive.FormComponent do
   def handle_event("save", %{"manager" => manager_params}, socket) do
     %{"manager_email" => email} = manager_params
 
+    role = manager_params["role"]
+
     case Accounts.get_user(email) do
       {:ok, user} ->
-        dbg(user)
-        manager_params = %{id: user.id}
+        case return_role(role) do
+          :manager ->
+            manager_params = %{id: user.id}
 
-        case AshPhoenix.Form.submit(socket.assigns.form, params: manager_params) do
-          {:ok, manager} ->
-            notify_parent({:saved, manager})
+            case AshPhoenix.Form.submit(socket.assigns.form, params: manager_params) do
+              {:ok, manager} ->
+                notify_parent({:saved_manager, manager})
 
-            socket =
-              socket
-              |> put_flash(:info, "You are now an Manager")
-              |> push_patch(to: socket.assigns.patch)
+                socket =
+                  socket
+                  |> put_flash(:info, "Selected Individul has been given the Project Leader Role")
+                  |> push_patch(to: socket.assigns.patch)
 
-            {:noreply, socket}
+                {:noreply, socket}
 
-          {:error, _form} ->
-            {:noreply,
-             socket
-             |> put_flash(:error, "You are already an Manager")
-             |> push_patch(to: socket.assigns.patch)}
+              {:error, _form} ->
+                {:noreply,
+                 socket
+                 |> put_flash(
+                   :error,
+                   "You are not authorized to complete this action or role already exists"
+                 )
+                 |> push_patch(to: socket.assigns.patch)}
+            end
+
+          :leader ->
+            leader_params = %{id: user.id}
+
+            case Management.create_leader(leader_params, actor: socket.assigns.current_user) do
+              {:ok, leader} ->
+                notify_parent({:saved_leader, leader})
+
+                socket =
+                  socket
+                  |> put_flash(:info, "Team Leader Role has been assigned to the individual")
+                  |> push_patch(to: socket.assigns.patch)
+
+                {:noreply, socket}
+
+              {:error, _form} ->
+                {:noreply,
+                 socket
+                 |> put_flash(
+                   :error,
+                   "You are Not authorized to perform this action or role already exists"
+                 )
+                 |> push_patch(to: socket.assigns.patch)}
+            end
         end
 
       _ ->
@@ -111,5 +150,13 @@ defmodule MarketingbsmWeb.ManagementLive.FormComponent do
       end
 
     assign(socket, form: to_form(form))
+  end
+
+  def return_role(role) do
+    if role == "Team Leader" do
+      :leader
+    else
+      :manager
+    end
   end
 end

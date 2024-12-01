@@ -1,4 +1,4 @@
-defmodule Marketingbsm.Management.ProjectManager do
+defmodule Marketingbsm.Management.TeamLeader do
   alias Marketingbsm.Checks.IsAdmin
 
   use Ash.Resource,
@@ -9,16 +9,16 @@ defmodule Marketingbsm.Management.ProjectManager do
 
   resource do
     description """
-    Represents the Project managers
-    Handles the Sensitive information belonging to a Project managers
+    Represents the Team leaders
+    Handles the Sensitive information belonging to a Team leaders
     """
 
-    plural_name :managers
-    short_name :manager
+    plural_name :leaders
+    short_name :leader
   end
 
   postgres do
-    table "managers"
+    table "leaders"
     repo Marketingbsm.Repo
   end
 

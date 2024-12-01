@@ -61,7 +61,7 @@ defmodule MarketingbsmWeb.ManagementLive.Index do
               <Table.table_row class="hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted">
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    Manager Name
+                    Project Manager
                   </Text.text>
                 </Table.table_cell>
               </Table.table_row>
@@ -77,9 +77,51 @@ defmodule MarketingbsmWeb.ManagementLive.Index do
                 id={"#{dom_id}"}
                 class="group hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted"
               >
+                <.live_component
+                  module={MarketingbsmWeb.ManagerLive.RowComponent}
+                  id={dom_id}
+                  manager={manager}
+                  dom_id={dom_id}
+                >
+                  <Table.table_cell>
+                    <%= Accounts.get_user_by_id!(manager.id).name %>
+                  </Table.table_cell>
+                </.live_component>
+              </Table.table_row>
+            </Table.table_body>
+          </Table.table>
+
+          <Table.table class="w-full">
+            <Table.table_head class="rounded-t-md border-b-[1px]">
+              <Table.table_row class="hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted">
                 <Table.table_cell>
-                  <%= Accounts.get_user_by_id!(manager.id).name %>
+                  <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
+                    Team Leader
+                  </Text.text>
                 </Table.table_cell>
+              </Table.table_row>
+            </Table.table_head>
+
+            <Table.table_body
+              id="table_stream_outlets"
+              phx-update="stream"
+              class="divide-y overflow-y-auto"
+            >
+              <Table.table_row
+                :for={{dom_id, leader} <- @streams.leaders}
+                id={"#{dom_id}"}
+                class="group hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted"
+              >
+                <.live_component
+                  module={MarketingbsmWeb.LeaderLive.RowComponent}
+                  id={dom_id}
+                  leader={leader}
+                  dom_id={dom_id}
+                >
+                  <Table.table_cell>
+                    <%= Accounts.get_user_by_id!(leader.id).name %>
+                  </Table.table_cell>
+                </.live_component>
               </Table.table_row>
             </Table.table_body>
           </Table.table>
@@ -111,6 +153,7 @@ defmodule MarketingbsmWeb.ManagementLive.Index do
     socket =
       socket
       |> assign(:hiderr, "")
+      |> stream(:leaders, get_leaders())
 
     {:ok, stream(socket, :managers, get_records())}
   end
@@ -120,6 +163,14 @@ defmodule MarketingbsmWeb.ManagementLive.Index do
 
     for manager <- managers do
       manager
+    end
+  end
+
+  def get_leaders do
+    leaders = Management.list_leaders!()
+
+    for leader <- leaders do
+      leader
     end
   end
 
@@ -150,8 +201,32 @@ defmodule MarketingbsmWeb.ManagementLive.Index do
   end
 
   @impl true
-  def handle_info({MarketingbsmWeb.ManagementLive.FormComponent, {:saved, manager}}, socket) do
+  def handle_info(
+        {MarketingbsmWeb.ManagementLive.FormComponent, {:saved_manager, manager}},
+        socket
+      ) do
     {:noreply, stream_insert(socket, :managers, manager)}
+  end
+
+  @impl true
+  def handle_info({MarketingbsmWeb.ManagementLive.FormComponent, {:saved_leader, leader}}, socket) do
+    {:noreply, stream_insert(socket, :leaders, leader)}
+  end
+
+  @impl true
+  def handle_event("delete_manager", %{"manager_id" => id}, socket) do
+    manager = Ash.get!(Marketingbsm.Management.ProjectManager, id)
+    Ash.destroy!(manager, actor: socket.assigns.current_user)
+
+    {:noreply, stream_delete(socket, :managers, manager)}
+  end
+
+  @impl true
+  def handle_event("delete_leader", %{"leader_id" => id}, socket) do
+    leader = Ash.get!(Marketingbsm.Management.TeamLeader, id)
+    Ash.destroy!(leader, actor: socket.assigns.current_user)
+
+    {:noreply, stream_delete(socket, :leaders, leader)}
   end
 
   @impl true
