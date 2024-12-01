@@ -105,7 +105,7 @@ defmodule Marketingbsm.Record.Registry do
     end
 
     policy action_type(:update) do
-      authorize_if IsAdminLeader
+      authorize_if always()
     end
 
     policy action_type(:destroy) do

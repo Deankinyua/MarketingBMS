@@ -3,6 +3,7 @@ defmodule MarketingbsmWeb.RegistryLive.Index do
   alias Tremorx.Theme
 
   require Ash.Query
+  alias Marketingbsm.Management
 
   @impl true
   def render(assigns) do
@@ -132,16 +133,43 @@ defmodule MarketingbsmWeb.RegistryLive.Index do
   def mount(_params, _session, socket) do
     socket = socket |> assign(:hiderr, "")
 
-    {:ok,
-     socket
-     |> stream(
-       :registries,
-       Ash.read!(Marketingbsm.Record.Registry, actor: socket.assigns[:current_user])
-     )
-     |> stream(
-       :projects,
-       Ash.read!(Marketingbsm.ProjectGeneral.Project, actor: socket.assigns[:current_user])
-     )}
+    id = socket.assigns.current_user.id
+
+    case Management.get_manager(id) do
+      {:ok, _result} ->
+        {:ok,
+         socket
+         |> stream(
+           :registries,
+           Ash.read!(Marketingbsm.Record.Registry, actor: socket.assigns[:current_user])
+         )
+         |> stream(
+           :projects,
+           Ash.read!(Marketingbsm.ProjectGeneral.Project, actor: socket.assigns[:current_user])
+         )}
+
+      {:error, _error} ->
+        case Management.get_leader(id) do
+          {:ok, _result} ->
+            {:ok,
+             socket
+             |> stream(
+               :registries,
+               Ash.read!(Marketingbsm.Record.Registry, actor: socket.assigns[:current_user])
+             )
+             |> stream(
+               :projects,
+               Ash.read!(Marketingbsm.ProjectGeneral.Project,
+                 actor: socket.assigns[:current_user]
+               )
+             )}
+
+          {:error, _error} ->
+            socket = stream(socket, :projects, [])
+
+            {:ok, stream(socket, :registries, [])}
+        end
+    end
   end
 
   @impl true

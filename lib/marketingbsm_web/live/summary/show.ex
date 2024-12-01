@@ -183,6 +183,17 @@ defmodule MarketingbsmWeb.SummaryLive.Show do
     checkin = Ash.get!(Marketingbsm.Clockin.Checkin, id, actor: socket.assigns.current_user)
     Ash.destroy!(checkin, actor: socket.assigns.current_user)
 
+    date = checkin.create_date
+    ambassador_id = checkin.ambassador_id
+
+    case Clockin.get_user_by_id(ambassador_id, date) do
+      {:ok, checkout} ->
+        Ash.destroy!(checkout, actor: socket.assigns.current_user)
+
+      {:error, _error} ->
+        {:noreply, socket}
+    end
+
     {:noreply, stream_delete(socket, :checkins, checkin)}
   end
 

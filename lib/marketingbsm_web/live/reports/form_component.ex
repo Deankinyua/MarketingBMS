@@ -243,7 +243,9 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
             {:ok, _report} ->
               user_params = %{days_worked: registry.days_worked + 1}
 
-              Marketingbsm.Record.update_ambassador(registry, user_params)
+              Marketingbsm.Record.update_ambassador(registry, user_params,
+                actor: socket.assigns.current_user
+              )
 
               socket =
                 socket
