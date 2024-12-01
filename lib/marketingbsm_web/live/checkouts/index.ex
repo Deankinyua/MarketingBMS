@@ -54,9 +54,9 @@ defmodule MarketingbsmWeb.CheckoutLive.Index do
               module={MarketingbsmWeb.CheckoutLive.FormComponent}
               id={:new}
               title={@page_title}
-              current_user={@current_user}
+              current_user={@current_user.id}
               action={@live_action}
-              patch={~p"/reports"}
+              patch={~p"/checkouts"}
             />
           </.modal>
 

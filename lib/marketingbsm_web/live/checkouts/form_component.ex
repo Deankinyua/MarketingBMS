@@ -4,14 +4,14 @@ defmodule MarketingbsmWeb.CheckoutLive.FormComponent do
   alias SimpleS3Upload
   require Ash.Query
 
+  alias Marketingbsm.ProjectGeneral
   alias Marketingbsm.File
-  alias AshPhoenix.Form
-  alias Marketingbsm.Accounts
   alias Marketingbsm.Clockin
+  alias Marketingbsm.Record
+  alias AshPhoenix.Form
 
   alias MarketingbsmWeb.CheckinLive.FormComponent, as: CheckinComponent
   alias MarketingbsmWeb.ReportLive.FormComponent
-  alias MarketingbsmWeb.RegistryLive.FormComponent, as: RegistryComponent
 
   @impl true
   def render(assigns) do
@@ -48,47 +48,6 @@ defmodule MarketingbsmWeb.CheckoutLive.FormComponent do
                   <%= name %>
                 </:item>
               </Select.select>
-            </Layout.col>
-
-            <Layout.col class="space-y-1.5">
-              <label>
-                <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
-                  Ambassador Name
-                </Text.text>
-              </label>
-
-              <Select.search_select
-                id="ambassador[:ambassador_id]"
-                name={@form[:ambassador_id].name}
-                placeholder="Select..."
-                value={@form[:ambassador_id].value}
-                phx-update="ignore"
-                required={true}
-              >
-                <:item :for={%{id: _id, name: name} <- @ambassadors}>
-                  <%= name %>
-                </:item>
-              </Select.search_select>
-            </Layout.col>
-
-            <Layout.col class="space-y-1.5">
-              <label>
-                <Text.text class="text-tremor-content mt-2 mb-3 text-bold">
-                  Outlet Name
-                </Text.text>
-              </label>
-
-              <Select.search_select
-                id="outlet[:outlet_id]"
-                name={@form[:outlet_id].name}
-                placeholder="Select..."
-                value={@form[:outlet_id].value}
-                phx-update="ignore"
-              >
-                <:item :for={%{id: _id, name: name} <- @outlets}>
-                  <%= name %>
-                </:item>
-              </Select.search_select>
             </Layout.col>
 
             <fieldset>
@@ -188,34 +147,8 @@ defmodule MarketingbsmWeb.CheckoutLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> fetch_promoters()
      |> FormComponent.fetch_projects_unfreezed()
-     |> fetch_outlets()
      |> assign_form()}
-  end
-
-  def fetch_promoters(socket) do
-    query_results =
-      Marketingbsm.Record.Registry
-      |> Ash.Query.filter(should_activate: true)
-      |> Ash.Query.load([])
-      |> Ash.read!(page: [limit: 20])
-
-    ambassadors = Map.get(query_results, :results)
-
-    socket |> assign(ambassadors: ambassador_selector(ambassadors))
-  end
-
-  def fetch_outlets(socket) do
-    query_results =
-      Marketingbsm.Outlet.Shop
-      |> Ash.Query.load([])
-      |> Ash.Query.sort(created_at: :desc)
-      |> Ash.read!(page: [limit: 20])
-
-    outlets = Map.get(query_results, :results)
-
-    socket |> assign(outlets: outlets)
   end
 
   @impl true
@@ -226,76 +159,95 @@ defmodule MarketingbsmWeb.CheckoutLive.FormComponent do
   end
 
   def handle_event("save", %{"checkout" => checkout_params}, socket) do
-    ambassador_id = RegistryComponent.get_ambassador_id(socket, checkout_params)
+    id = socket.assigns.current_user
 
-    date = Date.utc_today()
+    case Record.get_user_by_id(id) do
+      {:ok, registry} ->
+        ambassador_id = registry.ambassador_id
+        outlet_id = registry.outlet_id
+        project_id = registry.project_id
 
-    case Clockin.get_user_by_id(ambassador_id, date) do
-      {:ok, _record} ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "You have already checked Out !!")
-         |> push_patch(to: "/checkouts")}
+        actual_project = ProjectGeneral.get_project_by_id!(project_id)
+
+        if actual_project.is_freezed == true do
+          {:noreply,
+           socket
+           |> put_flash(:error, "The Project You are activating is Freezed!!")
+           |> push_patch(to: "/checkins")}
+        else
+          date = Date.utc_today()
+
+          case Clockin.get_user_by_id(ambassador_id, date) do
+            {:ok, _record} ->
+              {:noreply,
+               socket
+               |> put_flash(:error, "You have already checked Out !!")
+               |> push_patch(to: "/checkouts")}
+
+            {:error, _error} ->
+              checkout_params =
+                Map.merge(checkout_params, %{
+                  "ambassador_id" => ambassador_id,
+                  "project_id" => project_id,
+                  "outlet_id" => outlet_id
+                })
+
+              consume_uploaded_entries(socket, :checkoutphoto, fn _meta, entry ->
+                client_name = Map.get(entry, :client_name)
+                filename = Map.get(entry, :uuid) <> "." <> SimpleS3Upload.ext(entry)
+
+                {:ok,
+                 %File{
+                   filename: filename,
+                   original_filename: client_name
+                 }}
+              end)
+              |> case do
+                [] ->
+                  socket =
+                    socket
+                    |> assign(:audio_errors, %{filename: "is required"})
+
+                  send_update(__MODULE__,
+                    id: socket.assigns.form_name,
+                    update: :toggle_submit,
+                    value: false
+                  )
+
+                  {:noreply, socket}
+
+                [%File{} = file] ->
+                  checkout_params = Map.merge(checkout_params, %{"file" => file})
+                  form = socket.assigns.form |> Form.validate(checkout_params)
+
+                  Form.errors(form)
+                  |> case do
+                    [] ->
+                      submit_form(socket, checkout_params, file)
+
+                    errors ->
+                      send_update(__MODULE__,
+                        id: socket.assigns.form_name,
+                        update: :toggle_submit,
+                        value: false
+                      )
+
+                      socket =
+                        socket
+                        |> assign(:form, form)
+                        |> assign(:errors, errors)
+
+                      {:noreply, socket}
+                  end
+              end
+          end
+        end
 
       {:error, _error} ->
-        outlet_id = RegistryComponent.get_outlet_id(socket, checkout_params)
-        project_id = RegistryComponent.get_project_id(socket, checkout_params)
-
-        checkout_params =
-          Map.merge(checkout_params, %{
-            "ambassador_id" => ambassador_id,
-            "project_id" => project_id,
-            "outlet_id" => outlet_id
-          })
-
-        consume_uploaded_entries(socket, :checkoutphoto, fn _meta, entry ->
-          client_name = Map.get(entry, :client_name)
-          filename = Map.get(entry, :uuid) <> "." <> SimpleS3Upload.ext(entry)
-
-          {:ok,
-           %File{
-             filename: filename,
-             original_filename: client_name
-           }}
-        end)
-        |> case do
-          [] ->
-            socket =
-              socket
-              |> assign(:audio_errors, %{filename: "is required"})
-
-            send_update(__MODULE__,
-              id: socket.assigns.form_name,
-              update: :toggle_submit,
-              value: false
-            )
-
-            {:noreply, socket}
-
-          [%File{} = file] ->
-            checkout_params = Map.merge(checkout_params, %{"file" => file})
-            form = socket.assigns.form |> Form.validate(checkout_params)
-
-            Form.errors(form)
-            |> case do
-              [] ->
-                submit_form(socket, checkout_params, file)
-
-              errors ->
-                send_update(__MODULE__,
-                  id: socket.assigns.form_name,
-                  update: :toggle_submit,
-                  value: false
-                )
-
-                socket =
-                  socket
-                  |> assign(:form, form)
-                  |> assign(:errors, errors)
-
-                {:noreply, socket}
-            end
-        end
+        {:noreply,
+         socket
+         |> push_patch(to: socket.assigns.patch)
+         |> put_flash(:error, "Report Not Submitted!! You are not scheduled to activate")}
     end
   end
 
@@ -356,14 +308,6 @@ defmodule MarketingbsmWeb.CheckoutLive.FormComponent do
         )
 
         {:noreply, assign(socket, form: form)}
-    end
-  end
-
-  def ambassador_selector(ambassadors) do
-    for item <- ambassadors do
-      user = Accounts.get_user_by_id!(item.ambassador_id)
-
-      user
     end
   end
 end

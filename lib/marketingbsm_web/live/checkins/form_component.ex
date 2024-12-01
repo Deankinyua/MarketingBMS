@@ -6,10 +6,9 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
 
   alias Marketingbsm.ProjectGeneral
   alias Marketingbsm.File
-  alias AshPhoenix.Form
-  alias Marketingbsm.Accounts
   alias Marketingbsm.Clockin
   alias Marketingbsm.Record
+  alias AshPhoenix.Form
 
   alias MarketingbsmWeb.ReportLive.FormComponent
 
@@ -313,14 +312,6 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
         )
 
         {:noreply, assign(socket, form: form)}
-    end
-  end
-
-  def ambassador_selector(ambassadors) do
-    for item <- ambassadors do
-      user = Accounts.get_user_by_id!(item.ambassador_id)
-
-      user
     end
   end
 
