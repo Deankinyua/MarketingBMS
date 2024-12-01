@@ -282,14 +282,14 @@ defmodule MarketingbsmWeb.NavigationComponent do
       class="w-full flex-shrink-0 pt-2.5"
       menu_items_class="right-0 -top-24 left-0 px-1 py-1.5 -mt-2 w-full origin-bottom-center space-y-0.5 divide-y divide-gray-100 rounded-md bg-white shadow-xl shadow-black/5 ring-1 ring-black/5 focus:outline-none"
       menu_item_class="focus:bg-tremor-brand focus:hover:bg-tremor-brand-emphasis
-            dark:focus:hover:bg-dark-tremor-brand-emphasis
-            focus:text-tremor-brand-inverted dark:focus:text-dark-tremor-brand-inverted focus:border-none
-            focus:border-transparent focus:outline-none
-            focus:text-white focus:rounded-md hover:rounded-md
-            transform-all hover:border-transparent
-            text-tremor-content duration-100
-            hover:bg-gray-100 dark:text-dark-tremor-content
-            hover:text-tremor-content-emphasis"
+        dark:focus:hover:bg-dark-tremor-brand-emphasis
+        focus:text-tremor-brand-inverted dark:focus:text-dark-tremor-brand-inverted focus:border-none
+        focus:border-transparent focus:outline-none
+        focus:text-white focus:rounded-md hover:rounded-md
+        transform-all hover:border-transparent
+        text-tremor-content duration-100
+        hover:bg-gray-100 dark:text-dark-tremor-content
+        hover:text-tremor-content-emphasis"
       enter_from="transform opacity-0 scale-95 translate-y-4"
       leave_to="transform opacity-0 scale-95 translate-y-4"
     >
@@ -365,17 +365,6 @@ defmodule MarketingbsmWeb.NavigationComponent do
 
       <:item>
         <.menu_dropdown_item
-          on_click={JS.navigate(~p"/settings")}
-          name="Profile"
-          class="w-full px-2 py-2"
-        >
-          <:icon>
-            <.icon name="hero-user-circle" />
-          </:icon>
-        </.menu_dropdown_item>
-      </:item>
-      <:item>
-        <.menu_dropdown_item
           on_click={JS.navigate(~p"/sign-out")}
           name="Sign out"
           class="w-full px-2 py-2"
@@ -389,6 +378,17 @@ defmodule MarketingbsmWeb.NavigationComponent do
     """
   end
 
+  # <:item>
+  #   <.menu_dropdown_item
+  #     on_click={JS.navigate(~p"/settings")}
+  #     name="Profile"
+  #     class="w-full px-2 py-2"
+  #   >
+  #     <:icon>
+  #       <.icon name="hero-user-circle" />
+  #     </:icon>
+  #   </.menu_dropdown_item>
+  # </:item>
   @doc """
   Renders a logo at the top
   """
