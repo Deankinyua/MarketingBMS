@@ -34,9 +34,9 @@ defmodule MarketingbsmWeb.NavigationComponent do
   def drawer(assigns) do
     ~H"""
     <div class={"#{@hiderr}"}>
-      <div class="small_nav w-72 h-screen flex border-red-400 flex-col px-2 py-4 border-r">
+      <div class="small_nav w-72 h-screen flex border-black-600 border-4 flex-col px-2 py-4 border-r">
         <Layout.flex flex_direction="col" class="flex-1">
-          <Layout.grid class="border-red-400 border-4 space-y-1 w-full first:mt-3">
+          <Layout.grid class="border-black-400 border-4 space-y-1 w-full first:mt-3">
             <.menu_item
               on_click={on_live_navigate(:report, ~p"/reports")}
               active={@active_tab == "report"}
