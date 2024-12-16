@@ -13,6 +13,7 @@ defmodule Marketingbsm.Clockin do
       define :update_data, action: :update
       define :read_data, action: :read
       define :verify_checkin, args: [:ambassador_id, :create_date], action: :by_id
+      define :destroy_checkin, action: :destroy
     end
   end
 
@@ -22,6 +23,7 @@ defmodule Marketingbsm.Clockin do
       define :update_data_checkout, action: :update
       define :read_data_checkout, action: :read
       define :get_user_by_id, args: [:ambassador_id, :create_date], action: :by_id
+      define :destroy_checkout, action: :destroy
     end
   end
 end

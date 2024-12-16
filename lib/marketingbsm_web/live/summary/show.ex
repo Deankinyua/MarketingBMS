@@ -181,20 +181,30 @@ defmodule MarketingbsmWeb.SummaryLive.Show do
   @impl true
   def handle_event("delete", %{"checkin_id" => id}, socket) do
     checkin = Ash.get!(Marketingbsm.Clockin.Checkin, id, actor: socket.assigns.current_user)
-    Ash.destroy!(checkin, actor: socket.assigns.current_user)
 
-    date = checkin.create_date
-    ambassador_id = checkin.ambassador_id
+    case Clockin.destroy_checkin(checkin, actor: socket.assigns.current_user) do
+      :ok ->
+        date = checkin.create_date
+        ambassador_id = checkin.ambassador_id
 
-    case Clockin.get_user_by_id(ambassador_id, date) do
-      {:ok, checkout} ->
-        Ash.destroy!(checkout, actor: socket.assigns.current_user)
+        case Clockin.get_user_by_id(ambassador_id, date) do
+          {:ok, checkout} ->
+            Ash.destroy!(checkout, actor: socket.assigns.current_user)
+
+          {:error, _error} ->
+            {:noreply, socket}
+        end
+
+        {:noreply, stream_delete(socket, :checkins, checkin)}
 
       {:error, _error} ->
-        {:noreply, socket}
+        {:noreply,
+         socket
+         |> put_flash(
+           :error,
+           "You are Not authorized to perform this action"
+         )}
     end
-
-    {:noreply, stream_delete(socket, :checkins, checkin)}
   end
 
   def get_checkout_time(ambassador_id, date) do

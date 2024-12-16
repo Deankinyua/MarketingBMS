@@ -1,5 +1,5 @@
 defmodule Marketingbsm.Clockin.Checkout do
-  alias Marketingbsm.Checks.IsAdmin
+  alias Marketingbsm.Checks.IsAdminLeader
 
   use Ash.Resource,
     # Tells Ash where the generated code interface belongs
@@ -125,11 +125,11 @@ defmodule Marketingbsm.Clockin.Checkout do
     end
 
     policy action_type(:update) do
-      authorize_if IsAdmin
+      authorize_if IsAdminLeader
     end
 
     policy action_type(:destroy) do
-      authorize_if IsAdmin
+      authorize_if IsAdminLeader
     end
   end
 end
