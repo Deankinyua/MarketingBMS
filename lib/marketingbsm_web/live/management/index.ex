@@ -155,23 +155,17 @@ defmodule MarketingbsmWeb.ManagementLive.Index do
       |> assign(:hiderr, "")
       |> stream(:leaders, get_leaders())
 
-    {:ok, stream(socket, :managers, get_records())}
+    {:ok, stream(socket, :managers, get_managers())}
   end
 
-  def get_records do
+  def get_managers do
     managers = Management.list_managers!()
-
-    for manager <- managers do
-      manager
-    end
+    managers
   end
 
   def get_leaders do
     leaders = Management.list_leaders!()
-
-    for leader <- leaders do
-      leader
-    end
+    leaders
   end
 
   @impl true
@@ -216,17 +210,37 @@ defmodule MarketingbsmWeb.ManagementLive.Index do
   @impl true
   def handle_event("delete_manager", %{"manager_id" => id}, socket) do
     manager = Ash.get!(Marketingbsm.Management.ProjectManager, id)
-    Ash.destroy!(manager, actor: socket.assigns.current_user)
 
-    {:noreply, stream_delete(socket, :managers, manager)}
+    case Management.destroy_manager(manager, actor: socket.assigns.current_user) do
+      :ok ->
+        {:noreply, stream_delete(socket, :managers, manager)}
+
+      {:error, _error} ->
+        {:noreply,
+         socket
+         |> put_flash(
+           :error,
+           "You are Not authorized to perform this action"
+         )}
+    end
   end
 
   @impl true
   def handle_event("delete_leader", %{"leader_id" => id}, socket) do
     leader = Ash.get!(Marketingbsm.Management.TeamLeader, id)
-    Ash.destroy!(leader, actor: socket.assigns.current_user)
 
-    {:noreply, stream_delete(socket, :leaders, leader)}
+    case Management.destroy_leader(leader, actor: socket.assigns.current_user) do
+      :ok ->
+        {:noreply, stream_delete(socket, :leaders, leader)}
+
+      {:error, _error} ->
+        {:noreply,
+         socket
+         |> put_flash(
+           :error,
+           "You are Not authorized to perform this action"
+         )}
+    end
   end
 
   @impl true
