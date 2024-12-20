@@ -175,7 +175,6 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
 
   @impl true
   def handle_event("load-more", _, %{assigns: assigns} = socket) do
-    IO.puts("load more was invoked")
     {:noreply, assign(socket, page: assigns.page + 1) |> get_checkins()}
   end
 
