@@ -39,9 +39,28 @@ defmodule MarketingbsmWeb.CheckoutLive.Show do
             </Layout.flex>
           </Layout.flex>
 
+          <div class="sm:hidden">
+            <Layout.grid num_items="1">
+              <section :for={{dom_id, checkout} <- @streams.checkouts} id={"photos_small#{dom_id}"}>
+                <div class="mr-4 mb-4">
+                  <.live_component
+                    module={MarketingbsmWeb.PictureLive.Component}
+                    id={"small#{dom_id}"}
+                    checkin={call(checkout.file.original_filename)}
+                    dom_id={dom_id}
+                  >
+                    <Text.text class="font-semibold text-center">
+                      <%= Outlet.get_outlet!(checkout.outlet_id).name %>
+                    </Text.text>
+                  </.live_component>
+                </div>
+              </section>
+            </Layout.grid>
+          </div>
+
           <div class="hidden sm:block md:hidden">
             <Layout.grid num_items="2">
-              <section :for={{dom_id, checkout} <- @streams.checkouts} id={"photos#{dom_id}"}>
+              <section :for={{dom_id, checkout} <- @streams.checkouts} id={"photos_medium#{dom_id}"}>
                 <div class="mr-4 mb-4">
                   <.live_component
                     module={MarketingbsmWeb.PictureLive.Component}
@@ -60,7 +79,7 @@ defmodule MarketingbsmWeb.CheckoutLive.Show do
 
           <div class="hidden md:block">
             <Layout.grid num_items="5">
-              <section :for={{dom_id, checkout} <- @streams.checkouts} id={"photos#{dom_id}"}>
+              <section :for={{dom_id, checkout} <- @streams.checkouts} id={"photos_large#{dom_id}"}>
                 <div class="mr-4 mb-4">
                   <.live_component
                     module={MarketingbsmWeb.PictureLive.Component}
@@ -77,30 +96,14 @@ defmodule MarketingbsmWeb.CheckoutLive.Show do
             </Layout.grid>
           </div>
 
-          <div class="sm:hidden">
-            <Layout.grid num_items="1">
-              <section :for={{dom_id, checkout} <- @streams.checkouts} id={"photos#{dom_id}"}>
-                <div class="mr-4 mb-4">
-                  <.live_component
-                    module={MarketingbsmWeb.PictureLive.Component}
-                    id={"small#{dom_id}"}
-                    checkin={call(checkout.file.original_filename)}
-                    dom_id={dom_id}
-                  >
-                    <Text.text class="font-semibold text-center">
-                      <%= Outlet.get_outlet!(checkout.outlet_id).name %>
-                    </Text.text>
-                  </.live_component>
-                </div>
-              </section>
-            </Layout.grid>
-          </div>
-
-          <Button.button size="xl" class="mt-2 w-min">
+          <Button.button size="xl" class="mt-2 mb-72 w-min">
             <.link navigate={~p"/checkins"}>
               Back to Check-Ins
             </.link>
           </Button.button>
+
+          <div id="infinite-scroll-marker-out" phx-hook="InfiniteScrollCheckout" data-page={@page}>
+          </div>
         </Layout.flex>
       </Layout.flex>
     </div>
@@ -112,6 +115,7 @@ defmodule MarketingbsmWeb.CheckoutLive.Show do
     socket =
       socket
       |> assign(:hiderr, "")
+      |> assign(:page, 1)
 
     {:ok, socket}
   end
@@ -133,7 +137,6 @@ defmodule MarketingbsmWeb.CheckoutLive.Show do
       Marketingbsm.Clockin.Checkout
       |> Ash.Query.filter(project_id: id)
       |> Ash.Query.filter(create_date: date)
-      # |> Ash.Query.sort(days_worked: :desc)
       |> Ash.read!(page: [limit: 50])
 
     checkouts = Map.get(query_results, :results)
@@ -155,6 +158,7 @@ defmodule MarketingbsmWeb.CheckoutLive.Show do
        checkouts
      )
      |> assign(:count, count)
+     |> assign(:project_id, id)
      |> assign(
        :project,
        Ash.get!(ProjectGeneral.Project, id, actor: socket.assigns.current_user)
@@ -170,7 +174,27 @@ defmodule MarketingbsmWeb.CheckoutLive.Show do
   end
 
   @impl true
-  def handle_event("picture", %{"file_name" => _file_name}, socket) do
-    {:noreply, socket}
+  def handle_event("load-more-checkouts", _, %{assigns: assigns} = socket) do
+    {:noreply, assign(socket, page: assigns.page + 1) |> get_checkouts()}
+  end
+
+  defp get_checkouts(%{assigns: %{page: page}} = socket) do
+    id = socket.assigns.project_id
+
+    date =
+      Date.utc_today()
+
+    query_results =
+      Marketingbsm.Clockin.Checkout
+      |> Ash.Query.filter(project_id: id)
+      |> Ash.Query.filter(create_date: date)
+      |> Ash.read!(page: [limit: 50])
+
+    checkouts = Map.get(query_results, :results)
+
+    socket = stream(socket, :checkouts, checkouts)
+
+    socket
+    |> assign(page: page)
   end
 end

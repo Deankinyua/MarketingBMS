@@ -96,7 +96,7 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
             </Layout.grid>
           </div>
 
-          <Button.button size="xl" class="mt-2 w-min">
+          <Button.button size="xl" class="mt-2 mb-72 w-min">
             <.link navigate={~p"/checkins"}>
               Back to Check-Ins
             </.link>
