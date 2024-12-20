@@ -27,7 +27,6 @@ defmodule MarketingbsmWeb.Auth.FormComponent do
 
   @impl true
   def handle_event("submit", %{"user" => params}, socket) do
-    # dbg(params)
     form = socket.assigns.form |> Form.validate(params)
 
     socket =
@@ -36,7 +35,6 @@ defmodule MarketingbsmWeb.Auth.FormComponent do
       |> assign(:errors, Form.errors(form))
       |> assign(:trigger_action, form.valid?)
 
-    dbg(socket.assigns)
     {:noreply, socket}
   end
 

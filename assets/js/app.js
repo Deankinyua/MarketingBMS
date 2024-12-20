@@ -25,10 +25,13 @@ import { TremorxHooks } from "tremorx";
 
 import Uploaders from "./uploaders";
 
+import InfiniteScroll from "./infinite_scroll";
+
 let Hooks = {};
 
 Hooks = {
   ...TremorxHooks,
+  InfiniteScroll,
 };
 
 let csrfToken = document
