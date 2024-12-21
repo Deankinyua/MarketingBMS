@@ -33,8 +33,12 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
                 <Text.bold><%= @project.name %> Project Check-Ins</Text.bold>
               </Text.title>
 
-              <Text.subtitle color="gray" class="mb-10">
+              <Text.subtitle color="gray" class="mb-2">
                 <strong><%= @count %></strong> Brand Ambassadors have checked In
+              </Text.subtitle>
+
+              <Text.subtitle color="gray" class="mb-10">
+                <strong>Scroll</strong> to Load More Ambassadors as they are checking in.
               </Text.subtitle>
             </Layout.flex>
           </Layout.flex>
