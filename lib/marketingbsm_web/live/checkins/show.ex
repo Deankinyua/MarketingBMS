@@ -132,24 +132,9 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
     date =
       Date.utc_today()
 
-    query_results =
-      Marketingbsm.Clockin.Checkin
-      |> Ash.Query.filter(project_id: id)
-      |> Ash.Query.filter(create_date: date)
-      # |> Ash.Query.sort(days_worked: :desc)
-      |> Ash.read!(page: [limit: 50])
+    checkins = fetch_checkins(date, id)
 
-    checkins = Map.get(query_results, :results)
-
-    ambassador_count =
-      Marketingbsm.Clockin.Checkin
-      |> Ash.Query.filter(project_id: id)
-      |> Ash.Query.filter(create_date: date)
-      |> Ash.read!(page: [limit: 150])
-
-    ambassadors = Map.get(ambassador_count, :results)
-
-    count = Enum.count(ambassadors)
+    count = fetch_ambassador_count(date, id)
 
     {:noreply,
      socket
@@ -184,18 +169,37 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
     date =
       Date.utc_today()
 
-    query_results =
-      Marketingbsm.Clockin.Checkin
-      |> Ash.Query.filter(project_id: id)
-      |> Ash.Query.filter(create_date: date)
-      # |> Ash.Query.sort(days_worked: :desc)
-      |> Ash.read!(page: [limit: 50])
-
-    checkins = Map.get(query_results, :results)
+    checkins = fetch_checkins(date, id)
+    count = fetch_ambassador_count(date, id)
 
     socket = stream(socket, :checkins, checkins)
 
     socket
     |> assign(page: page)
+    |> assign(count: count)
+  end
+
+  defp fetch_checkins(date, id) do
+    query_results =
+      Marketingbsm.Clockin.Checkin
+      |> Ash.Query.filter(project_id: id)
+      |> Ash.Query.filter(create_date: date)
+      |> Ash.read!(page: [limit: 50])
+
+    checkins = Map.get(query_results, :results)
+    checkins
+  end
+
+  defp fetch_ambassador_count(date, id) do
+    ambassador_count =
+      Marketingbsm.Clockin.Checkin
+      |> Ash.Query.filter(project_id: id)
+      |> Ash.Query.filter(create_date: date)
+      |> Ash.read!(page: [limit: 150])
+
+    ambassadors = Map.get(ambassador_count, :results)
+
+    count = Enum.count(ambassadors)
+    count
   end
 end
