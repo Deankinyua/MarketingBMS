@@ -33,15 +33,37 @@ defmodule MarketingbsmWeb.CheckoutLive.Show do
                 <Text.bold><%= @project.name %> Project Check-Outs</Text.bold>
               </Text.title>
 
-              <Text.subtitle color="gray" class="mb-10">
+              <Text.subtitle color="gray" class="mb-2">
                 <strong><%= @count %></strong> Brand Ambassadors have checked out
+              </Text.subtitle>
+              <Text.subtitle color="gray" class="mb-10">
+                <strong>Scroll</strong> to Load More Ambassadors as they are checking out.
               </Text.subtitle>
             </Layout.flex>
           </Layout.flex>
 
+          <div class="sm:hidden">
+            <Layout.grid num_items="1">
+              <section :for={{dom_id, checkout} <- @streams.checkouts} id={"photos_small#{dom_id}"}>
+                <div class="mr-4 mb-4">
+                  <.live_component
+                    module={MarketingbsmWeb.PictureLive.Component}
+                    id={"small#{dom_id}"}
+                    checkin={call(checkout.file.original_filename)}
+                    dom_id={dom_id}
+                  >
+                    <Text.text class="font-semibold text-center">
+                      <%= Outlet.get_outlet!(checkout.outlet_id).name %>
+                    </Text.text>
+                  </.live_component>
+                </div>
+              </section>
+            </Layout.grid>
+          </div>
+
           <div class="hidden sm:block md:hidden">
             <Layout.grid num_items="2">
-              <section :for={{dom_id, checkout} <- @streams.checkouts} id={"photos#{dom_id}"}>
+              <section :for={{dom_id, checkout} <- @streams.checkouts} id={"photos_medium#{dom_id}"}>
                 <div class="mr-4 mb-4">
                   <.live_component
                     module={MarketingbsmWeb.PictureLive.Component}
@@ -60,7 +82,7 @@ defmodule MarketingbsmWeb.CheckoutLive.Show do
 
           <div class="hidden md:block">
             <Layout.grid num_items="5">
-              <section :for={{dom_id, checkout} <- @streams.checkouts} id={"photos#{dom_id}"}>
+              <section :for={{dom_id, checkout} <- @streams.checkouts} id={"photos_large#{dom_id}"}>
                 <div class="mr-4 mb-4">
                   <.live_component
                     module={MarketingbsmWeb.PictureLive.Component}
@@ -77,30 +99,14 @@ defmodule MarketingbsmWeb.CheckoutLive.Show do
             </Layout.grid>
           </div>
 
-          <div class="sm:hidden">
-            <Layout.grid num_items="1">
-              <section :for={{dom_id, checkout} <- @streams.checkouts} id={"photos#{dom_id}"}>
-                <div class="mr-4 mb-4">
-                  <.live_component
-                    module={MarketingbsmWeb.PictureLive.Component}
-                    id={"small#{dom_id}"}
-                    checkin={call(checkout.file.original_filename)}
-                    dom_id={dom_id}
-                  >
-                    <Text.text class="font-semibold text-center">
-                      <%= Outlet.get_outlet!(checkout.outlet_id).name %>
-                    </Text.text>
-                  </.live_component>
-                </div>
-              </section>
-            </Layout.grid>
-          </div>
-
-          <Button.button size="xl" class="mt-2 w-min">
+          <Button.button size="xl" class="mt-2 mb-72 w-min">
             <.link navigate={~p"/checkins"}>
               Back to Check-Ins
             </.link>
           </Button.button>
+
+          <div id="infinite-scroll-marker-out" phx-hook="InfiniteScrollCheckout" data-page={@page}>
+          </div>
         </Layout.flex>
       </Layout.flex>
     </div>
@@ -112,6 +118,7 @@ defmodule MarketingbsmWeb.CheckoutLive.Show do
     socket =
       socket
       |> assign(:hiderr, "")
+      |> assign(:page, 1)
 
     {:ok, socket}
   end
@@ -129,24 +136,9 @@ defmodule MarketingbsmWeb.CheckoutLive.Show do
     date =
       Date.utc_today()
 
-    query_results =
-      Marketingbsm.Clockin.Checkout
-      |> Ash.Query.filter(project_id: id)
-      |> Ash.Query.filter(create_date: date)
-      # |> Ash.Query.sort(days_worked: :desc)
-      |> Ash.read!(page: [limit: 50])
+    checkouts = fetch_checkouts(date, id)
 
-    checkouts = Map.get(query_results, :results)
-
-    ambassador_count =
-      Marketingbsm.Clockin.Checkout
-      |> Ash.Query.filter(project_id: id)
-      |> Ash.Query.filter(create_date: date)
-      |> Ash.read!(page: [limit: 150])
-
-    ambassadors = Map.get(ambassador_count, :results)
-
-    count = Enum.count(ambassadors)
+    count = fetch_ambassador_count(date, id)
 
     {:noreply,
      socket
@@ -155,6 +147,7 @@ defmodule MarketingbsmWeb.CheckoutLive.Show do
        checkouts
      )
      |> assign(:count, count)
+     |> assign(:project_id, id)
      |> assign(
        :project,
        Ash.get!(ProjectGeneral.Project, id, actor: socket.assigns.current_user)
@@ -170,7 +163,47 @@ defmodule MarketingbsmWeb.CheckoutLive.Show do
   end
 
   @impl true
-  def handle_event("picture", %{"file_name" => _file_name}, socket) do
-    {:noreply, socket}
+  def handle_event("load-more-checkouts", _, %{assigns: assigns} = socket) do
+    {:noreply, assign(socket, page: assigns.page + 1) |> get_checkouts()}
+  end
+
+  defp get_checkouts(%{assigns: %{page: page}} = socket) do
+    id = socket.assigns.project_id
+
+    date =
+      Date.utc_today()
+
+    checkouts = fetch_checkouts(date, id)
+    count = fetch_ambassador_count(date, id)
+
+    socket = stream(socket, :checkouts, checkouts)
+
+    socket
+    |> assign(page: page)
+    |> assign(count: count)
+  end
+
+  defp fetch_checkouts(date, id) do
+    query_results =
+      Marketingbsm.Clockin.Checkout
+      |> Ash.Query.filter(project_id: id)
+      |> Ash.Query.filter(create_date: date)
+      |> Ash.read!(page: [limit: 50])
+
+    checkouts = Map.get(query_results, :results)
+    checkouts
+  end
+
+  def fetch_ambassador_count(date, id) do
+    ambassador_count =
+      Marketingbsm.Clockin.Checkout
+      |> Ash.Query.filter(project_id: id)
+      |> Ash.Query.filter(create_date: date)
+      |> Ash.read!(page: [limit: 150])
+
+    ambassadors = Map.get(ambassador_count, :results)
+
+    count = Enum.count(ambassadors)
+    count
   end
 end
