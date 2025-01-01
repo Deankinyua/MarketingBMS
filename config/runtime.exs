@@ -28,7 +28,7 @@ if config_env() == :prod do
   #     For example: ecto://USER:PASS@HOST/DATABASE
   #     """
 
-  db_database = System.get_env("DATABASE_DB") || "marketing_bsm"
+  db_database = System.get_env("DATABASE_DB") || "marketingbsm"
   db_username = System.get_env("DATABASE_USER") || "postgres"
   db_password = System.get_env("DATABASE_PASSWORD") || "postgres"
   db_url = "ecto://#{db_username}:#{db_password}@localhost/#{db_database}"
@@ -37,9 +37,68 @@ if config_env() == :prod do
 
   config :marketingbsm, Marketingbsm.Repo,
     # ssl: true,
-    url: database_url,
+    url: db_url,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     socket_options: maybe_ipv6
+
+  _access_key_id =
+    System.get_env("S3_ACCESS_KEY_ID") ||
+      raise """
+      environment variable S3_ACCESS_KEY_ID is missing.
+      This is required for file uploads
+      """
+
+  _secret_access_key =
+    System.get_env("S3_SECRET_ACCESS_KEY") ||
+      raise """
+      environment variable S3_SECRET_ACCESS_KEY is missing.
+      This is required for file uploads
+      """
+
+  _bucket =
+    System.get_env("S3_BUCKET") ||
+      raise """
+      environment variable S3_BUCKET is missing.
+      This is required for file uploads
+      """
+
+  _region =
+    System.get_env("S3_REGION") ||
+      raise """
+      environment variable S3_REGION is missing.
+      This is required for file uploads
+      """
+
+  host =
+    System.get_env("S3_HOST") ||
+      raise """
+      environment variable S3_HOST is missing.
+      This is required for file uploads
+      """
+
+  port =
+    System.get_env("S3_PORT") ||
+      raise """
+      environment variable S3_PORT is missing.
+      This is required for file uploads
+      """
+
+  scheme =
+    System.get_env("S3_SCHEME") ||
+      raise """
+      environment variable S3_SCHEME is missing.
+      This is required for file uploads
+      """
+
+  config :ex_aws,
+    region: {:system, "S3_REGION"},
+    access_key_id: {:system, "S3_ACCESS_KEY_ID"},
+    secret_access_key: {:system, "S3_SECRET_ACCESS_KEY"}
+
+  config :ex_aws, :s3,
+    scheme: scheme,
+    host: host,
+    port: port
 
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you
@@ -70,6 +129,4 @@ if config_env() == :prod do
       port: port
     ],
     secret_key_base: secret_key_base
-
-
 end

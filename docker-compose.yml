@@ -46,16 +46,17 @@ services:
     depends_on:
       - db
       - nginx
+      - minio
     ports:
-      - "8000:8000"
+      - "4000:4000"
 
     environment:
       MIX_ENV: ${MIX_ENV}
-      PORT: "8000"
+      PORT: "4000"
       PHX_HOST: ${PHX_HOST}
       SECRET_KEY_BASE: ${SECRET_KEY_BASE}
-      # ADMIN_USERNAME: ${ADMIN_USERNAME}
-      # ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       PROJECT_URL_CLIENT: ${PROJECT_URL_CLIENT}
       PROJECT_URL_SERVER: ${PROJECT_URL_SERVER}
       PROJECT_URL_SOCKET: ${PROJECT_URL_SOCKET}
@@ -63,23 +64,40 @@ services:
       PROJECT_OTP_LENGTH: ${PROJECT_OTP_LENGTH}
       PROJECT_OTP_EXPIRY: ${PROJECT_OTP_EXPIRY}
       PROJECT_OTP_CHARACTER_SET: ${PROJECT_OTP_CHARACTER_SET}
-      # S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID}
-      # S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
-      # S3_BUCKET: ${S3_BUCKET}
-      # S3_REGION: ${S3_REGION}
-      # S3_HOST: ${S3_HOST}
-      # S3_PORT: ${S3_PORT}
-      # S3_SCHEME: ${S3_SCHEME}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
+      S3_BUCKET: ${S3_BUCKET}
+      S3_REGION: ${S3_REGION}
+      S3_HOST: ${S3_HOST}
+      S3_PORT: ${S3_PORT}
+      S3_SCHEME: ${S3_SCHEME}
 
       JWT_SECRET: ${JWT_SECRET}
       RELEASE_COOKIE: ${RELEASE_COOKIE}
       RELEASE_NODE: ${RELEASE_NODE}
       RELEASE_DISTRIBUTION: ${RELEASE_DISTRIBUTION}
       DATABASE_URL: ecto://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:${POSTGRES_BIND_PORT}/${DATABASE_NAME}
-    # volumes:
-    #   - ${DOWNLOAD_PATH}:/app/download
-    #   - ${UPLOAD_PATH}:/app/upload
-    #   - ${METADATA_PATH}:/app/metadata
+
+  minio:
+    image: quay.io/minio/minio:RELEASE.2024-01-18T22-51-28Z
+    #command: server --console-address ":9001" http://minio/data
+    command: server /data --address ":${S3_PORT}" --console-address ":${S3_WEB_CLIENT_PORT}"
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY_ID}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_ACCESS_KEY}
+      MINIO_DEFAULT_BUCKETS: ${S3_BUCKET}
+      MINIO_ADDRESS: ${S3_PORT}
+      MINIO_CONSOLE_ADDRESS: ${S3_WEB_CLIENT_PORT}
+    ports:
+      - ${S3_PORT}:${S3_PORT}
+      - ${S3_WEB_CLIENT_PORT}:${S3_WEB_CLIENT_PORT}
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - "${S3_FILE_VOLUME_PATH}:/data"
 
 volumes:
   db_volume:

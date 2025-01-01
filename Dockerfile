@@ -34,7 +34,7 @@ RUN mix local.hex --force && \
 
 # set build ENV
 ENV MIX_ENV="prod"
-ENV SECRET_KEY_BASE="1JqLfroMq4q+ooZNpYXyIEp52NjayjqO5aJorOXQZVFM+gJ1r9mll453wfTPeejj"
+# ENV SECRET_KEY_BASE="1JqLfroMq4q+ooZNpYXyIEp52NjayjqO5aJorOXQZVFM+gJ1r9mll453wfTPeejj"
 
 # install mix dependencies
 COPY mix.exs mix.lock ./
