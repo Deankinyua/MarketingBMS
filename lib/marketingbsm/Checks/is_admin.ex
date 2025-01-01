@@ -20,7 +20,10 @@ defmodule Marketingbsm.Checks.IsAdmin do
         true
 
       {:error, _error} ->
-        false
+        case Management.list_managers!() do
+          [] -> true
+          _ -> false
+        end
     end
   end
 
