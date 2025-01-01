@@ -318,8 +318,8 @@ end
 
 # Phoenix.HTML.FormField
 # uses the Access behaviour => data[key]
-#* <.input field={@form[:field_1]} type="number" label={@result.field_1} />
+# * <.input field={@form[:field_1]} type="number" label={@result.field_1} />
 # which is used to retrieve the input name, id, and values.
 # without the field assign, you would have to input name, value fields explicitly like this :
 
-#* <.input name={"kerware"} value={"jeans"} type="number" label={@result.field_1} />
+# * <.input name={"kerware"} value={"jeans"} type="number" label={@result.field_1} />
