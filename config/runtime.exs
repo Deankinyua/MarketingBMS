@@ -91,14 +91,14 @@ if config_env() == :prod do
       """
 
   config :ex_aws,
-    region: {:system, "S3_REGION"},
-    access_key_id: {:system, "S3_ACCESS_KEY_ID"},
-    secret_access_key: {:system, "S3_SECRET_ACCESS_KEY"}
+    region: "ke-rack-one",
+    access_key_id: "lrihDPolEP7Z9VWtee4Y",
+    secret_access_key: "oFr7Gi4cPSpTOGewEyFWOCHIYDzkU5w95IlOUwJh"
 
   config :ex_aws, :s3,
-    scheme: scheme,
-    host: host,
-    port: port
+    scheme: "http://",
+    host: "localhost",
+    port: 9000
 
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you
