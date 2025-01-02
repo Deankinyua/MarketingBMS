@@ -71,21 +71,26 @@ defmodule SimpleS3Upload do
 
   def config do
     %{
-      region: region(),
-      access_key_id: Application.fetch_env!(:marketingbsm, :access_key_id),
-      secret_access_key: Application.fetch_env!(:marketingbsm, :secret_access_key)
-      # secret_access_key: System.fetch_env!("S3_SECRET_ACCESS_KEY")
+      # region: region(),
+      # access_key_id: Application.fetch_env!(:marketingbsm, :access_key_id),
+      # secret_access_key: Application.fetch_env!(:marketingbsm, :secret_access_key)
+
+      region: System.get_env("S3_REGION"),
+      access_key_id: System.get_env("S3_ACCESS_KEY_ID"),
+      secret_access_key: System.get_env("S3_SECRET_ACCESS_KEY")
     }
   end
 
   def bucket do
-    # System.fetch_env!("S3_BUCKET")
-    Application.fetch_env!(:marketingbsm, :bucket)
+    # Application.fetch_env!(:marketingbsm, :bucket)
+
+    System.get_env("S3_BUCKET")
   end
 
   def region do
-    # System.fetch_env!("S3_REGION")
-    Application.fetch_env!(:marketingbsm, :region)
+    # Application.fetch_env!(:marketingbsm, :region)
+
+    System.get_env("S3_REGION")
   end
 
   # def entry_url(entry) do
@@ -156,9 +161,10 @@ defmodule SimpleS3Upload do
 
     config =
       if System.get_env("MIX_ENV") == "prod" do
-        ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: nil)
+        ExAws.Config.new(:s3, scheme: scheme <> "://", host: "minio_cont", port: 9000)
+        # ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: nil)
       else
-        ExAws.Config.new(:s3, scheme: scheme <> "://", host: "localhost", port: 9000)
+        ExAws.Config.new(:s3, scheme: scheme <> "://", host: "minio_cont", port: 9000)
       end
 
     ExAws.S3.put_object(

@@ -64,10 +64,10 @@ services:
       PROJECT_OTP_LENGTH: ${PROJECT_OTP_LENGTH}
       PROJECT_OTP_EXPIRY: ${PROJECT_OTP_EXPIRY}
       PROJECT_OTP_CHARACTER_SET: ${PROJECT_OTP_CHARACTER_SET}
-      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID}
-      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
-      S3_BUCKET: ${S3_BUCKET}
-      S3_REGION: ${S3_REGION}
+      S3_ACCESS_KEY_ID: ${MINIO_ACCESS_KEY_ID}
+      S3_SECRET_ACCESS_KEY: ${MINIO_SECRET_ACCESS_KEY}
+      S3_BUCKET: ${MINIO_S3_BUCKET}
+      S3_REGION: ${MINIO_S3_REGION}
       S3_HOST: ${S3_HOST}
       S3_PORT: ${S3_PORT}
       S3_SCHEME: ${S3_SCHEME}
@@ -79,6 +79,7 @@ services:
       DATABASE_URL: ecto://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:${POSTGRES_BIND_PORT}/${DATABASE_NAME}
 
   minio:
+    container_name: minio_cont
     image: quay.io/minio/minio:RELEASE.2024-01-18T22-51-28Z
     #command: server --console-address ":9001" http://minio/data
     command: server /data --address ":${S3_PORT}" --console-address ":${S3_WEB_CLIENT_PORT}"
@@ -91,6 +92,7 @@ services:
     ports:
       - ${S3_PORT}:${S3_PORT}
       - ${S3_WEB_CLIENT_PORT}:${S3_WEB_CLIENT_PORT}
+    network_mode: host
     healthcheck:
       test: ["CMD", "mc", "ready", "local"]
       interval: 5s

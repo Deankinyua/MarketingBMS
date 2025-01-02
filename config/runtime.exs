@@ -41,42 +41,42 @@ if config_env() == :prod do
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     socket_options: maybe_ipv6
 
-  _access_key_id =
+  access_key_id =
     System.get_env("S3_ACCESS_KEY_ID") ||
       raise """
       environment variable S3_ACCESS_KEY_ID is missing.
       This is required for file uploads
       """
 
-  _secret_access_key =
+  secret_access_key =
     System.get_env("S3_SECRET_ACCESS_KEY") ||
       raise """
       environment variable S3_SECRET_ACCESS_KEY is missing.
       This is required for file uploads
       """
 
-  _bucket =
+  bucket =
     System.get_env("S3_BUCKET") ||
       raise """
       environment variable S3_BUCKET is missing.
       This is required for file uploads
       """
 
-  _region =
+  region =
     System.get_env("S3_REGION") ||
       raise """
       environment variable S3_REGION is missing.
       This is required for file uploads
       """
 
-  host =
+  s3_host =
     System.get_env("S3_HOST") ||
       raise """
       environment variable S3_HOST is missing.
       This is required for file uploads
       """
 
-  port =
+  s3_port =
     System.get_env("S3_PORT") ||
       raise """
       environment variable S3_PORT is missing.
@@ -91,15 +91,16 @@ if config_env() == :prod do
       """
 
   config :ex_aws,
-    region: "ke-rack-one",
-    access_key_id: "lrihDPolEP7Z9VWtee4Y",
-    secret_access_key: "oFr7Gi4cPSpTOGewEyFWOCHIYDzkU5w95IlOUwJh"
+    region: region,
+    access_key_id: access_key_id,
+    secret_access_key: secret_access_key
 
   config :ex_aws, :s3,
-    scheme: "http://",
-    host: "localhost",
-    port: 9000
+    scheme: scheme,
+    host: s3_host,
+    port: s3_port
 
+  import Config
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you
   # want to use a different value for prod and you most likely don't want
@@ -115,8 +116,6 @@ if config_env() == :prod do
   host = System.get_env("PHX_HOST") || "example.com"
   port = String.to_integer(System.get_env("PORT") || "4000")
 
-  config :marketingbsm, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
-
   config :marketingbsm, MarketingbsmWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
     check_origin: ["http://localhost:4000"],
@@ -129,4 +128,6 @@ if config_env() == :prod do
       port: port
     ],
     secret_key_base: secret_key_base
+
+  config :marketingbsm, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 end
