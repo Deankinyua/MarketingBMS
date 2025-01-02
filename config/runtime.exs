@@ -118,7 +118,7 @@ if config_env() == :prod do
 
   config :marketingbsm, MarketingbsmWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
-    check_origin: ["http://localhost:4000"],
+    check_origin: ["http://13.49.63.43:9484"],
     http: [
       # Enable IPv6 and bind on all interfaces.
       # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
