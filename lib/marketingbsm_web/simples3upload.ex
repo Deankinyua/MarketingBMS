@@ -161,10 +161,10 @@ defmodule SimpleS3Upload do
 
     config =
       if System.get_env("MIX_ENV") == "prod" do
-        ExAws.Config.new(:s3, scheme: scheme <> "://", host: "localhost", port: 9000)
+        ExAws.Config.new(:s3, scheme: scheme <> "://", host: "13.48.254.182", port: 9000)
         # ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: nil)
       else
-        ExAws.Config.new(:s3, scheme: scheme <> "://", host: "localhost", port: 9000)
+        ExAws.Config.new(:s3, scheme: scheme <> "://", host: "13.48.254.182", port: 9000)
       end
 
     ExAws.S3.put_object(
