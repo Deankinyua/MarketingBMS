@@ -92,13 +92,13 @@ services:
     ports:
       - ${S3_PORT}:${S3_PORT}
       - ${S3_WEB_CLIENT_PORT}:${S3_WEB_CLIENT_PORT}
+    network_mode: host
     healthcheck:
       test: ["CMD", "mc", "ready", "local"]
       interval: 5s
       timeout: 5s
       retries: 5
     volumes:
-      # network_mode: host
       - "${S3_FILE_VOLUME_PATH}:/data/minio"
 
 volumes:
