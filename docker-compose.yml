@@ -92,14 +92,14 @@ services:
     ports:
       - ${S3_PORT}:${S3_PORT}
       - ${S3_WEB_CLIENT_PORT}:${S3_WEB_CLIENT_PORT}
-    network_mode: host
     healthcheck:
       test: ["CMD", "mc", "ready", "local"]
       interval: 5s
       timeout: 5s
       retries: 5
     volumes:
-      - "${S3_FILE_VOLUME_PATH}:/data"
+      # network_mode: host
+      - "${S3_FILE_VOLUME_PATH}:/data/minio"
 
 volumes:
   db_volume:
@@ -113,6 +113,9 @@ volumes:
     driver_opts:
       type: none
       device: ${NGINX_FILE_VOLUME_PATH}
-networks:
-  amqp_network:
-    driver: bridge
+
+  minio_volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${S3_FILE_VOLUME_PATH}
