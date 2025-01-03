@@ -99,7 +99,7 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - "${S3_FILE_VOLUME_PATH}:/data/minio"
+      - "${S3_FILE_VOLUME_PATH}:/data"
 
 volumes:
   db_volume:
