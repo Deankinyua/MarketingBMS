@@ -150,7 +150,7 @@ defmodule SimpleS3Upload do
     [scheme, host] = System.get_env("PROJECT_URL_MEDIA") |> String.split("://")
 
     {:ok, url} =
-      ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: nil)
+      ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: 9000)
       |> ExAws.S3.presigned_url(:get, bucket, key, expires_in: expires_in)
 
     url
@@ -161,10 +161,10 @@ defmodule SimpleS3Upload do
 
     config =
       if System.get_env("MIX_ENV") == "prod" do
-        ExAws.Config.new(:s3, scheme: scheme <> "://", host: "13.48.254.182", port: 9000)
+        ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: 9000)
         # ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: nil)
       else
-        ExAws.Config.new(:s3, scheme: scheme <> "://", host: "13.48.254.182", port: 9000)
+        ExAws.Config.new(:s3, scheme: scheme <> "://", host: "localhost", port: 9000)
       end
 
     ExAws.S3.put_object(
@@ -175,10 +175,10 @@ defmodule SimpleS3Upload do
     |> ExAws.request!(config)
   end
 
-  def presign_upload(entry, socket, key \\ "audio") do
+  def presign_upload(entry, socket, key \\ "photo") do
     [scheme, host] = System.get_env("PROJECT_URL_MEDIA") |> String.split("://")
 
-    config = ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: nil)
+    config = ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: 9000)
     bucket = "marketingbsm"
     key = "#{key}/#{entry.client_name}"
 
