@@ -46,7 +46,7 @@ services:
     depends_on:
       - db
       - nginx
-      - minio
+      # - minio
     ports:
       - "4000:4000"
 
