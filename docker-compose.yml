@@ -20,14 +20,14 @@ services:
     restart: unless-stopped
     ports:
       # Runtime configuration
-      # # - "9484:80"
-      # # - "81:81"
-      # - "9484:443"
+      # - "9484:80"
+      # - "81:81"
+      - "9484:443"
 
-      # Local configuration
-      - "80:80"
-      - "81:81"
-      - "443:443"
+      # # Local configuration
+      # - "80:80"
+      # - "81:81"
+      # - "443:443"
 
     volumes:
       - "${NGINX_FILE_VOLUME_PATH}:/data"
