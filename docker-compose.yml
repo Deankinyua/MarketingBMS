@@ -22,7 +22,7 @@ services:
       # Runtime configuration
       # - "9484:80"
       # - "81:81"
-      - "9484:80"
+      - "9484:443"
 
       # # Local configuration
       # - "80:80"

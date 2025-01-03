@@ -113,11 +113,11 @@ if config_env() == :prod do
       You can generate one by calling: mix phx.gen.secret
       """
 
-  host = System.get_env("PHX_HOST") || "example.com"
+  host = System.get_env("PHX_HOST") || "localhost"
   port = String.to_integer(System.get_env("PORT") || "4000")
 
   config :marketingbsm, MarketingbsmWeb.Endpoint,
-    url: [host: host, port: 80, scheme: "https"],
+    url: [host: host, port: 443, scheme: "https"],
     check_origin: ["http://13.48.254.182:9484"],
     http: [
       # Enable IPv6 and bind on all interfaces.
