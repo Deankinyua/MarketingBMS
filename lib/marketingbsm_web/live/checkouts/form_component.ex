@@ -153,7 +153,7 @@ defmodule MarketingbsmWeb.CheckoutLive.FormComponent do
 
   @impl true
   def handle_event("validate", %{"checkout" => checkout_params}, socket) do
-    form = socket.assigns.form |> Form.validate(checkout_params, errors: false)
+    form = socket.assigns.form |> Form.validate(checkout_params, errors: true)
 
     {:noreply, assign(socket, form: form)}
   end

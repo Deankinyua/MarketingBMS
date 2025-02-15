@@ -83,7 +83,8 @@ defmodule MarketingbsmWeb.RegionLive.FormComponent do
 
   @impl true
   def handle_event("validate", %{"region" => region_params}, socket) do
-    {:noreply, assign(socket, form: AshPhoenix.Form.validate(socket.assigns.form, region_params))}
+    dbg(socket.assigns.form)
+    {:noreply, assign(socket, form: AshPhoenix.Form.validate(socket.assigns.form, region_params, errors: true))}
   end
 
   def handle_event("save", %{"region" => region_params}, socket) do

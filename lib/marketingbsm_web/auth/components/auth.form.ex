@@ -20,7 +20,7 @@ defmodule MarketingbsmWeb.Auth.FormComponent do
 
   @impl true
   def handle_event("validate", %{"user" => params}, socket) do
-    form = socket.assigns.form |> Form.validate(params, errors: false)
+    form = socket.assigns.form |> Form.validate(params, errors: true)
 
     {:noreply, assign(socket, form: form)}
   end
