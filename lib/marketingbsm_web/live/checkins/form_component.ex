@@ -206,6 +206,10 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
                    original_filename: client_name
                  }}
               end)
+
+              # * consume_uploaded_entries ends here !! and at
+              # * this point the picture has been uploaded to s3
+
               |> case do
                 [] ->
                   socket =
