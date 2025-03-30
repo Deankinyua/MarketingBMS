@@ -7,7 +7,7 @@ defmodule MarketingbsmWeb.PictureLive.Component do
     <div phx="showPicture">
       <div><img src={@checkin} height="150" /></div>
       <div>
-        <%= render_slot(@inner_block) %>
+        {render_slot(@inner_block)}
       </div>
     </div>
     """

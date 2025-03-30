@@ -5,7 +5,7 @@ defmodule MarketingbsmWeb.TemplateLive.Show do
   def render(assigns) do
     ~H"""
     <.header>
-      Label <%= @template.id %>
+      Label {@template.id}
       <:subtitle>This is a template record from your database.</:subtitle>
 
       <:actions>

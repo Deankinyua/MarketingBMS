@@ -11,7 +11,7 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
     ~H"""
     <div class="w-full h-full">
       <Layout.flex align_items="start" class="h-screen overflow-y-hidden">
-        <%= live_render(@socket, MarketingbsmWeb.LiveDrawer,
+        {live_render(@socket, MarketingbsmWeb.LiveDrawer,
           session: %{
             "active_tab" => "checkin",
             "hiderr" => @hiderr,
@@ -19,7 +19,7 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
           },
           id: "live_drawer",
           sticky: true
-        ) %>
+        )}
 
         <Layout.flex
           flex_direction="col"
@@ -30,11 +30,11 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
           <Layout.flex justify_content="between">
             <Layout.flex flex_direction="col" align_items="start" class="grow">
               <Text.title class="text-xl">
-                <Text.bold><%= @project.name %> Project Check-Ins</Text.bold>
+                <Text.bold>{@project.name} Project Check-Ins</Text.bold>
               </Text.title>
 
               <Text.subtitle color="gray" class="mb-2">
-                <strong><%= @count %></strong> Brand Ambassadors have checked In
+                <strong>{@count}</strong> Brand Ambassadors have checked In
               </Text.subtitle>
 
               <Text.subtitle color="gray" class="mb-10">
@@ -54,7 +54,7 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
                     dom_id={dom_id}
                   >
                     <Text.text class="font-semibold text-center">
-                      <%= Outlet.get_outlet!(checkin.outlet_id).name %>
+                      {Outlet.get_outlet!(checkin.outlet_id).name}
                     </Text.text>
                   </.live_component>
                 </div>
@@ -73,7 +73,7 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
                     dom_id={dom_id}
                   >
                     <Text.text class="font-semibold text-center">
-                      <%= Outlet.get_outlet!(checkin.outlet_id).name %>
+                      {Outlet.get_outlet!(checkin.outlet_id).name}
                     </Text.text>
                   </.live_component>
                 </div>
@@ -92,7 +92,7 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
                     dom_id={dom_id}
                   >
                     <Text.text class="font-semibold text-center">
-                      <%= Outlet.get_outlet!(checkin.outlet_id).name %>
+                      {Outlet.get_outlet!(checkin.outlet_id).name}
                     </Text.text>
                   </.live_component>
                 </div>

@@ -19,7 +19,7 @@ defmodule MarketingbsmWeb.CheckoutLive.FormComponent do
     <section>
       <Layout.col>
         <Text.title class="text-xl">
-          <Text.bold><%= @title %></Text.bold>
+          <Text.bold>{@title}</Text.bold>
         </Text.title>
 
         <Text.subtitle color="gray">
@@ -45,7 +45,7 @@ defmodule MarketingbsmWeb.CheckoutLive.FormComponent do
                 phx-update="ignore"
               >
                 <:item :for={%{id: _id, name: name} <- @projects}>
-                  <%= name %>
+                  {name}
                 </:item>
               </Select.select>
             </Layout.col>
@@ -85,7 +85,7 @@ defmodule MarketingbsmWeb.CheckoutLive.FormComponent do
                       <Layout.flex class="" flex_direction="col" align_items="start">
                         <div class="w-full flex-1">
                           <Text.subtitle color="black" class="text-ellipsis">
-                            <%= entry.client_name %>
+                            {entry.client_name}
                           </Text.subtitle>
                         </div>
                       </Layout.flex>
@@ -114,7 +114,7 @@ defmodule MarketingbsmWeb.CheckoutLive.FormComponent do
                 </Layout.flex>
 
                 <%= for err <- upload_errors(@uploads.checkoutphoto, entry) do %>
-                  <p class="alert alert-danger"><%= error_to_string(err) %></p>
+                  <p class="alert alert-danger">{error_to_string(err)}</p>
                 <% end %>
               </article>
             <% end %>

@@ -5,7 +5,7 @@ defmodule MarketingbsmWeb.AmbassadorLive.Show do
   def render(assigns) do
     ~H"""
     <.header>
-      Ambassador <%= @ambassador.id %>
+      Ambassador {@ambassador.id}
       <:subtitle>This is a ambassador record from your database.</:subtitle>
 
       <:actions>

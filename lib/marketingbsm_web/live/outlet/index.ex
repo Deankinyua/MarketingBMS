@@ -12,7 +12,7 @@ defmodule MarketingbsmWeb.ShopLive.Index do
     ~H"""
     <div class="w-full h-full">
       <Layout.flex align_items="start" class="h-screen overflow-y-hidden">
-        <%= live_render(@socket, MarketingbsmWeb.LiveDrawer,
+        {live_render(@socket, MarketingbsmWeb.LiveDrawer,
           session: %{
             "active_tab" => "outlet",
             "hiderr" => @hiderr,
@@ -20,7 +20,7 @@ defmodule MarketingbsmWeb.ShopLive.Index do
           },
           id: "live_drawer",
           sticky: true
-        ) %>
+        )}
 
         <Layout.flex
           flex_direction="col"
@@ -61,7 +61,7 @@ defmodule MarketingbsmWeb.ShopLive.Index do
               </Text.subtitle>
 
               <Text.subtitle color="gray">
-                There are <strong><%= @count %></strong> Outlets.
+                There are <strong>{@count}</strong> Outlets.
               </Text.subtitle>
             </Layout.flex>
 
@@ -113,11 +113,11 @@ defmodule MarketingbsmWeb.ShopLive.Index do
                   dom_id={dom_id}
                 >
                   <Table.table_cell>
-                    <%= outlet.name %>
+                    {outlet.name}
                   </Table.table_cell>
 
                   <Table.table_cell>
-                    <%= Outlet.get_region!(outlet.region_id).name %>
+                    {Outlet.get_region!(outlet.region_id).name}
                   </Table.table_cell>
                 </.live_component>
               </Table.table_row>

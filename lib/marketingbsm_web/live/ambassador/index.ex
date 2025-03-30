@@ -10,7 +10,7 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
     ~H"""
     <div class="w-full h-full">
       <Layout.flex align_items="start" class="h-screen overflow-y-hidden">
-        <%= live_render(@socket, MarketingbsmWeb.LiveDrawer,
+        {live_render(@socket, MarketingbsmWeb.LiveDrawer,
           session: %{
             "active_tab" => "ambassador",
             "hiderr" => @hiderr,
@@ -18,7 +18,7 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
           },
           id: "live_drawer",
           sticky: true
-        ) %>
+        )}
 
         <Layout.flex
           flex_direction="col"
@@ -46,7 +46,7 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
               </Text.title>
 
               <Text.subtitle color="gray">
-                There are <strong><%= @count %></strong> Brand Ambassadors.
+                There are <strong>{@count}</strong> Brand Ambassadors.
               </Text.subtitle>
             </Layout.flex>
 
@@ -90,13 +90,13 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
                 class="group hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted"
               >
                 <Table.table_cell>
-                  <%= Accounts.get_user_by_id!(ambassador.id).name %>
+                  {Accounts.get_user_by_id!(ambassador.id).name}
                 </Table.table_cell>
                 <Table.table_cell>
-                  <%= ambassador.availability %>
+                  {ambassador.availability}
                 </Table.table_cell>
                 <Table.table_cell>
-                  <%= ambassador.location %>
+                  {ambassador.location}
                 </Table.table_cell>
               </Table.table_row>
             </Table.table_body>

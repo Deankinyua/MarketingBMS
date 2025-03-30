@@ -10,7 +10,7 @@ defmodule MarketingbsmWeb.ManagementLive.FormComponent do
     <section>
       <Layout.col>
         <Text.title class="text-xl">
-          <Text.bold><%= @title %></Text.bold>
+          <Text.bold>{@title}</Text.bold>
         </Text.title>
 
         <Text.subtitle color="gray">

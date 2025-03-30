@@ -15,7 +15,7 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
     <section>
       <Layout.col>
         <Text.title class="text-xl">
-          <Text.bold><%= @title %></Text.bold>
+          <Text.bold>{@title}</Text.bold>
         </Text.title>
 
         <Text.subtitle color="gray">
@@ -40,7 +40,7 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
               phx-update="ignore"
             >
               <:item :for={%{id: _id, name: name} <- @projects}>
-                <%= name %>
+                {name}
               </:item>
             </Select.select>
           </Layout.col>

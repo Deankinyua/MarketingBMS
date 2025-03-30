@@ -13,7 +13,7 @@ defmodule MarketingbsmWeb.SummaryLive.Show do
     ~H"""
     <div class="w-full h-full">
       <Layout.flex align_items="start" class="h-screen overflow-y-hidden">
-        <%= live_render(@socket, MarketingbsmWeb.LiveDrawer,
+        {live_render(@socket, MarketingbsmWeb.LiveDrawer,
           session: %{
             "active_tab" => "checkin",
             "hiderr" => @hiderr,
@@ -21,7 +21,7 @@ defmodule MarketingbsmWeb.SummaryLive.Show do
           },
           id: "live_drawer",
           sticky: true
-        ) %>
+        )}
 
         <Layout.flex
           flex_direction="col"
@@ -32,11 +32,11 @@ defmodule MarketingbsmWeb.SummaryLive.Show do
           <Layout.flex justify_content="between">
             <Layout.flex flex_direction="col" align_items="start" class="grow">
               <Text.title class="text-xl">
-                <Text.bold><%= @project.name %> Project Check-Ins</Text.bold>
+                <Text.bold>{@project.name} Project Check-Ins</Text.bold>
               </Text.title>
 
               <Text.subtitle color="gray" class="mb-10">
-                <strong><%= @count %></strong> Brand Ambassadors have checked In
+                <strong>{@count}</strong> Brand Ambassadors have checked In
               </Text.subtitle>
             </Layout.flex>
           </Layout.flex>
@@ -99,23 +99,23 @@ defmodule MarketingbsmWeb.SummaryLive.Show do
                   dom_id={dom_id}
                 >
                   <Table.table_cell>
-                    <%= Accounts.get_user_by_id!(checkin.ambassador_id).name %>
+                    {Accounts.get_user_by_id!(checkin.ambassador_id).name}
                   </Table.table_cell>
 
                   <Table.table_cell>
-                    <%= ProjectGeneral.get_project_by_id!(checkin.project_id).name %>
+                    {ProjectGeneral.get_project_by_id!(checkin.project_id).name}
                   </Table.table_cell>
 
                   <Table.table_cell>
-                    <%= Outlet.get_outlet!(checkin.outlet_id).name %>
+                    {Outlet.get_outlet!(checkin.outlet_id).name}
                   </Table.table_cell>
 
                   <Table.table_cell>
-                    <%= Time.to_string(Time.add(checkin.create_time, 3, :hour)) %>
+                    {Time.to_string(Time.add(checkin.create_time, 3, :hour))}
                   </Table.table_cell>
 
                   <Table.table_cell>
-                    <%= get_checkout_time(checkin.ambassador_id, checkin.create_date) %>
+                    {get_checkout_time(checkin.ambassador_id, checkin.create_date)}
                   </Table.table_cell>
                 </.live_component>
               </Table.table_row>

@@ -10,7 +10,7 @@ defmodule MarketingbsmWeb.TemplateLive.FormComponent do
     <section>
       <Layout.col>
         <Text.title class="text-xl">
-          <Text.bold><%= @title %></Text.bold>
+          <Text.bold>{@title}</Text.bold>
         </Text.title>
 
         <Text.subtitle color="gray">
@@ -36,7 +36,7 @@ defmodule MarketingbsmWeb.TemplateLive.FormComponent do
               required={true}
             >
               <:item :for={%{id: _id, name: name} <- @projects}>
-                <%= name %>
+                {name}
               </:item>
             </Select.search_select>
           </Layout.col>

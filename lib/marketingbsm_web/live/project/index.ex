@@ -10,7 +10,7 @@ defmodule MarketingbsmWeb.ProjectLive.Index do
     ~H"""
     <div class="w-full h-full">
       <Layout.flex align_items="start" class="h-screen overflow-y-hidden">
-        <%= live_render(@socket, MarketingbsmWeb.LiveDrawer,
+        {live_render(@socket, MarketingbsmWeb.LiveDrawer,
           session: %{
             "active_tab" => "project",
             "hiderr" => @hiderr,
@@ -18,7 +18,7 @@ defmodule MarketingbsmWeb.ProjectLive.Index do
           },
           id: "live_drawer",
           sticky: true
-        ) %>
+        )}
 
         <Layout.flex
           flex_direction="col"
@@ -108,7 +108,7 @@ defmodule MarketingbsmWeb.ProjectLive.Index do
                   dom_id={dom_id}
                 >
                   <Table.table_cell>
-                    <%= project.name %>
+                    {project.name}
                   </Table.table_cell>
                   <Table.table_cell>
                     <%= if project.is_freezed == true do %>
@@ -149,6 +149,7 @@ defmodule MarketingbsmWeb.ProjectLive.Index do
     socket =
       socket
       |> assign(:hiderr, "")
+      |> assign(:nothing, :nothing)
 
     id = socket.assigns.current_user.id
 

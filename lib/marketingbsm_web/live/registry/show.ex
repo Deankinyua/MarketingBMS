@@ -12,11 +12,11 @@ defmodule MarketingbsmWeb.RegistryLive.Show do
     ~H"""
     <div class="w-full h-full">
       <Layout.flex align_items="start" class="h-screen overflow-y-hidden">
-        <%= live_render(@socket, MarketingbsmWeb.LiveDrawer,
+        {live_render(@socket, MarketingbsmWeb.LiveDrawer,
           session: %{"active_tab" => "checkin", "user" => "user?id=#{@current_user.id}"},
           id: "live_drawer",
           sticky: true
-        ) %>
+        )}
 
         <Layout.flex
           flex_direction="col"
@@ -27,13 +27,13 @@ defmodule MarketingbsmWeb.RegistryLive.Show do
           <Layout.flex justify_content="between">
             <Layout.flex flex_direction="col" align_items="start" class="grow">
               <Text.title class="text-xl">
-                <Text.bold><%= @project.name %> Project Registry</Text.bold>
+                <Text.bold>{@project.name} Project Registry</Text.bold>
               </Text.title>
 
               <Text.subtitle color="gray" class="mb-10">
-                There are <strong><%= @count %></strong>
+                There are <strong>{@count}</strong>
                 Brand Ambassadors activating
-                <Text.bold><%= @project.name %></Text.bold>
+                <Text.bold>{@project.name}</Text.bold>
               </Text.subtitle>
             </Layout.flex>
           </Layout.flex>
@@ -96,19 +96,19 @@ defmodule MarketingbsmWeb.RegistryLive.Show do
                   dom_id={dom_id}
                 >
                   <Table.table_cell>
-                    <%= Accounts.get_user_by_id!(registry.ambassador_id).name %>
+                    {Accounts.get_user_by_id!(registry.ambassador_id).name}
                   </Table.table_cell>
 
                   <Table.table_cell>
-                    <%= ProjectGeneral.get_project_by_id!(registry.project_id).name %>
+                    {ProjectGeneral.get_project_by_id!(registry.project_id).name}
                   </Table.table_cell>
 
                   <Table.table_cell>
-                    <%= Outlet.get_outlet!(registry.outlet_id).name %>
+                    {Outlet.get_outlet!(registry.outlet_id).name}
                   </Table.table_cell>
 
                   <Table.table_cell>
-                    <%= registry.days_worked %>
+                    {registry.days_worked}
                   </Table.table_cell>
 
                   <Table.table_cell>

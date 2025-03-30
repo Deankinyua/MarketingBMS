@@ -5,7 +5,7 @@ defmodule MarketingbsmWeb.RegionLive.Show do
   def render(assigns) do
     ~H"""
     <.header>
-      Region <%= @region.name %>
+      Region {@region.name}
       <:subtitle>This is a region record from your database.</:subtitle>
 
       <:actions>
@@ -16,7 +16,7 @@ defmodule MarketingbsmWeb.RegionLive.Show do
     </.header>
 
     <.list>
-      <:item title="Name"><%= @region.name %></:item>
+      <:item title="Name">{@region.name}</:item>
     </.list>
 
     <.back navigate={~p"/regions"}>Back to regions</.back>

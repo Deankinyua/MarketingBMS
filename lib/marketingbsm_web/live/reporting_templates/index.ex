@@ -10,7 +10,7 @@ defmodule MarketingbsmWeb.TemplateLive.Index do
     ~H"""
     <div class="w-full h-full">
       <Layout.flex align_items="start" class="h-screen overflow-y-hidden">
-        <%= live_render(@socket, MarketingbsmWeb.LiveDrawer,
+        {live_render(@socket, MarketingbsmWeb.LiveDrawer,
           session: %{
             "active_tab" => "template",
             "hiderr" => @hiderr,
@@ -18,7 +18,7 @@ defmodule MarketingbsmWeb.TemplateLive.Index do
           },
           id: "live_drawer",
           sticky: true
-        ) %>
+        )}
 
         <Layout.flex
           flex_direction="col"
@@ -198,85 +198,85 @@ defmodule MarketingbsmWeb.TemplateLive.Index do
                 class="group hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted"
               >
                 <Table.table_cell>
-                  <%= ProjectGeneral.get_project_by_id!(template.project_id).name %>
+                  {ProjectGeneral.get_project_by_id!(template.project_id).name}
                 </Table.table_cell>
                 <Table.table_cell>
-                  <%= template.field_1 %>
+                  {template.field_1}
                 </Table.table_cell>
                 <Table.table_cell>
-                  <%= template.field_2 %>
-                </Table.table_cell>
-
-                <Table.table_cell>
-                  <%= template.field_3 %>
+                  {template.field_2}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= template.field_4 %>
+                  {template.field_3}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= template.field_5 %>
+                  {template.field_4}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= template.field_6 %>
+                  {template.field_5}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= template.field_7 %>
+                  {template.field_6}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= template.field_8 %>
+                  {template.field_7}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= template.field_9 %>
+                  {template.field_8}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= template.field_10 %>
+                  {template.field_9}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= template.field_11 %>
+                  {template.field_10}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= template.field_12 %>
+                  {template.field_11}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= template.field_13 %>
+                  {template.field_12}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= template.field_14 %>
+                  {template.field_13}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= template.field_15 %>
+                  {template.field_14}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= template.field_16 %>
+                  {template.field_15}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= template.field_17 %>
+                  {template.field_16}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= template.field_18 %>
+                  {template.field_17}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= template.field_19 %>
+                  {template.field_18}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= template.field_20 %>
+                  {template.field_19}
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  {template.field_20}
                 </Table.table_cell>
               </Table.table_row>
             </Table.table_body>

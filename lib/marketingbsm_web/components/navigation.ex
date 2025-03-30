@@ -8,8 +8,6 @@ defmodule MarketingbsmWeb.NavigationComponent do
   use Phoenix.Component
 
   attr :user, :any, required: true
-  attr :active_tab, :string
-  attr :hiderr, :string
 
   @doc """
   Renders a side navigation
@@ -259,8 +257,8 @@ defmodule MarketingbsmWeb.NavigationComponent do
           }
           justify_content="start"
         >
-          <%= render_slot(@icon) %>
-          <Text.subtitle color="" class=""><%= @name %></Text.subtitle>
+          {render_slot(@icon)}
+          <Text.subtitle color="" class="">{@name}</Text.subtitle>
         </Layout.flex>
       </Layout.flex>
     </button>
@@ -318,8 +316,8 @@ defmodule MarketingbsmWeb.NavigationComponent do
               </div>
 
               <Layout.col class="text-left">
-                <Text.subtitle color="" class=""><%= @name %></Text.subtitle>
-                <Text.text color="gray" class="text-sm"><%= @email %></Text.text>
+                <Text.subtitle color="" class="">{@name}</Text.subtitle>
+                <Text.text color="gray" class="text-sm">{@email}</Text.text>
               </Layout.col>
             </Layout.flex>
 
@@ -353,8 +351,8 @@ defmodule MarketingbsmWeb.NavigationComponent do
               />
 
               <Layout.col class="text-left">
-                <Text.subtitle color="" class=""><%= @name %></Text.subtitle>
-                <Text.text color="gray" class="text-sm"><%= @email %></Text.text>
+                <Text.subtitle color="" class="">{@name}</Text.subtitle>
+                <Text.text color="gray" class="text-sm">{@email}</Text.text>
               </Layout.col>
             </Layout.flex>
 
@@ -443,8 +441,8 @@ defmodule MarketingbsmWeb.NavigationComponent do
           }
           justify_content="start"
         >
-          <%= render_slot(@icon) %>
-          <Text.subtitle color="" class=""><%= @name %></Text.subtitle>
+          {render_slot(@icon)}
+          <Text.subtitle color="" class="">{@name}</Text.subtitle>
         </Layout.flex>
       </Layout.flex>
     </button>

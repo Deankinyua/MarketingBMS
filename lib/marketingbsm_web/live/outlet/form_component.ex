@@ -13,7 +13,7 @@ defmodule MarketingbsmWeb.ShopLive.FormComponent do
     <section>
       <Layout.col>
         <Text.title class="text-xl">
-          <Text.bold><%= @title %></Text.bold>
+          <Text.bold>{@title}</Text.bold>
         </Text.title>
 
         <Text.subtitle color="gray">
@@ -58,7 +58,7 @@ defmodule MarketingbsmWeb.ShopLive.FormComponent do
                 required={true}
               >
                 <:item :for={%{id: _id, name: name} <- @regions}>
-                  <%= name %>
+                  {name}
                 </:item>
               </Select.select>
             </Layout.col>
@@ -99,8 +99,8 @@ defmodule MarketingbsmWeb.ShopLive.FormComponent do
                 phx-update="ignore"
                 required={true}
               >
-                <:item :for={%{id: _id, name: name} <- @regions}>
-                  <%= name %>
+                <:item :for={%{name: name} <- @regions}>
+                  {name}
                 </:item>
               </Select.select>
             </Layout.col>
@@ -136,6 +136,8 @@ defmodule MarketingbsmWeb.ShopLive.FormComponent do
       |> Ash.read!(page: [limit: 20])
 
     regions = Map.get(query_results, :results)
+
+    dbg(regions)
 
     socket |> assign(regions: regions)
   end

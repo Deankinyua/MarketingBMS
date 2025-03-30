@@ -6,7 +6,7 @@ defmodule MarketingbsmWeb.CheckinLive.RowComponent do
   def render(assigns) do
     ~H"""
     <div>
-      <%= render_slot(@inner_block) %>
+      {render_slot(@inner_block)}
 
       <Table.table_cell>
         <div class="flex justify-between px-6">

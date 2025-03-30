@@ -18,7 +18,7 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
     <section>
       <Layout.col>
         <Text.title class="text-xl">
-          <Text.bold><%= @title %></Text.bold>
+          <Text.bold>{@title}</Text.bold>
         </Text.title>
 
         <Text.subtitle color="gray">
@@ -44,7 +44,7 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
                 phx-update="ignore"
               >
                 <:item :for={%{id: _id, name: name} <- @projects}>
-                  <%= name %>
+                  {name}
                 </:item>
               </Select.select>
             </Layout.col>
@@ -84,7 +84,7 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
                       <Layout.flex class="" flex_direction="col" align_items="start">
                         <div class="w-full flex-1">
                           <Text.subtitle color="black" class="text-ellipsis">
-                            <%= entry.client_name %>
+                            {entry.client_name}
                           </Text.subtitle>
                         </div>
                       </Layout.flex>
@@ -113,7 +113,7 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
                 </Layout.flex>
 
                 <%= for err <- upload_errors(@uploads.checkinphoto, entry) do %>
-                  <p class="alert alert-danger"><%= error_to_string(err) %></p>
+                  <p class="alert alert-danger">{error_to_string(err)}</p>
                 <% end %>
               </article>
             <% end %>
@@ -157,7 +157,11 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
 
   @impl true
   def handle_event("validate", %{"checkin" => checkin_params}, socket) do
+    dbg(socket.assigns.form)
+
     form = socket.assigns.form |> Form.validate(checkin_params, errors: false)
+
+    dbg(socket.assigns.uploads.checkinphoto.entries)
 
     {:noreply, assign(socket, form: form)}
   end

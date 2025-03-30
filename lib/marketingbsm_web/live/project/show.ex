@@ -12,11 +12,11 @@ defmodule MarketingbsmWeb.ProjectLive.Show do
     ~H"""
     <div class="w-full h-full">
       <Layout.flex align_items="start" class="h-screen overflow-y-hidden">
-        <%= live_render(@socket, MarketingbsmWeb.LiveDrawer,
+        {live_render(@socket, MarketingbsmWeb.LiveDrawer,
           session: %{"active_tab" => "project", "user" => "user?id=#{@current_user.id}"},
           id: "live_drawer",
           sticky: true
-        ) %>
+        )}
 
         <Layout.flex
           flex_direction="col"
@@ -27,12 +27,12 @@ defmodule MarketingbsmWeb.ProjectLive.Show do
           <Layout.flex justify_content="between">
             <Layout.flex flex_direction="col" align_items="start" class="grow">
               <Text.title class="text-xl">
-                <Text.bold><%= @project.name %> Project</Text.bold>
+                <Text.bold>{@project.name} Project</Text.bold>
               </Text.title>
 
               <Text.subtitle color="gray" class="mb-10">
                 These are reports for
-                <Text.bold><%= @project.name %></Text.bold>
+                <Text.bold>{@project.name}</Text.bold>
                 .
               </Text.subtitle>
             </Layout.flex>
@@ -55,121 +55,121 @@ defmodule MarketingbsmWeb.ProjectLive.Show do
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_1 %>
+                    {@result.field_1}
                   </Text.text>
                 </Table.table_cell>
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_2 %>
+                    {@result.field_2}
                   </Text.text>
                 </Table.table_cell>
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_3 %>
+                    {@result.field_3}
                   </Text.text>
                 </Table.table_cell>
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_4 %>
+                    {@result.field_4}
                   </Text.text>
                 </Table.table_cell>
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_5 %>
+                    {@result.field_5}
                   </Text.text>
                 </Table.table_cell>
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_6 %>
+                    {@result.field_6}
                   </Text.text>
                 </Table.table_cell>
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_7 %>
+                    {@result.field_7}
                   </Text.text>
                 </Table.table_cell>
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_8 %>
+                    {@result.field_8}
                   </Text.text>
                 </Table.table_cell>
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_9 %>
+                    {@result.field_9}
                   </Text.text>
                 </Table.table_cell>
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_10 %>
+                    {@result.field_10}
                   </Text.text>
                 </Table.table_cell>
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_11 %>
+                    {@result.field_11}
                   </Text.text>
                 </Table.table_cell>
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_12 %>
+                    {@result.field_12}
                   </Text.text>
                 </Table.table_cell>
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_13 %>
+                    {@result.field_13}
                   </Text.text>
                 </Table.table_cell>
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_14 %>
+                    {@result.field_14}
                   </Text.text>
                 </Table.table_cell>
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_15 %>
+                    {@result.field_15}
                   </Text.text>
                 </Table.table_cell>
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_16 %>
+                    {@result.field_16}
                   </Text.text>
                 </Table.table_cell>
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_17 %>
+                    {@result.field_17}
                   </Text.text>
                 </Table.table_cell>
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_18 %>
+                    {@result.field_18}
                   </Text.text>
                 </Table.table_cell>
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_19 %>
+                    {@result.field_19}
                   </Text.text>
                 </Table.table_cell>
 
                 <Table.table_cell>
                   <Text.text class="font-semibold text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis">
-                    <%= @result.field_20 %>
+                    {@result.field_20}
                   </Text.text>
                 </Table.table_cell>
 
@@ -192,94 +192,94 @@ defmodule MarketingbsmWeb.ProjectLive.Show do
                 class="group hover:bg-tremor-background-muted dark:hover:bg-dark-tremor-background-muted"
               >
                 <Table.table_cell>
-                  <%= Accounts.get_user_by_id!(record.ambassador_id).name %>
+                  {Accounts.get_user_by_id!(record.ambassador_id).name}
                 </Table.table_cell>
                 <Table.table_cell>
-                  <%= Outlet.get_outlet!(record.outlet_id).name %>
-                </Table.table_cell>
-
-                <Table.table_cell>
-                  <%= record.field_1 %>
+                  {Outlet.get_outlet!(record.outlet_id).name}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.field_2 %>
+                  {record.field_1}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.field_3 %>
+                  {record.field_2}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.field_4 %>
+                  {record.field_3}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.field_5 %>
+                  {record.field_4}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.field_6 %>
+                  {record.field_5}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.field_7 %>
+                  {record.field_6}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.field_8 %>
+                  {record.field_7}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.field_9 %>
+                  {record.field_8}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.field_10 %>
+                  {record.field_9}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.field_11 %>
+                  {record.field_10}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.field_12 %>
+                  {record.field_11}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.field_13 %>
+                  {record.field_12}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.field_14 %>
+                  {record.field_13}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.field_15 %>
+                  {record.field_14}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.field_16 %>
+                  {record.field_15}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.field_17 %>
+                  {record.field_16}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.field_18 %>
+                  {record.field_17}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.field_19 %>
+                  {record.field_18}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.field_20 %>
+                  {record.field_19}
                 </Table.table_cell>
 
                 <Table.table_cell>
-                  <%= record.total_sales %>
+                  {record.field_20}
+                </Table.table_cell>
+
+                <Table.table_cell>
+                  {record.total_sales}
                 </Table.table_cell>
               </Table.table_row>
             </Table.table_body>
