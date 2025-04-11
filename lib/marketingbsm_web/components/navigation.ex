@@ -41,7 +41,6 @@ defmodule MarketingbsmWeb.NavigationComponent do
               name="Reports"
             >
               <:icon>
-                <%!-- hero-home-solid --%>
                 <.icon
                   class={
                     Tails.classes([
@@ -60,7 +59,6 @@ defmodule MarketingbsmWeb.NavigationComponent do
               name="Check-Ins"
             >
               <:icon>
-                <%!-- hero-home-solid --%>
                 <.icon
                   class={
                     Tails.classes([
@@ -79,7 +77,6 @@ defmodule MarketingbsmWeb.NavigationComponent do
               name="Projects"
             >
               <:icon>
-                <%!-- hero-briefcase-solid --%>
                 <.icon
                   class={
                     Tails.classes([
@@ -98,7 +95,6 @@ defmodule MarketingbsmWeb.NavigationComponent do
               name="Templates"
             >
               <:icon>
-                <%!-- hero-briefcase-solid --%>
                 <.icon
                   class={
                     Tails.classes([
@@ -117,7 +113,6 @@ defmodule MarketingbsmWeb.NavigationComponent do
               name="Registry"
             >
               <:icon>
-                <%!-- hero-building-office-2-solid --%>
                 <.icon
                   class={
                     Tails.classes([
@@ -136,7 +131,6 @@ defmodule MarketingbsmWeb.NavigationComponent do
               name="Regions"
             >
               <:icon>
-                <%!-- hero-rectangle-stack-solid --%>
                 <.icon
                   class={
                     Tails.classes([
@@ -155,7 +149,6 @@ defmodule MarketingbsmWeb.NavigationComponent do
               name="Outlets"
             >
               <:icon>
-                <%!-- hero-home-solid --%>
                 <.icon
                   class={
                     Tails.classes([
@@ -174,7 +167,6 @@ defmodule MarketingbsmWeb.NavigationComponent do
               name="Ambassadors"
             >
               <:icon>
-                <%!-- hero-rectangle-stack-solid --%>
                 <.icon
                   class={
                     Tails.classes([
@@ -195,7 +187,6 @@ defmodule MarketingbsmWeb.NavigationComponent do
               name="Management"
             >
               <:icon>
-                <%!-- hero-cog-solid --%>
                 <.icon
                   class={
                     Tails.classes([
