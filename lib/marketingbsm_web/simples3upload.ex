@@ -7,9 +7,11 @@ defmodule SimpleS3Upload do
   @doc """
   Signs a form upload.
   The configuration is a map which must contain the following keys:
+  config = %{
     * `:region` - The AWS region, such as "us-east-1"
     * `:access_key_id` - The AWS access key id
     * `:secret_access_key` - The AWS secret access key
+    }
   Returns a map of form fields to be used on the client via the JavaScript `FormData` API.
   ## Options
     * `:key` - The required key of the object to be uploaded.
@@ -71,26 +73,21 @@ defmodule SimpleS3Upload do
 
   def config do
     %{
-      # region: region(),
-      # access_key_id: Application.fetch_env!(:marketingbsm, :access_key_id),
-      # secret_access_key: Application.fetch_env!(:marketingbsm, :secret_access_key)
-
-      region: System.get_env("S3_REGION"),
-      access_key_id: System.get_env("S3_ACCESS_KEY_ID"),
-      secret_access_key: System.get_env("S3_SECRET_ACCESS_KEY")
+      region: region(),
+      access_key_id: Application.fetch_env!(:invoice_generator, :access_key_id),
+      secret_access_key: Application.fetch_env!(:invoice_generator, :secret_access_key)
+      # secret_access_key: System.fetch_env!("S3_SECRET_ACCESS_KEY")
     }
   end
 
   def bucket do
-    # Application.fetch_env!(:marketingbsm, :bucket)
-
-    System.get_env("S3_BUCKET")
+    # System.fetch_env!("S3_BUCKET")
+    Application.fetch_env!(:invoice_generator, :bucket)
   end
 
   def region do
-    # Application.fetch_env!(:marketingbsm, :region)
-
-    System.get_env("S3_REGION")
+    # System.fetch_env!("S3_REGION")
+    Application.fetch_env!(:invoice_generator, :region)
   end
 
   # def entry_url(entry) do
@@ -146,42 +143,21 @@ defmodule SimpleS3Upload do
 
   defp sha256(secret, msg), do: :crypto.mac(:hmac, :sha256, secret, msg)
 
-  def get_file_url(key, bucket, expires_in) do
-    [scheme, host] = System.get_env("PROJECT_URL_MEDIA") |> String.split("://")
+  # * The presign_upload function's job is to generate metadata
+  # * returns a map of metadata and the socket unchanged
+  # * It must return {:ok, metadata, socket}
 
-    {:ok, url} =
-      ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: 9000)
-      |> ExAws.S3.presigned_url(:get, bucket, key, expires_in: expires_in)
+  def presign_upload(entry, socket, key \\ "audio") do
+    [scheme, host] =
+      "PROJECT_URL_MEDIA"
+      |> System.get_env()
+      |> String.split("://")
 
-    url
-  end
-
-  def put_object(key, bucket, file) do
-    [scheme, host] = System.get_env("PROJECT_URL_MEDIA") |> String.split("://")
-
-    config =
-      if System.get_env("MIX_ENV") == "prod" do
-        ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: 9000)
-        # ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: nil)
-      else
-        ExAws.Config.new(:s3, scheme: scheme <> "://", host: "localhost", port: 9000)
-      end
-
-    ExAws.S3.put_object(
-      bucket,
-      key,
-      file
-    )
-    |> ExAws.request!(config)
-  end
-
-  def presign_upload(entry, socket, key \\ "photo") do
-    [scheme, host] = System.get_env("PROJECT_URL_MEDIA") |> String.split("://")
-
-    config = ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: 9000)
+    config = ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: nil)
     bucket = "marketingbsm"
     key = "#{key}/#{entry.client_name}"
 
+    # * Generates a presigned url for the object
     case ExAws.S3.presigned_url(config, :put, bucket, key,
            expires_in: 3600,
            query_params: [{"Content-Type", entry.client_type}]

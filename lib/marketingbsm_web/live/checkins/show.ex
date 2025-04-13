@@ -124,7 +124,7 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
   end
 
   def call(filename) do
-    "http://13.48.254.182:9000/marketingbsm/checkinphoto/#{filename}"
+    "http://127.0.0.1:9000/marketingbsm/checkinphoto/#{filename}"
   end
 
   def call_outlet(outlet) do
