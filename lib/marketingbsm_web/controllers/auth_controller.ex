@@ -2,8 +2,12 @@ defmodule MarketingbsmWeb.AuthController do
   use MarketingbsmWeb, :controller
   use AshAuthentication.Phoenix.Controller
 
+  alias Marketingbsm.Accounts.UserNotifier
+
   def success(conn, _activity, user, _token) do
     return_to = get_session(conn, :return_to) || ~p"/regions"
+
+    UserNotifier.deliver_confirmation_instructions(user, "httpf3")
 
     conn
     |> delete_session(:return_to)

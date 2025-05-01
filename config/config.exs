@@ -29,7 +29,6 @@ config :marketingbsm, MarketingbsmWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :marketingbsm, Marketingbsm.Mailer, adapter: Swoosh.Adapters.Local
 
 config :marketingbsm,
   ash_domains: [
@@ -41,6 +40,10 @@ config :marketingbsm,
     Marketingbsm.Clockin,
     Marketingbsm.Management
   ]
+
+config :marketingbsm, Marketingbsm.Mailer,
+  adapter: Swoosh.Adapters.Brevo,
+  api_key: System.get_env("BREVO_API_KEY")
 
 # Configure esbuild (the version is required)
 config :esbuild,
