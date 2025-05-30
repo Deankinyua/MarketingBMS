@@ -29,11 +29,7 @@ defmodule MarketingbsmWeb.SummaryLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    socket =
-      socket
-      |> assign(:hiderr, "")
-
-    {:ok, socket}
+    {:ok, assign(socket, :hiderr, "")}
   end
 
   @impl true
@@ -42,17 +38,11 @@ defmodule MarketingbsmWeb.SummaryLive.Index do
   end
 
   defp apply_action(socket, :new, _params) do
-    socket
-    |> assign(:page_title, "Check In")
+    assign(socket, :page_title, "Check In")
   end
 
   defp apply_action(socket, :index, _params) do
-    socket
-    |> assign(:page_title, "Listing checkins")
-  end
-
-  defp apply_action(socket, :see, _params) do
-    socket
+    assign(socket, :page_title, "Listing checkins")
   end
 
   @impl true
@@ -64,15 +54,4 @@ defmodule MarketingbsmWeb.SummaryLive.Index do
        type: type
      })}
   end
-
-  # @impl true
-  # def handle_event("close", _params, socket) do
-  #   Phoenix.PubSub.broadcast(
-  #     Marketingbsm.PubSub,
-  #     "#{socket.assigns.current_user.id}",
-  #     {:toggle_drawer}
-  #   )
-
-  #   {:noreply, socket}
-  # end
 end

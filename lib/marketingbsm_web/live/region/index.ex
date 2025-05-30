@@ -176,8 +176,7 @@ defmodule MarketingbsmWeb.RegionLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"region_id" => id} = params, socket) do
-    dbg(params)
+  def handle_event("delete", %{"region_id" => id} = _params, socket) do
     region = Ash.get!(Marketingbsm.Outlet.Region, id)
     Ash.destroy!(region, actor: socket.assigns.current_user)
 

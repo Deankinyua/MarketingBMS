@@ -138,15 +138,17 @@ defmodule MarketingbsmWeb.ReportLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    socket = socket |> assign(:hiderr, "")
-
-    {
-      :ok,
+    socket =
       socket
+      |> assign(:hiderr, "")
       |> stream(
         :report,
         Ash.read!(Marketingbsm.Record.Report, actor: socket.assigns[:current_user])
       )
+
+    {
+      :ok,
+      socket
     }
   end
 

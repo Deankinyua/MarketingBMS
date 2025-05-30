@@ -135,11 +135,7 @@ defmodule MarketingbsmWeb.SummaryLive.Show do
 
   @impl true
   def mount(_params, _session, socket) do
-    socket =
-      socket
-      |> assign(:hiderr, "")
-
-    {:ok, socket}
+    {:ok, assign(socket, :hiderr, "")}
   end
 
   @impl true
@@ -199,8 +195,8 @@ defmodule MarketingbsmWeb.SummaryLive.Show do
 
       {:error, _error} ->
         {:noreply,
-         socket
-         |> put_flash(
+         put_flash(
+           socket,
            :error,
            "You are Not authorized to perform this action"
          )}
@@ -218,14 +214,4 @@ defmodule MarketingbsmWeb.SummaryLive.Show do
         ""
     end
   end
-
-  # def hours_worked(ambassador_id) do
-  #   case Clockin.get_user_by_id(ambassador_id) do
-  #     {:ok, checkout} ->
-  #       Time.add(checkout.create_time, 3, :hour)
-
-  #     {:error, _error} ->
-  #       ""
-  #   end
-  # end
 end

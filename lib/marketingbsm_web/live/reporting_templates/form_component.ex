@@ -397,7 +397,6 @@ defmodule MarketingbsmWeb.TemplateLive.FormComponent do
   end
 
   def handle_event("save", %{"template" => template_params}, socket) do
-
     project_id = FormComponent.get_project_id(socket, template_params)
 
     case ProjectGeneral.get_template_by_project_id(project_id) do

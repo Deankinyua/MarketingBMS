@@ -30,8 +30,6 @@ defmodule MarketingbsmWeb.SignInPage do
   end
 
   defp build_form(:signin, socket, params) do
-    dbg(params)
-
     form_action =
       case Map.get(params, "redirect_to") do
         nil ->
