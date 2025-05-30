@@ -32,6 +32,7 @@ defmodule Marketingbsm.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:ex_image_info, "~> 0.2.4"},
       {:ex_aws, "~> 2.5"},
       {:ex_aws_s3, "~> 2.0"},

@@ -31,7 +31,6 @@ defmodule MarketingbsmWeb.RegisterPage do
   end
 
   defp build_form(:register, socket) do
-    dbg(socket.assigns)
 
     # The name to use for the register action. Defaults to register_with_<strategy_name> hence the name of the action is register_with_password
 
