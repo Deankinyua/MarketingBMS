@@ -220,8 +220,7 @@ defmodule MarketingbsmWeb.CheckoutLive.FormComponent do
                   checkout_params = Map.merge(checkout_params, %{"file" => file})
                   form = socket.assigns.form |> Form.validate(checkout_params)
 
-                  Form.errors(form)
-                  |> case do
+                  case Form.errors(form) do
                     [] ->
                       submit_form(socket, checkout_params, file)
 

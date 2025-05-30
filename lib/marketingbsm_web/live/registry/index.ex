@@ -131,7 +131,7 @@ defmodule MarketingbsmWeb.RegistryLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    socket = socket |> assign(:hiderr, "")
+    socket = assign(socket, :hiderr, "")
 
     id = socket.assigns.current_user.id
 

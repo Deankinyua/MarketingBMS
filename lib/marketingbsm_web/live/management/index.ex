@@ -217,8 +217,8 @@ defmodule MarketingbsmWeb.ManagementLive.Index do
 
       {:error, _error} ->
         {:noreply,
-         socket
-         |> put_flash(
+         put_flash(
+           socket,
            :error,
            "You are Not authorized to perform this action"
          )}
@@ -235,8 +235,8 @@ defmodule MarketingbsmWeb.ManagementLive.Index do
 
       {:error, _error} ->
         {:noreply,
-         socket
-         |> put_flash(
+         put_flash(
+           socket,
            :error,
            "You are Not authorized to perform this action"
          )}

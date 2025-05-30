@@ -212,12 +212,7 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
   def handle_event("validate", %{"report" => report_params}, socket) do
     project_id = FormComponent.get_project_id(socket, report_params)
 
-    result = ProjectGeneral.get_template_by_project_id!(project_id)
-
-    {:noreply,
-     socket
-     #  |> assign(form: AshPhoenix.Form.validate(socket.assigns.form, report_params))
-     |> assign(result: result)}
+    {:noreply, assign(socket, result: ProjectGeneral.get_template_by_project_id!(project_id))}
   end
 
   def handle_event("save", %{"report" => report_params}, socket) do
@@ -273,13 +268,12 @@ defmodule MarketingbsmWeb.ReportLive.FormComponent do
   end
 
   def get_complete_params(params) do
-    new_map = Map.drop(params, ["ambassador_id", "outlet_id", "project_id"])
-
-    new_map = Enum.filter(new_map, fn {_key, value} -> value != "" end)
-    list_num = Enum.map(new_map, fn {_k, v} -> v end)
-
-    list_final = Enum.map(list_num, fn x -> String.to_integer(x) end)
-    total_sales = Enum.sum(list_final)
+    total_sales =
+      params
+      |> Map.drop(["ambassador_id", "outlet_id", "project_id"])
+      |> Enum.filter(fn {_key, value} -> value != "" end)
+      |> Enum.map(fn {_k, v} -> String.to_integer(v) end)
+      |> Enum.sum()
 
     new_map = %{"total_sales" => total_sales}
 

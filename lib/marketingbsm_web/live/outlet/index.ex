@@ -163,8 +163,8 @@ defmodule MarketingbsmWeb.ShopLive.Index do
     case Management.get_manager(id) do
       {:ok, _result} ->
         {:ok,
-         socket
-         |> stream(
+         stream(
+           socket,
            :outlets,
            Ash.read!(Marketingbsm.Outlet.Shop)
          )}

@@ -147,16 +147,15 @@ defmodule MarketingbsmWeb.ProjectLive.Index do
   @impl true
   def mount(_params, _session, socket) do
     socket =
-      socket
-      |> assign(:hiderr, "")
+      assign(socket, :hiderr, "")
 
     id = socket.assigns.current_user.id
 
     case Management.get_manager(id) do
       {:ok, _result} ->
         {:ok,
-         socket
-         |> stream(
+         stream(
+           socket,
            :projects,
            Ash.read!(Marketingbsm.ProjectGeneral.Project, actor: socket.assigns[:current_user])
          )}

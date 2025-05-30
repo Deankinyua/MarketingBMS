@@ -307,7 +307,7 @@ defmodule MarketingbsmWeb.TemplateLive.Index do
   @impl true
 
   def mount(_params, _session, socket) do
-    socket = socket |> assign(:hiderr, "")
+    socket = assign(socket, :hiderr, "")
     {:ok, stream(socket, :templates, ProjectGeneral.list_templates!())}
   end
 
