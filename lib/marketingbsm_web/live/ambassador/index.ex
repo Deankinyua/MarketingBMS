@@ -5,7 +5,7 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
   alias Marketingbsm.Accounts
   alias Tremorx.Theme
 
-  @impl true
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <div class="w-full h-full">
@@ -124,31 +124,39 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
-    socket =
-      socket
-      |> assign(:count, get_count())
-      |> assign(:hiderr, "")
-
-    {:ok, stream(socket, :ambassadors, get_records())}
+    {:ok,
+     socket
+     |> assign(:count, Enum.count(Activation.list_ambassadors!()))
+     |> assign(:hiderr, "")
+     |> stream(:ambassadors, Activation.list_ambassadors!())}
   end
 
-  def get_count do
-    Enum.count(get_records())
-  end
-
-  def get_records do
-    ambassadors = Activation.list_ambassadors!()
-
-    for ambassador <- ambassadors do
-      ambassador
-    end
-  end
-
-  @impl true
+  @impl Phoenix.LiveView
+  @spec handle_params(any(), any(), map()) :: {:noreply, map()}
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_event("close", _params, socket) do
+    Phoenix.PubSub.broadcast(
+      Marketingbsm.PubSub,
+      "#{socket.assigns.current_user.id}",
+      {:toggle_drawer}
+    )
+
+    {:noreply, socket}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_info({MarketingbsmWeb.AmbassadorLive.FormComponent, {:saved, ambassador}}, socket) do
+    socket =
+      socket
+      |> assign(:count, socket.assigns.count + 1)
+
+    {:noreply, stream_insert(socket, :ambassadors, ambassador)}
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
@@ -170,25 +178,5 @@ defmodule MarketingbsmWeb.AmbassadorLive.Index do
     socket
     |> assign(:page_title, "Listing Ambassadors")
     |> assign(:ambassador, nil)
-  end
-
-  @impl true
-  def handle_info({MarketingbsmWeb.AmbassadorLive.FormComponent, {:saved, ambassador}}, socket) do
-    socket =
-      socket
-      |> assign(:count, socket.assigns.count + 1)
-
-    {:noreply, stream_insert(socket, :ambassadors, ambassador)}
-  end
-
-  @impl true
-  def handle_event("close", _params, socket) do
-    Phoenix.PubSub.broadcast(
-      Marketingbsm.PubSub,
-      "#{socket.assigns.current_user.id}",
-      {:toggle_drawer}
-    )
-
-    {:noreply, socket}
   end
 end

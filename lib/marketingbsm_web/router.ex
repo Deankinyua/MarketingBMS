@@ -50,9 +50,6 @@ defmodule MarketingbsmWeb.Router do
       live "/ambassadors/new", AmbassadorLive.Index, :new
       live "/ambassadors/:id/edit", AmbassadorLive.Index, :edit
 
-      live "/ambassadors/:id", AmbassadorLive.Show, :show
-      live "/ambassadors/:id/show/edit", AmbassadorLive.Show, :edit
-
       live "/projects", ProjectLive.Index, :index
       live "/projects/new", ProjectLive.Index, :new
       live "/projects/:id/edit", ProjectLive.Index, :edit
