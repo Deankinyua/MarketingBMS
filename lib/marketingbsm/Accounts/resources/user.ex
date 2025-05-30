@@ -6,7 +6,7 @@ defmodule Marketingbsm.Accounts.User do
 
   resource do
     description("""
-    Represents the User of the Audio2Audio platform.
+    Represents the User of the Marketing BSM platform.
     """)
   end
 
