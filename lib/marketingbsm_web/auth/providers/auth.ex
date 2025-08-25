@@ -10,9 +10,7 @@ defmodule MarketingbsmWeb.LiveUserAuth do
   def on_mount(:live_user_optional, _params, _session, socket) do
     if socket.assigns[:current_user] do
       {:cont, socket}
-      # {:cont,
-      #  socket
-      #  |> assign(:current_user, socket.assigns[:current_user] |> Accounts.load!([:profile]))}
+
     else
       {:cont, assign(socket, :current_user, nil)}
     end
@@ -41,9 +39,7 @@ defmodule MarketingbsmWeb.LiveUserAuth do
 
     if socket.assigns[:current_user] do
       {:cont, socket}
-      # {:cont,
-      #  socket
-      #  |> assign(:current_user, socket.assigns[:current_user] |> Accounts.load!([:profile]))}
+
     else
       {:halt, Phoenix.LiveView.redirect(socket, to: "/#{path}")}
     end

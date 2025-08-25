@@ -5,8 +5,7 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
 
   alias Marketingbsm.ProjectGeneral
   alias Marketingbsm.Outlet
-
-  @impl true
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <div class="w-full h-full">
@@ -46,7 +45,7 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
           <div class="sm:hidden">
             <Layout.grid num_items="1">
               <section :for={{dom_id, checkin} <- @streams.checkins} id={"photos_small#{dom_id}"}>
-                <div class="mr-4 mb-4">
+                <div class="mr-4 mb-4 border border-red-400">
                   <.live_component
                     module={MarketingbsmWeb.PictureLive.Component}
                     id={"small#{dom_id}"}
@@ -54,7 +53,7 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
                     dom_id={dom_id}
                   >
                     <Text.text class="font-semibold text-center">
-                      <%= Outlet.get_outlet!(checkin.outlet_id).name %>
+                      <%= Outlet.get_outlet!(checkin.outlet_id).name %>d
                     </Text.text>
                   </.live_component>
                 </div>
@@ -113,7 +112,7 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     socket =
       socket
@@ -123,22 +122,12 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
     {:ok, socket}
   end
 
-  def call(filename) do
-    "http://127.0.0.1:9000/marketingbsm/checkinphoto/#{filename}"
-  end
-
-  def call_outlet(outlet) do
-    "#{outlet}"
-  end
-
-  @impl true
-  def handle_params(%{"id" => id}, _, socket) do
+  @impl Phoenix.LiveView
+  def handle_params(%{"id" => project_id}, _, socket) do
     date =
       Date.utc_today()
 
-    checkins = fetch_checkins(date, id)
-
-    count = fetch_ambassador_count(date, id)
+    {checkins, checkin_count} = fetch_checkins(date, project_id)
 
     {:noreply,
      socket
@@ -146,15 +135,15 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
        :checkins,
        checkins
      )
-     |> assign(:count, count)
-     |> assign(:project_id, id)
+     |> assign(:count, checkin_count)
+     |> assign(:project_id, project_id)
      |> assign(
        :project,
-       Ash.get!(ProjectGeneral.Project, id, actor: socket.assigns.current_user)
+       Ash.get!(ProjectGeneral.Project, project_id, actor: socket.assigns.current_user)
      )}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_event("delete", %{"checkin_id" => id}, socket) do
     checkin = Ash.get!(Marketingbsm.Clockin.Checkin, id, actor: socket.assigns.current_user)
     Ash.destroy!(checkin, actor: socket.assigns.current_user)
@@ -162,48 +151,44 @@ defmodule MarketingbsmWeb.CheckinLive.Show do
     {:noreply, stream_delete(socket, :checkins, checkin)}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_event("load-more", _, %{assigns: assigns} = socket) do
-    {:noreply, assign(socket, page: assigns.page + 1) |> get_checkins()}
+    {:noreply,
+     socket
+     |> assign(page: assigns.page + 1)
+     |> get_checkins()}
   end
 
-  defp get_checkins(%{assigns: %{page: page}} = socket) do
-    id = socket.assigns.project_id
+  defp get_checkins(socket) do
+    project_id = socket.assigns.project_id
 
     date =
       Date.utc_today()
 
-    checkins = fetch_checkins(date, id)
-    count = fetch_ambassador_count(date, id)
+    {checkins, checkin_count} = fetch_checkins(date, project_id)
 
-    socket = stream(socket, :checkins, checkins)
+    dbg(checkins)
 
     socket
-    |> assign(page: page)
-    |> assign(count: count)
+    |> stream(:checkins, checkins)
+    |> assign(
+      :count,
+      checkin_count
+    )
   end
 
-  defp fetch_checkins(date, id) do
-    query_results =
+  defp fetch_checkins(date, project_id) do
+    checkins =
       Marketingbsm.Clockin.Checkin
-      |> Ash.Query.filter(project_id: id)
+      |> Ash.Query.filter(project_id: project_id)
       |> Ash.Query.filter(create_date: date)
       |> Ash.read!(page: [limit: 50])
+      |> Map.get(:results)
 
-    checkins = Map.get(query_results, :results)
-    checkins
+    {checkins, Enum.count(checkins)}
   end
 
-  defp fetch_ambassador_count(date, id) do
-    ambassador_count =
-      Marketingbsm.Clockin.Checkin
-      |> Ash.Query.filter(project_id: id)
-      |> Ash.Query.filter(create_date: date)
-      |> Ash.read!(page: [limit: 150])
-
-    ambassadors = Map.get(ambassador_count, :results)
-
-    count = Enum.count(ambassadors)
-    count
+  def call(filename) do
+    "http://127.0.0.1:9000/marketingbsm/checkinphoto/#{filename}"
   end
 end

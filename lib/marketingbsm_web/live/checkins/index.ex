@@ -2,7 +2,7 @@ defmodule MarketingbsmWeb.CheckinLive.Index do
   use MarketingbsmWeb, :live_view
   alias Tremorx.Theme
 
-  @impl true
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <div class="w-full h-full">
@@ -112,7 +112,7 @@ defmodule MarketingbsmWeb.CheckinLive.Index do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     socket =
       socket
@@ -126,7 +126,7 @@ defmodule MarketingbsmWeb.CheckinLive.Index do
      )}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
@@ -145,7 +145,7 @@ defmodule MarketingbsmWeb.CheckinLive.Index do
     socket
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_info(%{event: "notification", title: title, message: message, type: type}, socket) do
     {:noreply,
      push_event(socket, "notify", %{
@@ -155,7 +155,7 @@ defmodule MarketingbsmWeb.CheckinLive.Index do
      })}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_event("close", _params, socket) do
     Phoenix.PubSub.broadcast(
       Marketingbsm.PubSub,

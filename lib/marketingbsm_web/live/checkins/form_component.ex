@@ -12,7 +12,7 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
 
   alias MarketingbsmWeb.ReportLive.FormComponent
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <section>
@@ -128,7 +128,7 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     socket =
       socket
@@ -150,14 +150,14 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
      |> FormComponent.fetch_projects_unfreezed()}
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def handle_event("cancel-upload", %{"ref" => ref, "value" => _value}, socket) do
     {:noreply, cancel_upload(socket, :checkinphoto, ref)}
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def handle_event("validate", %{"checkin" => checkin_params}, socket) do
-    form = socket.assigns.form |> Form.validate(checkin_params, errors: false)
+    form = Form.validate(socket.assigns.form, checkin_params, errors: false)
 
     {:noreply, assign(socket, form: form)}
   end
@@ -179,9 +179,7 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
            |> put_flash(:error, "The Project You are activating is Freezed!!")
            |> push_patch(to: "/checkins")}
         else
-          date = Date.utc_today()
-
-          case Clockin.verify_checkin(ambassador_id, date) do
+          case Clockin.verify_checkin(ambassador_id, Date.utc_today()) do
             {:ok, _record} ->
               {:noreply,
                socket
@@ -196,36 +194,32 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
                   "outlet_id" => outlet_id
                 })
 
-              consume_uploaded_entries(socket, :checkinphoto, fn _meta, entry ->
-                client_name = Map.get(entry, :client_name)
-                filename = Map.get(entry, :uuid) <> "." <> SimpleS3Upload.ext(entry)
+              uploaded_files =
+                consume_uploaded_entries(socket, :checkinphoto, fn _meta, entry ->
+                  filename = Map.get(entry, :uuid) <> "." <> SimpleS3Upload.ext(entry)
 
-                {:ok,
-                 %File{
-                   filename: filename,
-                   original_filename: client_name
-                 }}
-              end)
-              |> case do
+                  {:ok,
+                   %File{
+                     filename: filename,
+                     original_filename: Map.get(entry, :client_name)
+                   }}
+                end)
+
+              case uploaded_files do
                 [] ->
-                  socket =
-                    socket
-                    |> assign(:audio_errors, %{filename: "is required"})
-
                   send_update(__MODULE__,
                     id: socket.assigns.form_name,
                     update: :toggle_submit,
                     value: false
                   )
 
-                  {:noreply, socket}
+                  {:noreply, assign(socket, :audio_errors, %{filename: "is required"})}
 
                 [%File{} = file] ->
                   checkin_params = Map.merge(checkin_params, %{"file" => file})
-                  form = socket.assigns.form |> Form.validate(checkin_params)
+                  form = Form.validate(socket.assigns.form, checkin_params)
 
-                  Form.errors(form)
-                  |> case do
+                  case Form.errors(form) do
                     [] ->
                       submit_form(socket, checkin_params, file)
 
@@ -236,12 +230,10 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
                         value: false
                       )
 
-                      socket =
-                        socket
-                        |> assign(:form, form)
-                        |> assign(:errors, errors)
-
-                      {:noreply, socket}
+                      {:noreply,
+                       socket
+                       |> assign(:form, form)
+                       |> assign(:errors, errors)}
                   end
               end
           end
@@ -254,8 +246,6 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
          |> put_flash(:error, "Report Not Submitted!! You are not scheduled to activate")}
     end
   end
-
-  # defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 
   defp assign_form(socket) do
     form =
@@ -273,8 +263,6 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
   defp error_to_string(:external_client_failure), do: "External client failure "
 
   defp submit_form(socket, params, _file) do
-    # params = Map.merge(params, %{file: file})
-
     case AshPhoenix.Form.submit(socket.assigns.form, params: params) do
       {:ok, _checkin} ->
         Process.send_after(
@@ -288,13 +276,10 @@ defmodule MarketingbsmWeb.CheckinLive.FormComponent do
           1000
         )
 
-        socket =
-          socket
-          |> put_flash(:info, "Your Photo has Been received")
-          |> push_patch(to: "/checkins")
-
         {:noreply,
          socket
+         |> put_flash(:info, "Your Photo has Been received")
+         |> push_patch(to: "/checkins")
          |> assign_form()
          |> assign(:uploaded_files, [])
          |> assign(:audio_errors, nil)}

@@ -193,8 +193,4 @@ defmodule MarketingbsmWeb.CheckoutLive.Show do
   def call(filename) do
     "http://127.0.0.1:9000/marketingbsm/checkoutphoto/#{filename}"
   end
-
-  def call_outlet(outlet) do
-    "#{outlet}"
-  end
 end

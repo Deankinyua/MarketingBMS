@@ -3,7 +3,7 @@ defmodule MarketingbsmWeb.AmbassadorLive.FormComponent do
 
   alias Marketingbsm.Accounts
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <section>
@@ -44,7 +44,7 @@ defmodule MarketingbsmWeb.AmbassadorLive.FormComponent do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     {:ok,
      socket
@@ -52,7 +52,7 @@ defmodule MarketingbsmWeb.AmbassadorLive.FormComponent do
      |> assign_form()}
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def handle_event("validate", %{"ambassador" => ambassador_params}, socket) do
     {:noreply,
      assign(socket, form: AshPhoenix.Form.validate(socket.assigns.form, ambassador_params))}
@@ -69,12 +69,10 @@ defmodule MarketingbsmWeb.AmbassadorLive.FormComponent do
           {:ok, ambassador} ->
             notify_parent({:saved, ambassador})
 
-            socket =
-              socket
-              |> put_flash(:info, "You are now an Ambassador")
-              |> push_patch(to: socket.assigns.patch)
-
-            {:noreply, socket}
+            {:noreply,
+             socket
+             |> put_flash(:info, "You are now an Ambassador")
+             |> push_patch(to: socket.assigns.patch)}
 
           {:error, _form} ->
             {:noreply,
@@ -84,12 +82,10 @@ defmodule MarketingbsmWeb.AmbassadorLive.FormComponent do
         end
 
       _ ->
-        socket =
-          socket
-          |> put_flash(:error, "Email is Invalid")
-          |> push_patch(to: socket.assigns.patch)
-
-        {:noreply, socket}
+        {:noreply,
+         socket
+         |> put_flash(:error, "Email is Invalid")
+         |> push_patch(to: socket.assigns.patch)}
     end
   end
 
