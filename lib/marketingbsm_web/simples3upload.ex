@@ -149,13 +149,17 @@ defmodule SimpleS3Upload do
 
   def presign_upload(entry, socket, key \\ "audio") do
     [scheme, host] =
-      "PROJECT_URL_MEDIA"
+      "S3_STORAGE"
       |> System.get_env()
       |> String.split("://")
 
     config = ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: nil)
-    bucket = "marketingbsm"
-    key = "#{key}/#{entry.client_name}"
+
+    bucket = System.fetch_env!("S3_BUCKET")
+
+    # This key should be the same everytime a user uploads the same document,
+    # For example if a user is uploading a tax compliance certificate, then we can
+    # use the same key everytime so that S3 updates a file instead of adding a new one
 
     # * Generates a presigned url for the object
     case ExAws.S3.presigned_url(config, :put, bucket, key,
